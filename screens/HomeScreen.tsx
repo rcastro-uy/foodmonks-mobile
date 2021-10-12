@@ -5,7 +5,6 @@ import { StatusBar } from "expo-status-bar";
 export default function HomeScreen({navigation, route}:any) {
     return (
         <View style={styles.container}>
-            <Text>Bienvenido a {route.params.name}</Text>
             <StatusBar style="auto" />
         </View>
     )

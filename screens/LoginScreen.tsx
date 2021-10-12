@@ -9,7 +9,7 @@ export default function LoginScreen({navigation}:any) {
             <Button
                 title="Continuar"
                 onPress={() =>
-                    navigation.navigate('Home', { name: 'FoodMonks' })
+                    navigation.navigate('HomeDrawer')
                 }
             />
             <StatusBar style="auto" />
