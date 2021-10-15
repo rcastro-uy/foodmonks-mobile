@@ -1,6 +1,8 @@
 import axios from 'axios'
+import {API_URL} from '@env'
 
-const baseURL = 'http://192.168.0.177:8080/api'
+
+const baseURL = API_URL
 
 const foodMonksApi = axios.create( {baseURL});
 
