@@ -7,7 +7,7 @@ export const FoodLogo = () => {
             alignItems: 'center'
         }}>
             <Image 
-                source={ require('../assets/foodMonks.png') }
+                source={ require('../images/foodMonks.png') }
                 style={{
                     width: 200,
                     height: 200 

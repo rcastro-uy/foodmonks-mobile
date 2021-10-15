@@ -2,21 +2,18 @@ import { Dimensions, Platform, StyleSheet } from "react-native";
 
 const { width: windowWidth } = Dimensions.get('window');
 export const loginStyles = StyleSheet.create ({
-    container: {
-        marginTop: windowWidth/3.5
-    },
     formContainer: {
+        
         flex: 1,
-        paddingHorizontal: 30,
+        paddingHorizontal: 11,
         justifyContent:'center',
-        height: 600,
-        marginBottom: 50
+        
     },
     title: {
         color: '#FD801E',
         fontSize: 30,
         fontWeight: 'bold',
-        marginTop: 20
+        marginTop: -10
     },
     label: {
         marginTop: 25,
@@ -24,13 +21,25 @@ export const loginStyles = StyleSheet.create ({
         fontWeight: 'bold',
     },
     inputField: {
-        borderBottomColor: '#FD801E',
-        borderBottomWidth: 2,
-        paddingBottom: 4
+       
+        borderBottomWidth: 1,
+        borderBottomColor:"black"
+    },
+    btnVisibility: {
+        height: 40,
+        width: 35,
+        paddingTop: 8,
+        paddingLeft:5,
+        paddingRight:5
+    },
+    btnImage:{
+        resizeMode: 'contain',
+        height: '100%',
+        width: '100%'
     },
     buttonContainer: {
         alignItems: 'center',
-        marginTop: 50
+        marginTop: 10
     },
     button: {
         borderWidth: 2,
@@ -39,11 +48,23 @@ export const loginStyles = StyleSheet.create ({
         paddingVertical: 5,
         borderRadius: 100
     },
+    buttonRegistrar: {
+        borderWidth: 2,
+        borderColor: '#FD801E',
+        backgroundColor: '#FD801E',
+        paddingHorizontal: 20,
+        paddingVertical: 5,
+        borderRadius: 100
+    },
     buttonText: {
         fontSize: 18,
         color: '#FD801E'
     },
-    newUserContainer: {
+    buttonTextRegistrar: {
+        fontSize: 18,
+        color: 'white'
+    },
+    rememberPassContainer: {
         alignItems: 'flex-end',
         marginTop: 10
     },
