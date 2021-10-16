@@ -39,7 +39,7 @@ export const loginStyles = StyleSheet.create ({
     },
     buttonContainer: {
         alignItems: 'center',
-        marginTop: 10
+        marginBottom: 10
     },
     button: {
         borderWidth: 2,
@@ -66,7 +66,7 @@ export const loginStyles = StyleSheet.create ({
     },
     rememberPassContainer: {
         alignItems: 'flex-end',
-        marginTop: 10
+        marginTop: -10
     },
     buttonReturn: {
         position: 'absolute',

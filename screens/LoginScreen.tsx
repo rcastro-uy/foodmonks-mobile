@@ -1,5 +1,5 @@
-import React, { useContext, useState } from "react";
-import { View, Text, StyleSheet, Button, TouchableHighlight, DrawerLayoutAndroid, TextInput, Platform, TouchableOpacity, KeyboardAvoidingView, Image, Keyboard } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import { View, Text, StyleSheet, Button, TouchableHighlight, DrawerLayoutAndroid, TextInput, Platform, TouchableOpacity, KeyboardAvoidingView, Image, Keyboard, Alert } from "react-native";
 import { Background } from "../components/Background";
 import { FoodLogo } from "../components/FoodLogo";
 import { loginStyles } from "../theme/LoginTheme";
@@ -14,20 +14,30 @@ import { AuthContext } from "../context/AuthContext";
 interface Props extends StackScreenProps<any, any> {}
 
 export default function LoginScreen({navigation}:Props) {
-    const [hidePassword, setHidePassword] = useState(false)
+    const [hidePassword, setHidePassword] = useState(true)
     
     const { email, password, onChange } = useForm({
         email: '',
         password: '' 
      });
 
-     const { iniciarSesion } = useContext( AuthContext );
+     const { iniciarSesion, MensajeError, quitarError} = useContext( AuthContext );
 
      const onLogin = () => {
         console.log({email, password});
         Keyboard.dismiss();
         iniciarSesion({ email, password });
     }
+
+    useEffect(() => {
+        if( MensajeError.length === 0 ) return;
+
+        Alert.alert( 'Inicio de sesion fallido ', MensajeError,[{
+            text: 'Ok',
+            onPress: quitarError
+        }]);
+
+    }, [ MensajeError ])
 
     const getPassword = (value : string) => onChange(value, 'password')
     return (
@@ -41,10 +51,9 @@ export default function LoginScreen({navigation}:Props) {
             >
 
 
-            <View  > 
+            <View style={{marginBottom:25}} > 
                 <FoodLogo />
 
-                <Text style={ loginStyles.title }>Iniciar Sesion</Text>
                 <Text style={ loginStyles.label }>Email:</Text>
                 <Input 
                     placeholder="Ingrese su email"
@@ -65,8 +74,18 @@ export default function LoginScreen({navigation}:Props) {
                  <Text style={ loginStyles.label }>Contraseña:</Text>
                  <InputPassword  onSubmitediting= {onLogin} getPass={getPassword} pass={password} secureTextEntry={hidePassword} onPress={() => setHidePassword(!hidePassword)} />
                  
+                {/* Olvide contrasenia */}  
+               
+                <View style={ loginStyles.rememberPassContainer  }>
+                            <TouchableOpacity
+                                activeOpacity={ 0.8 }
+                                onPress={ () => navigation.replace('HomeDrawer') }
+                            >
+                                <Text style={ loginStyles.buttonText }>¿Olvidaste tu contraseña? </Text>
+                            </TouchableOpacity>
+                </View> 
                 
-                
+                </View>
                 {/* Boton login */}
                 <View style={ loginStyles.buttonContainer }>
                             <TouchableOpacity
@@ -89,17 +108,8 @@ export default function LoginScreen({navigation}:Props) {
                             </TouchableOpacity>
                 </View>
 
-                 {/* Olvide contrasenia */}  
-               
-                <View style={ loginStyles.rememberPassContainer  }>
-                            <TouchableOpacity
-                                activeOpacity={ 0.8 }
-                                onPress={ () => navigation.replace('HomeDrawer') }
-                            >
-                                <Text style={ loginStyles.buttonText }>Olvide mi contraseña </Text>
-                            </TouchableOpacity>
-                </View>            
-            </View>
+                            
+            
             </KeyboardAwareScrollView>
         </>
     )

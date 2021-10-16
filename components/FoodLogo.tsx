@@ -4,13 +4,16 @@ import { Image, View } from 'react-native'
 export const FoodLogo = () => {
     return (
         <View style={{
-            alignItems: 'center'
+            alignItems: 'center',
+            marginBottom: 20
         }}>
             <Image 
-                source={ require('../images/foodMonks.png') }
+                source={ require('../images/FoodMonks-logo_letras.png') }
                 style={{
-                    width: 200,
-                    height: 200 
+                    aspectRatio: 3,      
+                    resizeMode: 'contain',
+
+                    
                 }}
             />
         </View>
