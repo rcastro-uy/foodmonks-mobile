@@ -1,17 +1,19 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { View, StyleSheet } from 'react-native'
 import * as Animatable from 'react-native-animatable'
 import { StackScreenProps } from '@react-navigation/stack';
+import { AuthContext } from '../context/AuthContext';
 
 interface Props extends StackScreenProps<any, any> {}
 
 export const SplashScreen = ({ navigation }: Props) =>  {
   
+  const { estado } = useContext( AuthContext );
     useEffect(() => {
  
           setTimeout(() => {
            
-            navigation.replace('Login')
+          navigation.replace('LoadingScreen');
           }, 3000)     
     })
   

@@ -5,6 +5,7 @@ import LoginScreen from "../screens/LoginScreen";
 import DrawerNavigator from "./DrawerNavigator";
 import { AuthContext } from "../context/AuthContext";
 import SplashScreen from "../screens/SplashScreen";
+import { LoadingScreen } from "../screens/LoadingScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -19,16 +20,25 @@ const screenOptionStyle = {
 const MainStackNavigator = () => {
 
   const { estado } = useContext( AuthContext );
+
+
   return (
     <Stack.Navigator
     screenOptions={{
         headerShown: false
       }}>
-        <Stack.Screen name="SplashScreen" component={ SplashScreen } />
+       
       {
+        
+          
+       
+        
+      
         (estado !== 'autenticado') 
           ? (
               <>
+                <Stack.Screen name="SplashScreen" component={ SplashScreen } />
+                <Stack.Screen name="LoadingScreen" component={ LoadingScreen } />
                 <Stack.Screen name="Login" component={LoginScreen} />
               </>
             )

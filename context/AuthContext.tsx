@@ -84,7 +84,10 @@ export const AuthProvider = ({children}: any) =>{
             
         }
     }
-    const cerrarSesion = () =>  {}
+    const cerrarSesion = async() => {
+        await AsyncStorage.removeItem('token');
+        dispatch({ type: 'cerrarSesion' });
+    };
     const quitarError = () =>  {
         dispatch({type: 'quitarError'})
     }
