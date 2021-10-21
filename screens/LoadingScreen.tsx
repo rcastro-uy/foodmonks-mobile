@@ -11,11 +11,8 @@ export const LoadingScreen = ({ navigation }: Props) => {
  
           setTimeout(() => {
            
-            if (estado!=='autenticado')
-            navigation.replace('Login');
-            else
-            navigation.replace('HomeDrawer');
-          }, 3000)     
+            navigation.navigate('HomeDrawer');
+          }, 1000)     
     })
 
     return (

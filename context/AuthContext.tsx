@@ -10,17 +10,20 @@ interface AuthContextProps {
     token: string | null;
     usuario: UserInfoResponse | null;
     estado: 'chequear' | 'autenticado' | 'no-autenticado';
+    primerCarga: boolean;
     registrarCuenta: (  ) => void;
     iniciarSesion: ( loginData : LoginData ) => void;
     cerrarSesion: () => void;
     quitarError: () => void;
+    cambiarPrimerCarga: () => void;
 }
 
 const authInicialState: AuthState = {
     MensajeError: '',
     token: null,
     usuario: null,
-    estado: 'chequear'
+    estado: 'chequear',
+    primerCarga : true
 }
 
 
@@ -39,11 +42,28 @@ export const AuthProvider = ({children}: any) =>{
         
         console.log ("token en memoria: " + token)
         //No hay token
-        //if (!token) return dispatch({type: 'noAutenticado'})
+        if (!token) return dispatch({type: 'noAutenticado'})
 
         //Hay token (falta agregar que valide el token que tenemos contra el back)
+        const resp = await foodMonksApi.get<UserInfoResponse>('/v1/auth/userinfo', {
+            headers: {
+                Authorization: "Bearer " + token,
+              }
+        });
+
+        if ( resp.status !== 200 ) {
+            return dispatch({ type: 'noAutenticado' });
+        }
         //lo voy a necesitar para guardar el nuevo token en caso que sea necesario
         //await AsyncStorage.setItem('token', resp1.data.token)
+        dispatch({ 
+            type: 'iniciarSesion',
+            payload: {
+                token: token,
+                usuario: resp.data,
+                primerCarga: false,
+            }
+        });
     }
 
     const registrarCuenta = () => {}
@@ -64,7 +84,8 @@ export const AuthProvider = ({children}: any) =>{
                         type: 'iniciarSesion',
                         payload: {
                             token: resp1.data.token,
-                            usuario: resp.data
+                            usuario: resp.data,
+                            primerCarga: false
                         }
                     });
                  await AsyncStorage.setItem('token', resp1.data.token)
@@ -92,13 +113,18 @@ export const AuthProvider = ({children}: any) =>{
         dispatch({type: 'quitarError'})
     }
 
+    const cambiarPrimerCarga = () =>  {
+        dispatch({type: 'cambiarPrimerCarga'})
+    }
+
     return(
         <AuthContext.Provider value={{
             ...state,
             registrarCuenta,
             iniciarSesion,
             cerrarSesion,
-            quitarError 
+            quitarError,
+            cambiarPrimerCarga
         }}>
             {children}
         </AuthContext.Provider>

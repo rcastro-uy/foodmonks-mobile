@@ -2,6 +2,7 @@ import { UserInfoResponse } from "../interfaces/appInterfaces";
 
 
 export interface AuthState {
+    primerCarga:boolean;
     estado: 'chequear' | 'autenticado' | 'no-autenticado';
     token: string | null;
     MensajeError: string;
@@ -9,11 +10,12 @@ export interface AuthState {
 }
 
 type AuthAction = 
-    | { type: 'iniciarSesion', payload: { token: string, usuario: UserInfoResponse  }}
+    | { type: 'iniciarSesion', payload: { token: string, usuario: UserInfoResponse, primerCarga:boolean  }}
     | { type: 'error', payload: string }
     | { type: 'quitarError' }
     | { type: 'noAutenticado' }
     | { type: 'cerrarSesion' }
+    | { type: 'cambiarPrimerCarga' }
 
 
     export const authReducer = ( state: AuthState, action: AuthAction ): AuthState => {
@@ -51,6 +53,14 @@ type AuthAction =
                     token: null,
                     usuario: null
                 }
+            
+                case 'cambiarPrimerCarga':
+                return {
+                    ...state,
+                    primerCarga: false
+                };
+
+
     
             default:
                 return state;

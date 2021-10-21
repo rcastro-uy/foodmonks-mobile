@@ -4,16 +4,17 @@ import * as Animatable from 'react-native-animatable'
 import { StackScreenProps } from '@react-navigation/stack';
 import { AuthContext } from '../context/AuthContext';
 
+
 interface Props extends StackScreenProps<any, any> {}
 
-export const SplashScreen = ({ navigation }: Props) =>  {
+export const SplashScreen = () =>  {
+  const { cambiarPrimerCarga } = useContext( AuthContext );
   
-  const { estado } = useContext( AuthContext );
     useEffect(() => {
  
           setTimeout(() => {
-           
-          navigation.replace('LoadingScreen');
+           cambiarPrimerCarga();
+          
           }, 3000)     
     })
   
