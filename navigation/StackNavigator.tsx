@@ -38,6 +38,7 @@ const MainStackNavigator = () => {
             )
           : (
               <>
+              
                  <Stack.Screen name="LoadingScreen" component={ LoadingScreen } />
                 <Stack.Screen name="HomeDrawer" component={DrawerNavigator} options={{ headerShown: false }}/>
               </>
