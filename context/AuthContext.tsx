@@ -34,7 +34,11 @@ export const AuthProvider = ({children}: any) =>{
     const [ state, dispatch ] = useReducer( authReducer, authInicialState);
 
     useEffect(() =>{
-        comprobarToken();
+
+        setTimeout(() => {
+            comprobarToken();
+           }, 2000)   
+        
     }, [])
 
     const comprobarToken = async () => {
