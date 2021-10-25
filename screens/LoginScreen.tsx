@@ -102,7 +102,7 @@ export default function LoginScreen({navigation}:Props) {
                             <TouchableOpacity
                                 activeOpacity={ 0.8 }
                                 style={loginStyles.buttonRegistrar}
-                                onPress={ () => navigation.replace('HomeDrawer') }
+                                onPress={ () => navigation.navigate('RegisterScreen') }
                             >
                                 <Text style={ loginStyles.buttonTextRegistrar }>Registrarse </Text>
                             </TouchableOpacity>
