@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useReducer } from "react";
+import { Buffer } from "buffer"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import foodMonksApi from "../api/foodMonksApi";
 import { LoginData, LoginResponse, UserInfoResponse } from "../interfaces/appInterfaces";
@@ -72,10 +73,12 @@ export const AuthProvider = ({children}: any) =>{
 
     const registrarCuenta = () => {}
     const iniciarSesion = async( {email, password} : LoginData) => {
-
+        
+        
         try {
-
-            const resp1 = await foodMonksApi.post<LoginResponse>('/v1/auth/login', { email, password } );
+            let buff = Buffer.from(password, "utf8");
+            let passEncode = buff.toString('base64');
+            const resp1 = await foodMonksApi.post<LoginResponse>('/v1/auth/login', { email, passEncode } );
             if (resp1.data.token != null){
                 try {
                     const resp = await foodMonksApi.get<UserInfoResponse>('/v1/auth/userinfo', {
@@ -95,7 +98,10 @@ export const AuthProvider = ({children}: any) =>{
                  await AsyncStorage.setItem('token', resp1.data.token)
            
                 } catch (error: any) {
-                    console.log(error.response.data.message);
+                    dispatch({ 
+                        type: 'error', 
+                        payload: "Algo Salio mal! Vuelva a intentar" || 'Información incorrecta'
+                    });
                 }
             }
             console.log(resp1.data.token);
@@ -103,7 +109,7 @@ export const AuthProvider = ({children}: any) =>{
         } catch (error : any) {
             dispatch({ 
                 type: 'error', 
-                payload: error.response.data.message || 'Información incorrecta'
+                payload: "Algo Salio mal! Usuario o contraseña incorrecto" || 'Información incorrecta'
             });
             //console.log(error.response.data.message);
             
