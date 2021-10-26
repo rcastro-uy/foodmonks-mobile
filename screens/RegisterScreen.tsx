@@ -16,14 +16,19 @@ export const RegisterScreen = ({navigation}:Props) => {
     
     const [hidePassword, setHidePassword] = useState(true)
 
-    const { nombre, email, password, onChange } = useForm({
+    const { nombre, apellido, calle, numCasa,esquina,observacion, email, password, onChange } = useForm({
         nombre: '',
+        apellido: '',
+        calle: '',
+        numCasa: '',
+        esquina: '',
+        observacion: '',
         email: '',
-        password: '' 
+        password: ''
      });
 
      const onRegister = () => {
-        console.log({email, password});
+        console.log({nombre,apellido,calle,numCasa,esquina,observacion,email, password});
         Keyboard.dismiss();
     }
     const getPassword = (value : string) => onChange(value, 'password')
@@ -52,7 +57,7 @@ export const RegisterScreen = ({navigation}:Props) => {
             inputContainerStyle={registerStyles.inputField}
             leftIcon={<Ionicons size={24} color={"#FD801E"} 
             type={'font-awesome'} name="person"/>}
-            selectionColor="black"
+            selectionColor="white"
 
             onChangeText = {(value) => onChange(value, 'nombre')}
             value={nombre}
@@ -68,10 +73,10 @@ export const RegisterScreen = ({navigation}:Props) => {
             inputContainerStyle={registerStyles.inputField}
             leftIcon={<Ionicons size={24} color={"#FD801E"} 
             type={'font-awesome'} name="person"/>}
-            selectionColor="black"
+            selectionColor="white"
 
-            onChangeText = {(value) => onChange(value, 'nombre')}
-            value={nombre}
+            onChangeText = {(value) => onChange(value, 'apellido')}
+            value={apellido}
 
         autoCapitalize="words"
             autoCorrect={ false }
@@ -84,10 +89,10 @@ export const RegisterScreen = ({navigation}:Props) => {
             inputContainerStyle={registerStyles.inputField}
             leftIcon={<Entypo  size={24} color={"#FD801E"} 
             type={'font-awesome'} name="address"/>}
-            selectionColor="black"
+            selectionColor="white"
 
-            onChangeText = {(value) => onChange(value, 'nombre')}
-            value={nombre}
+            onChangeText = {(value) => onChange(value, 'calle')}
+            value={calle}
 
         autoCapitalize="words"
             autoCorrect={ false }
@@ -96,14 +101,15 @@ export const RegisterScreen = ({navigation}:Props) => {
         <Text style={ registerStyles.label }>Numero de casa:</Text>
         <Input 
             placeholder="Ingrese numero"
+            keyboardType='numeric'
             placeholderTextColor="rgba(255,80,40,0.3)"
             inputContainerStyle={registerStyles.inputField}
             leftIcon={<Entypo  size={24} color={"#FD801E"} 
             type={'font-awesome'} name="address"/>}
-            selectionColor="black"
+            selectionColor="white"
 
-            onChangeText = {(value) => onChange(value, 'nombre')}
-            value={nombre}
+            onChangeText = {(value) => onChange(value, 'numCasa')}
+            value={numCasa}
 
         autoCapitalize="words"
             autoCorrect={ false }
@@ -116,10 +122,10 @@ export const RegisterScreen = ({navigation}:Props) => {
             inputContainerStyle={registerStyles.inputField}
             leftIcon={<Entypo  size={24} color={"#FD801E"} 
             type={'font-awesome'} name="address"/>}
-            selectionColor="black"
+            selectionColor="white"
 
-            onChangeText = {(value) => onChange(value, 'nombre')}
-            value={nombre}
+            onChangeText = {(value) => onChange(value, 'esquina')}
+            value={esquina}
 
         autoCapitalize="words"
             autoCorrect={ false }
@@ -132,10 +138,10 @@ export const RegisterScreen = ({navigation}:Props) => {
             inputContainerStyle={registerStyles.inputField}
             leftIcon={<Entypo  size={24} color={"#FD801E"} 
             type={'font-awesome'} name="address"/>}
-            selectionColor="black"
+            selectionColor="white"
 
-            onChangeText = {(value) => onChange(value, 'nombre')}
-            value={nombre}
+            onChangeText = {(value) => onChange(value, 'observacion')}
+            value={observacion}
 
         autoCapitalize="words"
             autoCorrect={ false }
@@ -149,11 +155,10 @@ export const RegisterScreen = ({navigation}:Props) => {
             leftIcon={<MaterialCommunityIcons size={24} color={"#FD801E"} 
             type={'font-awesome'} name="email-plus"/>}
             keyboardType="email-address"
-            selectionColor="black"
+            selectionColor="white"
 
             onChangeText = {(value) => onChange(value, 'email')}
             value={email}
-            onSubmitEditing={ onRegister }
 
         autoCapitalize="none"
             autoCorrect={ false }
