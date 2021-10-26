@@ -26,7 +26,7 @@ export default function LoginScreen({navigation}:Props) {
      const onLogin = () => {
         console.log({email, password});
         Keyboard.dismiss();
-        iniciarSesion({ email, password });
+        iniciarSesion({ correo: email, contraseña : password });
     }
 
     useEffect(() => {

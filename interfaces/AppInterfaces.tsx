@@ -18,6 +18,6 @@ export interface Role {
 }
 
 export interface LoginData {
-    email: string,
-    password: string
+    correo: string,
+    contraseña: string
 }

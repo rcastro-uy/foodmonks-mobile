@@ -72,13 +72,13 @@ export const AuthProvider = ({children}: any) =>{
     }
 
     const registrarCuenta = () => {}
-    const iniciarSesion = async( {email, password} : LoginData) => {
+    const iniciarSesion = async( {correo, contraseña} : LoginData) => {
         
         
         try {
-            let buff = Buffer.from(password, "utf8");
-            let passEncode = buff.toString('base64');
-            const resp1 = await foodMonksApi.post<LoginResponse>('/v1/auth/login', { email, passEncode } );
+            let password = Buffer.from(contraseña, "utf8").toString('base64');
+            let email = Buffer.from(correo, "utf8").toString('base64');
+            const resp1 = await foodMonksApi.post<LoginResponse>('/v1/auth/login', { email, password } );
             if (resp1.data.token != null){
                 try {
                     const resp = await foodMonksApi.get<UserInfoResponse>('/v1/auth/userinfo', {
