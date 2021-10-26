@@ -1,19 +1,22 @@
 import { Dimensions, Platform, StyleSheet } from "react-native";
 
 const { width: windowWidth } = Dimensions.get('window');
-export const loginStyles = StyleSheet.create ({
+export const registerStyles = StyleSheet.create ({
+    headerContainer: {
+        marginTop: 20
+    },
     formContainer: {
         
-        flex: 1,
         paddingHorizontal: 11,
         justifyContent:'center',
         
     },
     title: {
         color: '#FD801E',
-        fontSize: 30,
+        fontSize: 20,
         fontWeight: 'bold',
-        marginTop: -10
+        marginTop: -30,
+        textAlign: 'center'
     },
     label: {
         marginTop: 25,
@@ -67,5 +70,15 @@ export const loginStyles = StyleSheet.create ({
     rememberPassContainer: {
         alignItems: 'flex-end',
         marginTop: -10
+    },
+    buttonReturn: {
+        position: 'absolute',
+        top: 50,
+        left: 20,
+        borderWidth: 1,
+        borderColor: 'orange',
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        borderRadius: 100
     }
 })
