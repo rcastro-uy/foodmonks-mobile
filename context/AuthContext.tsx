@@ -93,7 +93,7 @@ export const AuthProvider = ({children}: any) =>{
             });
         }
     }
-    const iniciarSesion = async( {email, password} : LoginData) => {
+    const iniciarSesion = async( {correo, contraseña} : LoginData) => {
 
         try {
             let password = Buffer.from(contraseña, "utf8").toString('base64');
