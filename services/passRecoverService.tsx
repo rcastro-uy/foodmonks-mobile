@@ -1,6 +1,7 @@
 import { API_URL } from "@env";
 import axios from "axios";
 import { Alert } from "react-native";
+import { validateEmail } from "../utils/helpers";
 
 export function passRecoverService(email: string) {
     console.log(`${API_URL}`)
@@ -17,11 +18,21 @@ export function passRecoverService(email: string) {
             // },
         });
     };
-    if (email === "" || email === "Correo") {
+    if (email === "") {
         return (
             Alert.alert(
                 "Solicitud no enviada",
                 `Ingrese el correo`,
+                [
+                    { text: "OK", style: "default" }
+                ]
+            )
+        );
+    } else if (!validateEmail(email)) {
+        return (
+            Alert.alert(
+                "Solicitud no enviada",
+                `Ingrese un correo valido`,
                 [
                     { text: "OK", style: "default" }
                 ]
