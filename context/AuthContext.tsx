@@ -45,8 +45,7 @@ export const AuthProvider = ({children}: any) =>{
     const comprobarToken = async () => {
         const token = await AsyncStorage.getItem('token');
         const refreshToken = await AsyncStorage.getItem('refreshToken')
-        console.log ("token en memoria: " + token)
-        console.log ("refreshToken en memoria: " + refreshToken)
+        
         //No hay token
         if (!token) return dispatch({type: 'noAutenticado'})
 
@@ -111,7 +110,7 @@ export const AuthProvider = ({children}: any) =>{
                     });
                 }
             }
-            console.log(resp1.data.token);
+           
             
         } catch (error : any) {
             dispatch({ 

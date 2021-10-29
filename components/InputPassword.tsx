@@ -5,6 +5,7 @@ import { Input } from 'react-native-elements';
 import { loginStyles } from '../theme/LoginTheme';
 
 interface Props {
+  errorMessage: string,
   onSubmitediting : any,
   getPass : any,
   pass: string,
@@ -27,7 +28,7 @@ export default function InputPassword(props : Props){
         source = { (props.secureTextEntry) ? require('../images/hidePassword.png') : require('../images/viewPassword.png')}/>
         </TouchableOpacity>}
         secureTextEntry={props.secureTextEntry}
-        
+        errorMessage={props.errorMessage}
         //value={props.value}
         onChangeText = {(value) => props.getPass(value)}
         value={props.pass}
