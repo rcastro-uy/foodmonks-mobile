@@ -132,7 +132,6 @@ export const RegisterScreen = ({navigation}:Props) => {
         }
         let passBase = Buffer.from(password, "utf8").toString('base64');
         registrarCuenta({nombre,apellido,correo : email,password : passBase, direccion: direccion})
-       console.log({passBase});
         Keyboard.dismiss();
     }
 
