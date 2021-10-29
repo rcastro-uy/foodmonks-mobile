@@ -10,6 +10,7 @@ import InputPassword from "../components/InputPassword";
 import { useForm } from "../hooks/useForm";
 import { StackScreenProps } from "@react-navigation/stack";
 import { AuthContext } from "../context/AuthContext";
+import { validateEmail } from "../utils/helpers";
 
 interface Props extends StackScreenProps<any, any> {}
 
@@ -21,12 +22,35 @@ export default function LoginScreen({navigation}:Props) {
         password: '' 
      });
 
+     //para validaciones de inputs
+     const [errorEmail, setErrorEmail] = useState("")
+     const [errorPassword, setErrorPassword] = useState("")
+
+     // funcion para validar los inputs 
+    const validateData = () => {
+        setErrorEmail("")
+        setErrorPassword("")
+        
+        let isValid = true
+        
+        if(password==='') {
+            setErrorPassword("Debe ingresar su contraseña.")
+            isValid = false
+        }
+        
+        if(!validateEmail(email)) {
+            setErrorEmail("Debe ingresar un email válido.")
+            isValid = false
+        }
+        return isValid
+    }   
+
      const { iniciarSesion, MensajeError, quitarError} = useContext( AuthContext );
 
      const onLogin = () => {
-        console.log({email, password});
+        if (!validateData()) return ;
         Keyboard.dismiss();
-        iniciarSesion({ email, password });
+        iniciarSesion({ correo: email, contraseña : password });
     }
 
     useEffect(() => {
@@ -63,7 +87,7 @@ export default function LoginScreen({navigation}:Props) {
                     type={'font-awesome'} name="person"/>}
                     keyboardType="email-address"
                     selectionColor="black"
-
+                    errorMessage={errorEmail}
                     onChangeText = {(value) => onChange(value, 'email')}
                     value={email}
                     onSubmitEditing={ onLogin }
@@ -72,7 +96,7 @@ export default function LoginScreen({navigation}:Props) {
                     autoCorrect={ false }
                 />
                  <Text style={ loginStyles.label }>Contraseña:</Text>
-                 <InputPassword  onSubmitediting= {onLogin} getPass={getPassword} pass={password} secureTextEntry={hidePassword} onPress={() => setHidePassword(!hidePassword)} />
+                 <InputPassword errorMessage={errorPassword} onSubmitediting= {onLogin} getPass={getPassword} pass={password} secureTextEntry={hidePassword} onPress={() => setHidePassword(!hidePassword)} />
                  
                 {/* Olvide contrasenia */}  
                

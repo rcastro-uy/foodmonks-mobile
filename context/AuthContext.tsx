@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useReducer } from "react";
+import { Buffer } from "buffer"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import foodMonksApi from "../api/foodMonksApi";
 import { LoginData, LoginResponse, UserInfoResponse } from "../interfaces/appInterfaces";
@@ -34,28 +35,36 @@ export const AuthProvider = ({children}: any) =>{
     const [ state, dispatch ] = useReducer( authReducer, authInicialState);
 
     useEffect(() =>{
-        comprobarToken();
+
+        setTimeout(() => {
+            comprobarToken();
+           }, 2000)   
+        
     }, [])
 
     const comprobarToken = async () => {
         const token = await AsyncStorage.getItem('token');
+        const refreshToken = await AsyncStorage.getItem('refreshToken')
         
-        console.log ("token en memoria: " + token)
         //No hay token
         if (!token) return dispatch({type: 'noAutenticado'})
 
-        //Hay token (falta agregar que valide el token que tenemos contra el back)
+        //Hay token
         const resp = await foodMonksApi.get<UserInfoResponse>('/v1/auth/userinfo', {
             headers: {
                 Authorization: "Bearer " + token,
+                RefreshAuthentication: "Bearer " + refreshToken,
               }
         });
 
         if ( resp.status !== 200 ) {
             return dispatch({ type: 'noAutenticado' });
         }
-        //lo voy a necesitar para guardar el nuevo token en caso que sea necesario
-        //await AsyncStorage.setItem('token', resp1.data.token)
+
+        if (token !== resp.config.headers!.Authorization || refreshToken !== resp.config.headers!.RefreshAuthentication ){
+            await AsyncStorage.setItem('refreshToken', resp.config.headers!.RefreshAuthentication)
+            await AsyncStorage.setItem('token', resp.config.headers!.Authorization)
+        }
         dispatch({ 
             type: 'iniciarSesion',
             payload: {
@@ -67,19 +76,22 @@ export const AuthProvider = ({children}: any) =>{
     }
 
     const registrarCuenta = () => {}
-    const iniciarSesion = async( {email, password} : LoginData) => {
-
+    const iniciarSesion = async( {correo, contraseña} : LoginData) => {
+        
+        
         try {
-
+            let password = Buffer.from(contraseña, "utf8").toString('base64');
+            let email = Buffer.from(correo, "utf8").toString('base64');
             const resp1 = await foodMonksApi.post<LoginResponse>('/v1/auth/login', { email, password } );
             if (resp1.data.token != null){
                 try {
                     const resp = await foodMonksApi.get<UserInfoResponse>('/v1/auth/userinfo', {
                         headers: {
                             Authorization: "Bearer " + resp1.data.token,
+                            RefreshAuthentication: "Bearer " + resp1.data.refreshToken,
                           }
                     });
-                    console.log(resp.data)
+                    
                     dispatch({ 
                         type: 'iniciarSesion',
                         payload: {
@@ -88,18 +100,22 @@ export const AuthProvider = ({children}: any) =>{
                             primerCarga: false
                         }
                     });
+                 await AsyncStorage.setItem('refreshToken', resp1.data.refreshToken)
                  await AsyncStorage.setItem('token', resp1.data.token)
            
                 } catch (error: any) {
-                    console.log(error.response.data.message);
+                    dispatch({ 
+                        type: 'error', 
+                        payload: "Algo Salio mal! Vuelva a intentar" || 'Información incorrecta'
+                    });
                 }
             }
-            console.log(resp1.data.token);
+           
             
         } catch (error : any) {
             dispatch({ 
                 type: 'error', 
-                payload: error.response.data.message || 'Información incorrecta'
+                payload: "Algo Salio mal! Usuario o contraseña incorrecto" || 'Información incorrecta'
             });
             //console.log(error.response.data.message);
             
@@ -107,6 +123,7 @@ export const AuthProvider = ({children}: any) =>{
     }
     const cerrarSesion = async() => {
         await AsyncStorage.removeItem('token');
+        await AsyncStorage.removeItem('refreshToken');
         dispatch({ type: 'cerrarSesion' });
     };
     const quitarError = () =>  {
