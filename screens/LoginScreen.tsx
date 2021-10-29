@@ -96,6 +96,7 @@ export default function LoginScreen({navigation}:Props) {
                     autoCorrect={ false }
                 />
                  <Text style={ loginStyles.label }>Contraseña:</Text>
+
                  <InputPassword errorMessage={errorPassword} onSubmitediting= {onLogin} getPass={getPassword} pass={password} secureTextEntry={hidePassword} onPress={() => setHidePassword(!hidePassword)} />
                  
                 {/* Olvide contrasenia */}  
@@ -126,7 +127,7 @@ export default function LoginScreen({navigation}:Props) {
                             <TouchableOpacity
                                 activeOpacity={ 0.8 }
                                 style={loginStyles.buttonRegistrar}
-                                onPress={ () => navigation.replace('HomeDrawer') }
+                                onPress={ () => navigation.navigate('RegisterScreen') }
                             >
                                 <Text style={ loginStyles.buttonTextRegistrar }>Registrarse </Text>
                             </TouchableOpacity>

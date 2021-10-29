@@ -2,24 +2,27 @@ import React, { createContext, useEffect, useReducer } from "react";
 import { Buffer } from "buffer"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import foodMonksApi from "../api/foodMonksApi";
-import { LoginData, LoginResponse, UserInfoResponse } from "../interfaces/appInterfaces";
+import { LoginData, LoginResponse, NuevoCliente, UserInfoResponse } from "../interfaces/AppInterfaces";
 import { authReducer, AuthState } from "./AuthReducer";
 
 
 interface AuthContextProps {
+    MensajeOk: string
     MensajeError: string;
     token: string | null;
     usuario: UserInfoResponse | null;
     estado: 'chequear' | 'autenticado' | 'no-autenticado';
     primerCarga: boolean;
-    registrarCuenta: (  ) => void;
+    registrarCuenta: (NuevoCliente : NuevoCliente ) => void;
     iniciarSesion: ( loginData : LoginData ) => void;
     cerrarSesion: () => void;
     quitarError: () => void;
+    quitarMensajeOk: () => void
     cambiarPrimerCarga: () => void;
 }
 
 const authInicialState: AuthState = {
+    MensajeOk: '',
     MensajeError: '',
     token: null,
     usuario: null,
@@ -75,10 +78,23 @@ export const AuthProvider = ({children}: any) =>{
         });
     }
 
-    const registrarCuenta = () => {}
-    const iniciarSesion = async( {correo, contraseña} : LoginData) => {
-        
-        
+    const registrarCuenta = async ({nombre, apellido,correo,password,direccion} : NuevoCliente) => {
+
+         try{
+            const resp1 = await foodMonksApi.post('/v1/cliente/altaCliente', { nombre,apellido,correo,password,direccion } );
+            dispatch({ 
+                type: 'exito', 
+                payload: 'Su cuenta se creó correctamente'
+            });
+        } catch (error: any) {
+            dispatch({ 
+                type: 'error', 
+                payload: error.response.data || 'El correo ya esta registrado'
+            });
+        }
+    }
+    const iniciarSesion = async( {email, password} : LoginData) => {
+
         try {
             let password = Buffer.from(contraseña, "utf8").toString('base64');
             let email = Buffer.from(correo, "utf8").toString('base64');
@@ -130,6 +146,10 @@ export const AuthProvider = ({children}: any) =>{
         dispatch({type: 'quitarError'})
     }
 
+    const quitarMensajeOk = () =>  {
+        dispatch({type: 'quitarMensajeOk'})
+    }
+
     const cambiarPrimerCarga = () =>  {
         dispatch({type: 'cambiarPrimerCarga'})
     }
@@ -141,6 +161,7 @@ export const AuthProvider = ({children}: any) =>{
             iniciarSesion,
             cerrarSesion,
             quitarError,
+            quitarMensajeOk,
             cambiarPrimerCarga
         }}>
             {children}

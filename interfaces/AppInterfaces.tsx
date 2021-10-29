@@ -21,3 +21,20 @@ export interface LoginData {
     correo: string,
     contraseña: string
 }
+
+export interface NuevoCliente {
+    nombre: string;
+    apellido: string;
+    correo : string;
+    password: string;
+    direccion: Direccion;
+}
+
+export interface Direccion {
+    calle: string;
+    numero: string;
+    esquina: string;
+    detalles: string;
+    latitud: number;
+    longitud: number;
+}
