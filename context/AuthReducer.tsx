@@ -6,6 +6,7 @@ export interface AuthState {
     estado: 'chequear' | 'autenticado' | 'no-autenticado';
     token: string | null;
     MensajeError: string;
+    MensajeOk: string
     usuario: UserInfoResponse | null;
 }
 
@@ -16,6 +17,8 @@ type AuthAction =
     | { type: 'noAutenticado' }
     | { type: 'cerrarSesion' }
     | { type: 'cambiarPrimerCarga' }
+    | { type: 'quitarMensajeOk' }
+    | { type: 'exito', payload: string }
 
 
     export const authReducer = ( state: AuthState, action: AuthAction ): AuthState => {
@@ -29,12 +32,24 @@ type AuthAction =
                     token: null,
                     MensajeError: action.payload
                 }
+            
+            case 'exito':
+               return {
+                    ...state,
+                    MensajeOk: action.payload
+                    }
         
             case 'quitarError':
                 return {
                     ...state,
                     MensajeError: ''
                 };
+
+                case 'quitarMensajeOk':
+                    return {
+                        ...state,
+                        MensajeOk: ''
+                    };
     
             case 'iniciarSesion':
                 return {

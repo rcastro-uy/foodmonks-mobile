@@ -72,7 +72,7 @@ export default function LoginScreen({navigation}:Props) {
                     autoCorrect={ false }
                 />
                  <Text style={ loginStyles.label }>Contraseña:</Text>
-                 <InputPassword  onSubmitediting= {onLogin} getPass={getPassword} pass={password} secureTextEntry={hidePassword} onPress={() => setHidePassword(!hidePassword)} />
+                 <InputPassword errorMessage={""}  onSubmitediting= {onLogin} getPass={getPassword} pass={password} secureTextEntry={hidePassword} onPress={() => setHidePassword(!hidePassword)} />
                  
                 {/* Olvide contrasenia */}  
                
