@@ -11,7 +11,7 @@ export const LoadingScreen = ({ navigation }: Props) => {
  
           setTimeout(() => {
            
-            navigation.navigate('HomeDrawer');
+            navigation.replace('HomeDrawer');
           }, 1000)     
     })
 
