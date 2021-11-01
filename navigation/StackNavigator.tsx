@@ -7,6 +7,7 @@ import { AuthContext } from "../context/AuthContext";
 import SplashScreen from '../screens/SplashScreen';
 import { LoadingScreen } from "../screens/LoadingScreen";
 import { RegisterScreen } from "../screens/RegisterScreen";
+import RecoveryPasswordScreen from "../screens/RecoverPasswordScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -36,6 +37,7 @@ const MainStackNavigator = () => {
               <>
                 <Stack.Screen name="Login" component={LoginScreen} />
                 <Stack.Screen name="RegisterScreen" component={ RegisterScreen } />
+                <Stack.Screen name="RecoverPasswordScreen" component={ RecoveryPasswordScreen } />
               </>
             )
           : (

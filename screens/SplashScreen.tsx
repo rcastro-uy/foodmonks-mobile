@@ -15,7 +15,7 @@ export const SplashScreen = () =>  {
           setTimeout(() => {
            cambiarPrimerCarga();
           
-          }, 3000)     
+          }, 4000)     
     })
   
       return (

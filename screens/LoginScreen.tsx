@@ -104,7 +104,7 @@ export default function LoginScreen({navigation}:Props) {
                 <View style={ loginStyles.rememberPassContainer  }>
                             <TouchableOpacity
                                 activeOpacity={ 0.8 }
-                                onPress={ () => navigation.replace('HomeDrawer') }
+                                onPress={ () => navigation.navigate('RecoverPasswordScreen') }
                             >
                                 <Text style={ loginStyles.buttonText }>¿Olvidaste tu contraseña? </Text>
                             </TouchableOpacity>
