@@ -86,7 +86,7 @@ export default function ProfileScreen({navigation}:any) {
             style={profileStyles.menuItem}
             renderItem={({item})=>
             
-                <TouchableOpacity onPress={()=>seleccionarOpcion(item.opcion)} style={ profileStyles.containerList } activeOpacity={0.8}>
+             <TouchableOpacity onPress={()=>seleccionarOpcion(item.opcion)} style={ profileStyles.containerList } activeOpacity={0.8}>
                 
                 
             <Icon
@@ -139,15 +139,3 @@ export default function ProfileScreen({navigation}:any) {
  </>       
     )
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'white'
-    },
-   
-       
-
-})

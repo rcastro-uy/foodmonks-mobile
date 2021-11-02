@@ -88,7 +88,7 @@ export default function ChangeNameLastName({ setMostrarModal } : any) {
                     <Button
                         icon={
                             <Icon
-                              name="check-bold"
+                              name="pencil"
                               type="material-community"
                               size={25}
                               color="#FD801E"

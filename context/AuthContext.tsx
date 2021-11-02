@@ -53,29 +53,35 @@ export const AuthProvider = ({children}: any) =>{
         if (!token) return dispatch({type: 'noAutenticado'})
 
         //Hay token
-        const resp = await foodMonksApi.get<UserInfoResponse>('/v1/auth/userinfo', {
-            headers: {
-                Authorization: "Bearer " + token,
-                RefreshAuthentication: "Bearer " + refreshToken,
-              }
-        });
-
-        if ( resp.status !== 200 ) {
+        try{
+             const resp = await foodMonksApi.get<UserInfoResponse>('/v1/auth/userinfo', {
+                headers: {
+                    Authorization: "Bearer " + token,
+                    RefreshAuthentication: "Bearer " + refreshToken,
+                }
+             });
+             
+             const newAuth = resp.config.headers!.Authorization.substring(7);
+             const newRefreshAuth = resp.config.headers!.RefreshAuthentication.substring(7);
+                if(newAuth !== token || newRefreshAuth !== refreshToken) {
+                  localStorage.setItem("token", newAuth);
+                  localStorage.setItem("refreshToken", newRefreshAuth);
+                }
+                
+                dispatch({ 
+                    type: 'iniciarSesion',
+                    payload: {
+                        token: token,
+                        usuario: resp.data,
+                        primerCarga: false,
+                    }
+                });
+            
+        }catch (error: any){
+        
             return dispatch({ type: 'noAutenticado' });
         }
 
-        if (token !== resp.config.headers!.Authorization || refreshToken !== resp.config.headers!.RefreshAuthentication ){
-            await AsyncStorage.setItem('refreshToken', resp.config.headers!.RefreshAuthentication)
-            await AsyncStorage.setItem('token', resp.config.headers!.Authorization)
-        }
-        dispatch({ 
-            type: 'iniciarSesion',
-            payload: {
-                token: token,
-                usuario: resp.data,
-                primerCarga: false,
-            }
-        });
     }
 
     const registrarCuenta = async ({nombre, apellido,correo,password,direccion} : NuevoCliente) => {
