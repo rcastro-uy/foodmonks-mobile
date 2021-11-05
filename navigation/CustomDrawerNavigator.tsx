@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
     SafeAreaView,
     View,
@@ -13,11 +13,12 @@ import {
     DrawerContentScrollView,
     DrawerItemList,
     DrawerItem,
+    DrawerContentComponentProps,
 } from '@react-navigation/drawer';
 
 const { width: windowWidth } = Dimensions.get('window');
 const { height: windowHeight } = Dimensions.get('window');
-export const CustomDrawerNavigator = (props: any) => {
+export const CustomDrawerNavigator = (props: DrawerContentComponentProps) => {
     return (
     <SafeAreaView style={{flex: 1, maxWidth:windowWidth}}>
       <Image
@@ -33,7 +34,7 @@ export const CustomDrawerNavigator = (props: any) => {
         <View style={styles.customItem}>
             <DrawerItem
               label="Restaurantes"
-              onPress={() => console.log()}
+              onPress={() => props.navigation.navigate('Home')}
             />
           <Icon
             name='sc-telegram'
@@ -44,11 +45,11 @@ export const CustomDrawerNavigator = (props: any) => {
       </DrawerContentScrollView>
       <DrawerItem
           label="Perfil"
-          onPress={() => console.log()}
+          onPress={() => props.navigation.navigate('Profile')}
         />
       <DrawerItem
           label="Cerrar sesion"
-          onPress={() => console.log()}
+          onPress={ () => console.log("p") }
         />
     </SafeAreaView>
   );

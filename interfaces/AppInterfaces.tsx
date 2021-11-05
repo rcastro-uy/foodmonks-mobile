@@ -38,3 +38,32 @@ export interface Direccion {
     latitud: number;
     longitud: number;
 }
+
+enum EstadoRestaurante {
+    PENDIENTE,
+    RECHAZADO,
+    ABIERTO,
+    CERRADO,
+    BLOQUEADO,
+    ELIMINADO
+}
+
+export interface Restaurante {
+    correo: string;
+    fechaRegistro: Date;
+    rol: string;
+    estado: EstadoRestaurante;
+    rut: number;
+    descripcion: string;
+    nombre: string;
+    telefono: number;
+    calificacion: number;
+    imagen: string;
+}
+
+export interface RestauranteComp {
+    nombre: string;
+    descripcion: string;
+    imagen: string;
+    calificacion: number;
+}
