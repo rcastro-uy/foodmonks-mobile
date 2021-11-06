@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { color } from "react-native-reanimated";
 
 
 export const profileStyles = StyleSheet.create ({

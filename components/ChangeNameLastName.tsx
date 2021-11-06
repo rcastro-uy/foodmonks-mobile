@@ -5,33 +5,37 @@ import { Button,Input } from 'react-native-elements'
 import { Icon } from 'react-native-elements/dist/icons/Icon'
 import { AuthContext } from '../context/AuthContext'
 import { useForm } from '../hooks/useForm'
+import { modificarPerfil } from '../services/actions'
 import { registerStyles } from '../theme/RegisterTheme'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AddressContext } from '../context/AddressContext'
 
 
-export default function ChangeNameLastName({ setMostrarModal } : any) {
+export default function ChangeNameLastName({toastRef, setMostrarModal, setRefrescar } : any) {
     const [newDisplayName, setNewDisplayName] = useState(null)
     const [errorNombre, setErrorNombre] = useState("")
     const [errorApellido, setErrorApellido] = useState("")
-    const [loading, setLoading] = useState(false)
-    const { usuario} = useContext( AuthContext );
+    const [loading, setLoading] = useState(false)  
 
     const { nombre, apellido, onChange } = useForm({
         nombre: '',
         apellido: '' 
      });
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
         if (!validateForm()) {
             return
         }
-
+       
         setLoading(true)
-        //const result = await updateProfile({ displayName: newDisplayName })
+        const resp = await modificarPerfil(nombre,apellido)
         setLoading(false)
 
-
-        //setRelodUser(true)
-        //toastRef.current.show("Se han actualizado nombres y apellidos.", 3000)
+        if (!resp){
+            return
+        }
+        setRefrescar(true)
+        toastRef.current.show("Se han actualizado nombre y apellido.", 3000)
         setMostrarModal(false)
     }
 

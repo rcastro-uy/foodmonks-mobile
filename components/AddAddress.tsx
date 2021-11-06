@@ -1,16 +1,17 @@
 import { REACT_APP_GOOGLE_MAPS_API_KEY } from '@env'
 import { Entypo, Ionicons } from '@expo/vector-icons'
 import React, { useContext, useEffect, useState } from 'react'
-import { Alert, LogBox, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Keyboard, LogBox, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Button,Input } from 'react-native-elements'
 import { Icon } from 'react-native-elements/dist/icons/Icon'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
 import { AuthContext } from '../context/AuthContext'
 import { useForm } from '../hooks/useForm'
 import { registerStyles } from '../theme/RegisterTheme'
+import { AddressContext } from '../context/AddressContext';
 
 
-export default function AddAddress({ setMostrarModal } : any) {
+export default function AddAddress({ setMostrarModal, toastRef, setRefrescar } : any) {
     
     const [errorEsquina, setErrorEsquina] = useState("")
     const [loading, setLoading] = useState(Boolean)
@@ -22,8 +23,9 @@ export default function AddAddress({ setMostrarModal } : any) {
      const [calle, setCalle] = useState("")
      const [numCasa, setNumCasa] = useState("")
 
-    const { esquina, onChange } = useForm({
-        esquina: '', 
+    const { esquina,detalles, onChange } = useForm({
+        esquina: '',
+        detalles: '' 
      });
 
      useEffect(() => {
@@ -32,18 +34,23 @@ export default function AddAddress({ setMostrarModal } : any) {
        
      }, [])
 
+     const { agregarDireccion} = useContext( AddressContext );
 
-    const onSubmit = () => {
+
+    const onSubmit = async () => {
         if (!validateForm()) {
             return
         }
-        setLoading(true)
-        //const result = await updateProfile({ displayName: newDisplayName })
+        Keyboard.dismiss();
+         setLoading(true)
+            const result = await agregarDireccion(parseInt(numCasa),calle,esquina,detalles,lat,lng)
         setLoading(false)
 
-
-        //setRelodUser(true)
-        //toastRef.current.show("Se han actualizado nombres y apellidos.", 3000)
+        if (!result) {
+        return ;
+        }
+        setRefrescar(true)
+        toastRef.current.show("Direccion agregada correctamente", 3000)
         setMostrarModal(false)
     }
 
@@ -105,6 +112,20 @@ export default function AddAddress({ setMostrarModal } : any) {
             errorMessage={errorEsquina}
             onChangeText = {(value) => onChange(value, 'esquina')}
             value={esquina}
+        autoCapitalize="words"
+            autoCorrect={ false }
+        />
+
+<Text style={ registerStyles.label }>Detalles:</Text>
+        <Input 
+            placeholder="Ingrese detalles"
+            placeholderTextColor="rgba(255,80,40,0.3)"
+            inputContainerStyle={registerStyles.inputField}
+            leftIcon={<Entypo  size={24} color={"#FD801E"} 
+            type={'font-awesome'} name="address"/>}
+            selectionColor="white"
+            onChangeText = {(value) => onChange(value, 'detalles')}
+            value={detalles}
 
         autoCapitalize="words"
             autoCorrect={ false }

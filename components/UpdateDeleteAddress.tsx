@@ -9,16 +9,20 @@ import { AuthContext } from '../context/AuthContext'
 import { useForm } from '../hooks/useForm'
 import { registerStyles } from '../theme/RegisterTheme'
 import { Direccione } from '../interfaces/AppInterfaces';
+import { AddressContext } from '../context/AddressContext'
 
 interface props{
  setMostrarModal: any,
- address: Direccione
+ address: Direccione,
+ setRefrescar: any,
+ toastRef : any
 }
 
-export default function UpdateDeleteAddress({setMostrarModal, address} : props  ) {
+export default function UpdateDeleteAddress({setMostrarModal, toastRef, address, setRefrescar} : props  ) {
     
     const [errorEsquina, setErrorEsquina] = useState("")
-    const [loading, setLoading] = useState(Boolean)
+    const [loadingEliminar, setLoadingEliminar] = useState(Boolean)
+    const [loadingActualizar, setLoadingActualizar] = useState(Boolean)
     const { usuario} = useContext( AuthContext );
 
      //Para latitud, longitud calle y numero
@@ -38,24 +42,48 @@ export default function UpdateDeleteAddress({setMostrarModal, address} : props  
      useEffect(() => {
         //para sacar la advertencia. De momento es la solucion
        LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
-       setLat(parseInt(address.latitud))
-       setLng(parseInt(address.longitud))
+       setLat(address.latitud)
+       setLng(address.longitud)
+       setCalle(address.calle)
+       setNumCasa(address.numero.toString())
        ref.current?.setAddressText(address.calle +' '+ address.numero);
      }, [])
 
+     const { eliminarDireccion, modificarDireccion } = useContext( AddressContext );
 
 
-    const onSubmit = () => {
+    const eliminarDirecc = async () => {
         if (!validateForm()) {
             return
         }
-        setLoading(true)
-        //const result = await updateProfile({ displayName: newDisplayName })
-        setLoading(false)
+        setLoadingEliminar(true)
+        const result = await eliminarDireccion(address.id)
+        setLoadingEliminar(false)
 
+        if (!result) {
+            return ;
+        }
 
+        setRefrescar(true)
         //setRelodUser(true)
-        //toastRef.current.show("Se han actualizado nombres y apellidos.", 3000)
+        toastRef.current.show("Se ha eliminado la direccion correctamente", 3000)
+        setMostrarModal(false)
+    }
+
+    const actualizarDirecc = async () => {
+        if (!validateForm()) {
+            return
+        }
+        setLoadingActualizar(true)
+        const result = await modificarDireccion(address.id, parseInt(numCasa),calle,esquina,detalles,lat,lng)
+        setLoadingActualizar(false)
+
+        if (!result) {
+            return ;
+        }
+
+        setRefrescar(true)
+        toastRef.current.show("Se ha actualizado la direccion correctamente", 3000)
         setMostrarModal(false)
     }
 
@@ -143,7 +171,7 @@ export default function UpdateDeleteAddress({setMostrarModal, address} : props  
         autoCapitalize="words"
             autoCorrect={ false }
         /> 
-            <View style={{flexDirection: "row", padding:20}}>
+            <View style={{flexDirection: "row", padding:10, alignContent:'center'}}>
                 <View style={{flex:1}}>
                     <Button
                         icon={
@@ -159,8 +187,8 @@ export default function UpdateDeleteAddress({setMostrarModal, address} : props  
                         buttonStyle = {styles.buttonActualizar}
                         activeOpacity={ 0.8 }
                         style={ styles.buttonActualizar }
-                        onPress={ onSubmit }
-                        loading= {loading}
+                        onPress={ actualizarDirecc }
+                        loading= {loadingActualizar}
                         title = 'Actualizar'
                         titleStyle= {styles.title}
                     />
@@ -181,8 +209,8 @@ export default function UpdateDeleteAddress({setMostrarModal, address} : props  
                         buttonStyle = {styles.buttonEliminar}
                         activeOpacity={ 0.8 }
                         style={ styles.buttonEliminar }
-                        onPress={ onSubmit }
-                        loading= {loading}
+                        onPress={ eliminarDirecc }
+                        loading= {loadingEliminar}
                         title = 'Eliminar'
                         titleStyle= {styles.title}
                     />

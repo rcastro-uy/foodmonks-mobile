@@ -1,25 +1,39 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { AuthContext } from "../context/AuthContext";
 import { profileStyles } from "../theme/ProfileTheme";
 import { Icon, Button } from "react-native-elements";
+import Toast from 'react-native-easy-toast'
 import AddAddress from '../components/AddAddress';
 import Modal from "../components/Modal";
 import { Direccione } from "../interfaces/AppInterfaces";
 import UpdateDeleteAddress from "../components/UpdateDeleteAddress";
+import { AddressContext } from '../context/AddressContext';
+
 
 export default function AddressScreen({navigation, route}:any) {
 
-    const { usuario } = useContext( AuthContext );
-
+    //const { comprobarToken } = useContext( AuthContext );
+    const toastRef = React.useRef<any>()
+    const { direcciones} = useContext( AddressContext );
+    const [ refrescar, setRefrescar ] = useState( false );
+   
     const [renderComponent, setRenderComponent] = useState(<AddAddress />)
     const [mostrarModal, setMostrarModal] = useState(false)
+
+    
+    useEffect(() => {
+       
+        setRefrescar(false)
+  },[refrescar])
+
+    let id = 0;
 
     const agregarDireccion = () => {
         setRenderComponent(
             <AddAddress
-            setMostrarModal={setMostrarModal}
+            setMostrarModal={setMostrarModal} toastRef={toastRef} setRefrescar={setRefrescar}
         /> 
         )
         setMostrarModal(true)
@@ -28,7 +42,7 @@ export default function AddressScreen({navigation, route}:any) {
     const editarDireccion = (item : Direccione) => {
         setRenderComponent(
             <UpdateDeleteAddress
-            setMostrarModal={setMostrarModal} address={item}
+            setMostrarModal={setMostrarModal} toastRef={toastRef} address={item} setRefrescar={setRefrescar}
         /> 
         )
         setMostrarModal(true)
@@ -41,12 +55,12 @@ export default function AddressScreen({navigation, route}:any) {
     <View style={{top: 25, flex:0.93}}>
      <View style={profileStyles.optionContainer}>
         <FlatList
-            data={usuario?.direcciones}
+            data={direcciones}
             keyExtractor={( p, index) => index.toString()}
-            style={profileStyles.menuItem}
+            style={styles.direccionItem}
             renderItem={({item})=>
             
-                <TouchableOpacity onPress={()=> editarDireccion(item)} style={ profileStyles.containerList } activeOpacity={0.8}>
+                <TouchableOpacity onPress={()=> editarDireccion(item)} style={ styles.containerList } activeOpacity={0.8}>
                 
                 
             <Icon
@@ -63,9 +77,7 @@ export default function AddressScreen({navigation, route}:any) {
             
                 </TouchableOpacity>   
         }
-        ItemSeparatorComponent = { () =>(
-            <View style={profileStyles.separador} />
-        )}
+       
         />
         </View>
         <Modal visible={mostrarModal} setVisible={setMostrarModal}>
@@ -75,6 +87,7 @@ export default function AddressScreen({navigation, route}:any) {
         </Modal>
 
     </View>
+    <Toast ref={toastRef} position="center" opacity={0.9}/>
      <View style={{flex:0.07, alignItems:'center'}}>
      <Button
                         icon={
@@ -91,7 +104,6 @@ export default function AddressScreen({navigation, route}:any) {
                         activeOpacity={ 0.8 }
                         style={ styles.button }
                         onPress={()=>agregarDireccion()}
-                        loading= { null }
                         title = 'Agregar direccion'
                         titleStyle= {styles.title}
                     />
@@ -115,6 +127,20 @@ const styles = StyleSheet.create({
     title: {
         alignItems: 'center',
         color : 'white'
-
-    }
+    },
+    direccionItem: {
+        bottom: 10,
+        shadowColor: 'transparent',
+       
+    },
+    containerList: {
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "row",
+        paddingVertical: 30,
+        backgroundColor:"white",
+        marginVertical: 10,
+        borderRadius:20,
+    
+    },
 })

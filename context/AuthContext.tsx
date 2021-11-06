@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useReducer } from "react";
+import React, { createContext, useContext, useEffect, useReducer } from "react";
 import { Buffer } from "buffer"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import foodMonksApi from "../api/foodMonksApi";
@@ -19,6 +19,7 @@ interface AuthContextProps {
     quitarError: () => void;
     quitarMensajeOk: () => void
     cambiarPrimerCarga: () => void;
+    comprobarToken: () => void;
 }
 
 const authInicialState: AuthState = {
@@ -67,7 +68,6 @@ export const AuthProvider = ({children}: any) =>{
                   localStorage.setItem("token", newAuth);
                   localStorage.setItem("refreshToken", newRefreshAuth);
                 }
-                
                 dispatch({ 
                     type: 'iniciarSesion',
                     payload: {
@@ -113,7 +113,7 @@ export const AuthProvider = ({children}: any) =>{
                             RefreshAuthentication: "Bearer " + resp1.data.refreshToken,
                           }
                     });
-                    
+                   
                     dispatch({ 
                         type: 'iniciarSesion',
                         payload: {
@@ -168,7 +168,8 @@ export const AuthProvider = ({children}: any) =>{
             cerrarSesion,
             quitarError,
             quitarMensajeOk,
-            cambiarPrimerCarga
+            cambiarPrimerCarga,
+            comprobarToken
         }}>
             {children}
         </AuthContext.Provider>

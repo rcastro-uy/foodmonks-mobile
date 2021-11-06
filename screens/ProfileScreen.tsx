@@ -6,14 +6,24 @@ import { Icon } from "react-native-elements";
 import Modal from "../components/Modal";
 import ChangeNameLastName from "../components/ChangeNameLastName";
 import ChangePassword from "../components/ChangePassword";
-import { StackScreenProps } from "@react-navigation/stack";
+import {Rating} from 'react-native-elements';
+import Toast from "react-native-easy-toast";
+
 
 export default function ProfileScreen({navigation}:any) {
 
-    const { usuario} = useContext( AuthContext );
+    const toastRef = React.useRef<any>()
+    const {comprobarToken, usuario} = useContext( AuthContext );
     const [mostrarModal, setMostrarModal] = useState(false)
     const [renderComponent, setRenderComponent] = useState(<ChangeNameLastName />)
+    const [ refrescar, setRefrescar ] = useState( false );
 
+    useEffect(() => {
+        comprobarToken()
+        setRefrescar(false)
+  },[refrescar])
+     
+      
     const generarOpciones = () => {
         return [
             {
@@ -44,7 +54,7 @@ export default function ProfileScreen({navigation}:any) {
             case "modificarInfo":
                 setRenderComponent(
                     <ChangeNameLastName
-                        setMostrarModal={setMostrarModal}
+                    toastRef={toastRef} setMostrarModal={setMostrarModal} setRefrescar ={setRefrescar}
                     />
                 )
                 break;
@@ -69,10 +79,14 @@ export default function ProfileScreen({navigation}:any) {
            <View style={profileStyles.infoUser}>
                 <Text style={profileStyles.displayName}>
                     {
-                        usuario?.firstName 
+                        usuario?.nombre 
                     }
                 </Text>
-                <Text>{usuario?.mail}</Text>
+                <Text>{usuario?.correo}</Text>
+                <View style={{top:15}}>
+                    <Text style={{fontWeight: "bold", bottom:5}}>Mi valoracion: {usuario?.calificacion}/5</Text>
+                    <Rating  fractions="{1}"  imageSize={20}  showRating={false} startingValue={usuario?.calificacion.toString()} />
+                </View>
             </View>
         </View>
 
@@ -130,12 +144,13 @@ export default function ProfileScreen({navigation}:any) {
                     name="chevron-right"
                     color="#a7bfd3"
                 /> 
-        </TouchableOpacity>  
+        </TouchableOpacity> 
+        
       </View> 
-            
+     
 
 </View>
-            
+<Toast ref={toastRef} position="bottom" opacity={0.9}/>       
  </>       
     )
 }

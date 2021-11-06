@@ -28,8 +28,8 @@ export const CustomDrawerNavigator = (props : DrawerContentComponentProps) => {
         source={ require('../images/monjeNegro.png') }
         style={styles.sideMenuProfileIcon}
       />
-      <Text style={styles.textProfile}> {usuario?.firstName}</Text>
-      <Text style={styles.textProfile}> {usuario?.lastName}</Text>
+      <Text style={styles.textProfile}> {usuario?.nombre}</Text>
+      <Text style={styles.textProfile}> {usuario?.apellido}</Text>
       <DrawerContentScrollView style={{top:30}} {...props}>
         <DrawerItemList {...props} />
         <DrawerItem
