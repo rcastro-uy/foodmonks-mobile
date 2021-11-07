@@ -10,6 +10,7 @@ interface AuthContextProps {
     MensajeOk: string
     MensajeError: string;
     token: string | null;
+    refreshToken: string | null;
     usuario: UserInfoResponse | null;
     estado: 'chequear' | 'autenticado' | 'no-autenticado';
     primerCarga: boolean;
@@ -25,6 +26,7 @@ const authInicialState: AuthState = {
     MensajeOk: '',
     MensajeError: '',
     token: null,
+    refreshToken: null,
     usuario: null,
     estado: 'chequear',
     primerCarga : true
