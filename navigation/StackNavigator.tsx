@@ -8,8 +8,21 @@ import SplashScreen from '../screens/SplashScreen';
 import { LoadingScreen } from "../screens/LoadingScreen";
 import { RegisterScreen } from "../screens/RegisterScreen";
 import RecoveryPasswordScreen from "../screens/RecoverPasswordScreen";
+import PaymentScreen from '../screens/PaymentScreen';
 
-const Stack = createNativeStackNavigator();
+export type RootStackParams = {
+  Login: undefined,
+  RegisterScreen: undefined,
+  RecoverPasswordScreen: undefined,
+  LoadingScreen: undefined,
+  HomeDrawer: undefined,
+  PaymentScreen: {amt: number}
+
+}
+
+
+
+const Stack = createNativeStackNavigator<RootStackParams>();
 
 const screenOptionStyle = {
   headerStyle: {
@@ -44,6 +57,7 @@ const MainStackNavigator = () => {
               <>
                  <Stack.Screen name="LoadingScreen" component={ LoadingScreen } />
                 <Stack.Screen name="HomeDrawer" component={DrawerNavigator} options={{ headerShown: false }}/>
+                <Stack.Screen name="PaymentScreen" component={PaymentScreen} />
               </>
             )
       }

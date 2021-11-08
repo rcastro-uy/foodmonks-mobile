@@ -1,4 +1,4 @@
-import { API_URL } from '@env';
+import {API_URL} from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import React, { useContext } from 'react'
@@ -34,6 +34,36 @@ export const modificarPerfil = async (nombre : string, apellido: string): Promis
      
       return result
     }
+  
+  const obtenerTokens = async () => {
+    const token = await AsyncStorage.getItem('token')
+    const refreshToken = await AsyncStorage.getItem('refreshToken')
+    return {token : token, refreshToken : refreshToken}
+  }
 
 
+
+  export const obtenerUri = async (monto: number, setUri: any) => {
+    const data = JSON.stringify({
+      total: monto,
+     });
+     let uri = ''
+     obtenerTokens().then(response => {  
+      
+     fetch(`${API_URL}/v1/paypal/order/request`, {
+       method: 'POST',
+       headers: {
+         'Content-Type': 'application/json',
+         Authorization: "Bearer " + response.token,
+         RefreshAuthentication: "Bearer " + response.refreshToken,
+
+       },
+       body: data,
+     }).then(response => response.url).then(text => {
+      uri = text;
+      setUri(uri)
+     
+     })
+    })
+  }
 
