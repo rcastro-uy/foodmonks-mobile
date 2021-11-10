@@ -67,3 +67,46 @@ export interface RestauranteComp {
     imagen: string;
     calificacion: number;
 }
+
+export const categorias = [
+    {
+        label: "Bebidas",
+        value: "BEBIDAS"
+    },
+    {
+        label: "Combos",
+        value: "COMBOS"
+    },
+    {
+        label: "ComidaArabe",
+        value: "COMIDAARABE"
+    },
+    {
+        label: "Hamburguesas",
+        value: "HAMBURGUESAS"
+    },
+    {
+        label: "Minutas",
+        value: "MINUTAS"
+    },
+    {
+        label: "Pastas",
+        value: "PASTAS"
+    },
+    {
+        label: "Pizzas",
+        value: "PIZZAS"
+    },
+    {
+        label: "Postres",
+        value: "POSTRES"
+    },
+    {
+        label: "Sushi",
+        value: "SUSHI"
+    },
+    {
+        label: "Otros",
+        value: "OTROS"
+    },
+]
