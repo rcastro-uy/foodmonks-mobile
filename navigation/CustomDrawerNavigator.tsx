@@ -20,7 +20,6 @@ import { AuthContext } from '../context/AuthContext';
 const { width: windowWidth } = Dimensions.get('window');
 const { height: windowHeight } = Dimensions.get('window');
 export const CustomDrawerNavigator = (props : DrawerContentComponentProps) => {
-  
   const { usuario, cerrarSesion } = useContext( AuthContext );
     return (
     <SafeAreaView style={{flex: 1, maxWidth:windowWidth}}>
@@ -39,7 +38,7 @@ export const CustomDrawerNavigator = (props : DrawerContentComponentProps) => {
         <View style={styles.customItem}>
             <DrawerItem
               label="Restaurantes"
-              onPress={() => console.log()}
+              onPress={() => props.navigation.navigate('Home')}
             />
           <Icon
             name='sc-telegram'
@@ -48,6 +47,10 @@ export const CustomDrawerNavigator = (props : DrawerContentComponentProps) => {
           />
         </View>
       </DrawerContentScrollView>
+      <DrawerItem
+          label="Perfil"
+          onPress={() => props.navigation.navigate('Profile')}
+        />
       <DrawerItem
           label="Cerrar sesion"
           onPress={ cerrarSesion }

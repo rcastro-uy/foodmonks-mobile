@@ -63,3 +63,75 @@ export interface Direccion {
     latitud: number;
     longitud: number;
 }
+
+enum EstadoRestaurante {
+    PENDIENTE,
+    RECHAZADO,
+    ABIERTO,
+    CERRADO,
+    BLOQUEADO,
+    ELIMINADO
+}
+
+export interface Restaurante {
+    correo: string;
+    fechaRegistro: Date;
+    rol: string;
+    estado: EstadoRestaurante;
+    rut: number;
+    descripcion: string;
+    nombre: string;
+    telefono: number;
+    calificacion: number;
+    imagen: string;
+}
+
+export interface RestauranteComp {
+    nombre: string;
+    descripcion: string;
+    imagen: string;
+    calificacion: number;
+}
+
+export const categorias = [
+    {
+        label: "Bebidas",
+        value: "BEBIDAS"
+    },
+    {
+        label: "Combos",
+        value: "COMBOS"
+    },
+    {
+        label: "ComidaArabe",
+        value: "COMIDAARABE"
+    },
+    {
+        label: "Hamburguesas",
+        value: "HAMBURGUESAS"
+    },
+    {
+        label: "Minutas",
+        value: "MINUTAS"
+    },
+    {
+        label: "Pastas",
+        value: "PASTAS"
+    },
+    {
+        label: "Pizzas",
+        value: "PIZZAS"
+    },
+    {
+        label: "Postres",
+        value: "POSTRES"
+    },
+    {
+        label: "Sushi",
+        value: "SUSHI"
+    },
+    {
+        label: "Otros",
+        value: "OTROS"
+    },
+]
