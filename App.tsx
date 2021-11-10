@@ -5,6 +5,7 @@ import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { MainStackNavigator } from './navigation/StackNavigator';
 import { AuthProvider } from './context/AuthContext';
+import { AddressProvider } from './context/AddressContext';
 
 export default function App() {
   return (
@@ -19,7 +20,9 @@ export default function App() {
 const AppState = ({ children }: any ) => {
   return (
     <AuthProvider>
+      <AddressProvider>
        { children }
+      </AddressProvider> 
     </AuthProvider>
   )
 }

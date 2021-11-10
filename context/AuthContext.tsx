@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useReducer } from "react";
+import React, { createContext, useContext, useEffect, useReducer } from "react";
 import { Buffer } from "buffer"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import foodMonksApi from "../api/foodMonksApi";
@@ -20,6 +20,7 @@ interface AuthContextProps {
     quitarError: () => void;
     quitarMensajeOk: () => void
     cambiarPrimerCarga: () => void;
+    comprobarToken: () => void;
 }
 
 const authInicialState: AuthState = {
@@ -55,29 +56,34 @@ export const AuthProvider = ({children}: any) =>{
         if (!token) return dispatch({type: 'noAutenticado'})
 
         //Hay token
-        const resp = await foodMonksApi.get<UserInfoResponse>('/v1/auth/userinfo', {
-            headers: {
-                Authorization: "Bearer " + token,
-                RefreshAuthentication: "Bearer " + refreshToken,
-              }
-        });
-
-        if ( resp.status !== 200 ) {
+        try{
+             const resp = await foodMonksApi.get<UserInfoResponse>('/v1/auth/userinfo', {
+                headers: {
+                    Authorization: "Bearer " + token,
+                    RefreshAuthentication: "Bearer " + refreshToken,
+                }
+             });
+             
+             const newAuth = resp.config.headers!.Authorization.substring(7);
+             const newRefreshAuth = resp.config.headers!.RefreshAuthentication.substring(7);
+                if(newAuth !== token || newRefreshAuth !== refreshToken) {
+                  localStorage.setItem("token", newAuth);
+                  localStorage.setItem("refreshToken", newRefreshAuth);
+                }
+                dispatch({ 
+                    type: 'iniciarSesion',
+                    payload: {
+                        token: token,
+                        usuario: resp.data,
+                        primerCarga: false,
+                    }
+                });
+            
+        }catch (error: any){
+        
             return dispatch({ type: 'noAutenticado' });
         }
 
-        if (token !== resp.config.headers!.Authorization || refreshToken !== resp.config.headers!.RefreshAuthentication ){
-            await AsyncStorage.setItem('refreshToken', resp.config.headers!.RefreshAuthentication)
-            await AsyncStorage.setItem('token', resp.config.headers!.Authorization)
-        }
-        dispatch({ 
-            type: 'iniciarSesion',
-            payload: {
-                token: token,
-                usuario: resp.data,
-                primerCarga: false,
-            }
-        });
     }
 
     const registrarCuenta = async ({nombre, apellido,correo,password,direccion} : NuevoCliente) => {
@@ -109,7 +115,7 @@ export const AuthProvider = ({children}: any) =>{
                             RefreshAuthentication: "Bearer " + resp1.data.refreshToken,
                           }
                     });
-                    
+                   
                     dispatch({ 
                         type: 'iniciarSesion',
                         payload: {
@@ -164,7 +170,8 @@ export const AuthProvider = ({children}: any) =>{
             cerrarSesion,
             quitarError,
             quitarMensajeOk,
-            cambiarPrimerCarga
+            cambiarPrimerCarga,
+            comprobarToken
         }}>
             {children}
         </AuthContext.Provider>

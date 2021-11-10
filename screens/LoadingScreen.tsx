@@ -1,14 +1,17 @@
 import { StackScreenProps } from '@react-navigation/stack';
 import React, { useContext, useEffect } from 'react'
 import { ActivityIndicator, View } from 'react-native'
+import { AddressContext } from '../context/AddressContext';
 import { AuthContext } from '../context/AuthContext';
 
 interface Props extends StackScreenProps<any, any> {}
 export const LoadingScreen = ({ navigation }: Props) => {
 
-    const { estado } = useContext( AuthContext );
-    useEffect(() => {
- 
+    const { usuario } = useContext( AuthContext );
+    const {  cargarDirecciones } = useContext( AddressContext );
+     useEffect(() => {
+
+        cargarDirecciones(usuario!.direcciones)
           setTimeout(() => {
            
             navigation.replace('HomeDrawer');

@@ -15,17 +15,21 @@ import {
     DrawerItem,
     DrawerContentComponentProps,
 } from '@react-navigation/drawer';
+import { AuthContext } from '../context/AuthContext';
 
 const { width: windowWidth } = Dimensions.get('window');
 const { height: windowHeight } = Dimensions.get('window');
-export const CustomDrawerNavigator = (props: DrawerContentComponentProps) => {
+export const CustomDrawerNavigator = (props : DrawerContentComponentProps) => {
+  const { usuario, cerrarSesion } = useContext( AuthContext );
     return (
     <SafeAreaView style={{flex: 1, maxWidth:windowWidth}}>
       <Image
-        source={ require('../assets/foodMonks.png') }
+        source={ require('../images/monjeNegro.png') }
         style={styles.sideMenuProfileIcon}
       />
-      <DrawerContentScrollView {...props}>
+      <Text style={styles.textProfile}> {usuario?.nombre}</Text>
+      <Text style={styles.textProfile}> {usuario?.apellido}</Text>
+      <DrawerContentScrollView style={{top:30}} {...props}>
         <DrawerItemList {...props} />
         <DrawerItem
           label="Restaurantes"
@@ -49,7 +53,7 @@ export const CustomDrawerNavigator = (props: DrawerContentComponentProps) => {
         />
       <DrawerItem
           label="Cerrar sesion"
-          onPress={ () => console.log("p") }
+          onPress={ cerrarSesion }
         />
     </SafeAreaView>
   );
@@ -58,12 +62,18 @@ export const CustomDrawerNavigator = (props: DrawerContentComponentProps) => {
 export const styles = StyleSheet.create ({
   sideMenuProfileIcon: {
     resizeMode: 'center',
-    width: 100,
-    height: 200,
-    borderRadius: 100 / 2,
+    width: 140,
+    height: 140,
+    borderRadius:200,
+    top:25,
     borderColor: '#FFFFFF',
-    borderWidth: 1,
     alignSelf: 'center',
+  },
+  textProfile: {
+    top:27, 
+    fontSize:17, 
+    fontWeight: 'bold', 
+    textAlign:'center'
   },
   iconStyle: {
       width: 15,
