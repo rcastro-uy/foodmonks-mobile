@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useEffect, useReducer } from "react";
+import React, { createContext, useContext, useEffect, useReducer, useState } from "react";
 import { Buffer } from "buffer"
+import * as Notifications from 'expo-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import foodMonksApi from "../api/foodMonksApi";
 import { LoginData, LoginResponse, NuevoCliente, UserInfoResponse } from "../interfaces/AppInterfaces";
@@ -37,12 +38,37 @@ export const AuthContext = createContext({} as AuthContextProps);
 export const AuthProvider = ({children}: any) =>{
 
     const [ state, dispatch ] = useReducer( authReducer, authInicialState);
+    const [notification, setNotification] = useState<any>();
+  const notificationListener = React.useRef<any>();
+  const responseListener = React.useRef<any>();
+
+
+    Notifications.setNotificationHandler({
+        handleNotification: async () => ({
+          shouldShowAlert: true,
+          shouldPlaySound: false,
+          shouldSetBadge: false,
+        }),
+      });
 
     useEffect(() =>{
-
+        // Este oyente se activa cada vez que se recibe una notificación mientras la aplicación está en primer plano
+        notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+            setNotification(notification);
+          });
+      // Este oyente se activa cada vez que un usuario toca una notificación o interactúa con ella (funciona cuando la aplicación está en primer plano, en segundo plano o eliminada)
+          responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+            console.log(response);
+          });
+          
         setTimeout(() => {
             comprobarToken();
            }, 2000)   
+
+           return () => {
+            Notifications.removeNotificationSubscription(notificationListener.current);
+            Notifications.removeNotificationSubscription(responseListener.current);
+          };
         
     }, [])
 
@@ -84,8 +110,20 @@ export const AuthProvider = ({children}: any) =>{
 
     }
 
-    const registrarCuenta = async ({nombre, apellido,correo,password,direccion} : NuevoCliente) => {
+    const getTokenMobile = async () => {
+        const {status} = await Notifications.requestPermissionsAsync();
+        if (status !== "granted") {
+            return;
+        }
 
+        const token = await Notifications.getExpoPushTokenAsync();
+        console.log({token})
+
+       
+    }
+
+    const registrarCuenta = async ({nombre, apellido,correo,password,direccion} : NuevoCliente) => {
+            
          try{
             const resp1 = await foodMonksApi.post('/v1/cliente/altaCliente', { nombre,apellido,correo,password,direccion } );
             dispatch({ 
@@ -100,6 +138,8 @@ export const AuthProvider = ({children}: any) =>{
         }
     }
     const iniciarSesion = async( {correo, contraseña} : LoginData) => {
+
+        getTokenMobile()
 
         try {
             let password = Buffer.from(contraseña, "utf8").toString('base64');
