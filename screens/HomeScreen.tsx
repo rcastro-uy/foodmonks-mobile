@@ -1,58 +1,48 @@
 import React, { useContext, useEffect } from "react";
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Keyboard } from "react-native";
+import { Text, StyleSheet, FlatList, TouchableOpacity, Keyboard, ListRenderItem, ListRenderItemInfo } from "react-native";
 import { AuthContext } from "../context/AuthContext";
-import { listarRestauranteService } from "../services/listarRestaurantesService";
 import { categorias, Restaurante } from "../interfaces/AppInterfaces";
 import { RestauranteComponent } from "../components/Restaurante";
-import axios from "axios";
-import { API_URL } from "@env";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Input, Switch } from "react-native-elements";
 import { Ionicons } from "@expo/vector-icons";
 import { fontPixel, pixelSizeHorizontal, pixelSizeVertical } from "../theme/Normalization";
 import { Picker } from "@react-native-picker/picker";
+import { RestaurantesContext } from "../context/RestaurantesContext";
 
 export default function HomeScreen({navigation, route}:any) {
     const [restaurantes, setRestaurantes] = React.useState([]);
     const [nombre, setNombre] = React.useState("");
     const [categoria, setCategoria] = React.useState("");
     const [orden, setOrden] = React.useState(false);
-    const { token, refreshToken, cerrarSesion } = useContext( AuthContext );
+    const { cerrarSesion, comprobarToken, token, refreshToken } = useContext( AuthContext );
+    const { listarRestaurantes } = useContext( RestaurantesContext );
 
     const onListarRestaurantes = () => {
         Keyboard.dismiss();
         console.log(`${nombre} + ${categoria} + ${orden}`)
-        listarRestauranteService(nombre, categoria, orden).then((data: any) => {
-            setRestaurantes(data);
-        });
+        listarRestaurantes(nombre, categoria, orden).then((res) => {
+            setRestaurantes(res)
+        })
     }
 
     const toggleSwitch = () => setOrden(previousState => !previousState);
     
     useEffect(() => {
-        console.log(`Bearer ${token}`);
-        console.log(`Bearer ${refreshToken}`);
-        axios({
-            method: "GET",
-            url: `${API_URL}/v1/cliente/listarAbiertos?nombre=${nombre}&categoria=${categoria}&orden=${orden}`,
-            headers: {
-                Authorization: `Bearer ${token}`,
-                RefreshAuthentication: `Bearer ${refreshToken}`,
-            },
-        }).then((res: any) => {
-            if (res.status === 200) {
-                console.log(res.data);
-                setRestaurantes(res.data);
-            }
-        }).catch((error) => {
-            console.log(error);
-        });
+        let isMounted = true;
+        comprobarToken();
+        setRestaurantes([]);
+        listarRestaurantes(nombre, categoria, orden).then((res) => {
+            if (isMounted) setRestaurantes(res);
+        })
+        console.log("Cargo los restaurantes")
+        return () => { isMounted = false };
     }, [])
     
     return (
         <>
-        <View style={ styles.headerContainer } >
-        <Text style={ styles.title }>Restaurantes</Text>
+        {/* <View style={ styles.headerContainer } >
+        <Text style={ styles.title }>Restaurantes</Text> */}
         {/* <Ionicons 
         type='material-community'
         name='arrow-back-circle'
@@ -60,10 +50,10 @@ export default function HomeScreen({navigation, route}:any) {
         color={"#FD801E"}
         onPress={ () => navigation.replace('Login') }
         style={ styles.buttonReturn } /> */}
-        </View>
+        {/* </View> */}
         <KeyboardAwareScrollView
         contentContainerStyle={ styles.formContainer }
-        keyboardShouldPersistTaps='always'
+        keyboardShouldPersistTaps='handled'
         >
         <Input 
             placeholder="Nombre del restaurante"
@@ -106,9 +96,13 @@ export default function HomeScreen({navigation, route}:any) {
             <Text style={ styles.buttonText } >Buscar</Text>
         </TouchableOpacity>
 
-        {restaurantes.map((item: Restaurante, index: number) => {
+        <FlatList
+          data={restaurantes}
+          keyExtractor={({correo}, index) => correo}
+          renderItem={({ item }:ListRenderItemInfo<Restaurante>) => (
             <RestauranteComponent nombre={item.nombre} descripcion={item.descripcion} imagen={item.imagen} calificacion={item.calificacion}/>
-        })}
+          )}
+        />
 
         <RestauranteComponent nombre={"Mauricio"} descripcion={"el restaurante"} imagen={"img.com"} calificacion={4.5}/>
         <RestauranteComponent nombre={"Mauricio"} descripcion={"el restaurante"} imagen={"img.com"} calificacion={3.2}/>

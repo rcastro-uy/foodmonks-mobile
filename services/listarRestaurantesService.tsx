@@ -6,7 +6,10 @@ import { AuthContext } from "../context/AuthContext";
 import { RestauranteComp } from "../interfaces/AppInterfaces";
 
 export async function listarRestauranteService(nombre: string, categoria: string, orden: boolean) {
-    const { token, refreshToken } = useContext( AuthContext );
+    const { comprobarToken, token, refreshToken } = useContext( AuthContext );
+    //comprobarToken();
+    //const refreshToken = localStorage.getItem('token');
+    //const token = localStorage.getItem('refreshToken')
     console.log(token);
     console.log(`${API_URL}`)
     // const data = {
