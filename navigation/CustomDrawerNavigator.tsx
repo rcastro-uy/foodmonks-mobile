@@ -49,7 +49,7 @@ export const CustomDrawerNavigator = (props : DrawerContentComponentProps) => {
       </DrawerContentScrollView>
       <DrawerItem
           label="Perfil"
-          onPress={() => props.navigation.navigate('Profile')}
+          onPress={() => props.navigation.navigate('Mi cuenta')}
         />
       <DrawerItem
           label="Cerrar sesion"
