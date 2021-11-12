@@ -13,7 +13,7 @@ import Toast from "react-native-easy-toast";
 export default function ProfileScreen({navigation}:any) {
 
     const toastRef = React.useRef<any>()
-    const {comprobarToken, usuario} = useContext( AuthContext );
+    const {comprobarToken, usuario, eliminarCuenta, cerrarSesion} = useContext( AuthContext );
     const [mostrarModal, setMostrarModal] = useState(false)
     const [renderComponent, setRenderComponent] = useState(<ChangeNameLastName />)
     const [ refrescar, setRefrescar ] = useState( false );
@@ -132,7 +132,7 @@ export default function ProfileScreen({navigation}:any) {
 
     <Text style={ profileStyles.title}>Administrar</Text>
       <View style={profileStyles.optionContainer}>
-        <TouchableOpacity style={ profileStyles.containerList } activeOpacity={0.8}> 
+        <TouchableOpacity style={ profileStyles.containerList } activeOpacity={0.8} onPress={()=> { eliminarCuenta(); cerrarSesion()} }> 
                 <Icon
                     type="material-community"
                     name="delete"
