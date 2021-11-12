@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { Text, StyleSheet, FlatList, TouchableOpacity, Keyboard, ListRenderItem, ListRenderItemInfo } from "react-native";
+import { Text, StyleSheet, FlatList, TouchableOpacity, Keyboard, ListRenderItem, ListRenderItemInfo, View, ActivityIndicator } from "react-native";
 import { AuthContext } from "../context/AuthContext";
 import { categorias, Restaurante } from "../interfaces/AppInterfaces";
 import { RestauranteComponent } from "../components/Restaurante";
@@ -9,13 +9,15 @@ import { Ionicons } from "@expo/vector-icons";
 import { fontPixel, pixelSizeHorizontal, pixelSizeVertical } from "../theme/Normalization";
 import { Picker } from "@react-native-picker/picker";
 import { RestaurantesContext } from "../context/RestaurantesContext";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen({navigation, route}:any) {
     const [restaurantes, setRestaurantes] = React.useState([]);
     const [nombre, setNombre] = React.useState("");
     const [categoria, setCategoria] = React.useState("");
     const [orden, setOrden] = React.useState(false);
-    const { cerrarSesion, comprobarToken, token, refreshToken } = useContext( AuthContext );
+    const [loading, setLoading] = React.useState(true);
+    const { cerrarSesion, comprobarToken } = useContext( AuthContext );
     const { listarRestaurantes } = useContext( RestaurantesContext );
 
     const onListarRestaurantes = () => {
@@ -30,17 +32,35 @@ export default function HomeScreen({navigation, route}:any) {
     
     useEffect(() => {
         let isMounted = true;
+        setLoading(true);
         comprobarToken();
         setRestaurantes([]);
         listarRestaurantes(nombre, categoria, orden).then((res) => {
-            if (isMounted) setRestaurantes(res);
+            if (isMounted) {
+                setRestaurantes(res);
+                setLoading(false);
+            }
         })
         console.log("Cargo los restaurantes")
         return () => { isMounted = false };
     }, [])
-    
+
+    const renderFooter = () => {
+        if(loading){
+            return(
+                <View style={{paddingVertical: 20}}>
+                    <ActivityIndicator size='large' color='blue'/>
+                </View>
+            );
+        }
+        else {
+            return null;
+        }
+    }
+
     return (
         <>
+        <SafeAreaView>
         {/* <View style={ styles.headerContainer } >
         <Text style={ styles.title }>Restaurantes</Text> */}
         {/* <Ionicons 
@@ -51,10 +71,11 @@ export default function HomeScreen({navigation, route}:any) {
         onPress={ () => navigation.replace('Login') }
         style={ styles.buttonReturn } /> */}
         {/* </View> */}
-        <KeyboardAwareScrollView
+        
+        {/* <KeyboardAwareScrollView
         contentContainerStyle={ styles.formContainer }
         keyboardShouldPersistTaps='handled'
-        >
+        > */}
         <Input 
             placeholder="Nombre del restaurante"
             placeholderTextColor="rgba(255,80,40,0.3)"
@@ -86,6 +107,7 @@ export default function HomeScreen({navigation, route}:any) {
             thumbColor={orden ? "orange" : "#ffffff"}
             ios_backgroundColor="#3e3e3e"
             onValueChange={toggleSwitch}
+            style={styles.switch}
             value={orden}
         />
         <TouchableOpacity
@@ -98,21 +120,23 @@ export default function HomeScreen({navigation, route}:any) {
 
         <FlatList
           data={restaurantes}
+          ListFooterComponent = {renderFooter}
           keyExtractor={({correo}, index) => correo}
           renderItem={({ item }:ListRenderItemInfo<Restaurante>) => (
             <RestauranteComponent nombre={item.nombre} descripcion={item.descripcion} imagen={item.imagen} calificacion={item.calificacion}/>
           )}
         />
 
-        <RestauranteComponent nombre={"Mauricio"} descripcion={"el restaurante"} imagen={"img.com"} calificacion={4.5}/>
-        <RestauranteComponent nombre={"Mauricio"} descripcion={"el restaurante"} imagen={"img.com"} calificacion={3.2}/>
+        {/* <RestauranteComponent nombre={"Mauricio"} descripcion={"el restaurante"} imagen={"img.com"} calificacion={4.5}/>
+        <RestauranteComponent nombre={"Mauricio"} descripcion={"el restaurante"} imagen={"img.com"} calificacion={3.2}/> */}
         
         {/* <Button 
             title="cerrar sesion"
             color="#5856D6"
             onPress={ cerrarSesion }
         /> */}
-        </KeyboardAwareScrollView>
+        {/* </KeyboardAwareScrollView> */}
+        </SafeAreaView>
         </>
     )
 }
@@ -166,6 +190,9 @@ const styles = StyleSheet.create({
         padding: 10,
         borderWidth: 1,
         borderColor: "#666",
+    },
+    switch: {
+        position: 'relative',
     },
     inputField: {
         borderBottomWidth: 1,
