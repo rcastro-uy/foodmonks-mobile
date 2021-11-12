@@ -1,58 +1,68 @@
 import React, { useContext, useEffect } from "react";
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Keyboard } from "react-native";
+import { Text, StyleSheet, FlatList, TouchableOpacity, Keyboard, ListRenderItem, ListRenderItemInfo, View, ActivityIndicator } from "react-native";
 import { AuthContext } from "../context/AuthContext";
-import { listarRestauranteService } from "../services/listarRestaurantesService";
 import { categorias, Restaurante } from "../interfaces/AppInterfaces";
 import { RestauranteComponent } from "../components/Restaurante";
-import axios from "axios";
-import { API_URL } from "@env";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Input, Switch } from "react-native-elements";
 import { Ionicons } from "@expo/vector-icons";
 import { fontPixel, pixelSizeHorizontal, pixelSizeVertical } from "../theme/Normalization";
 import { Picker } from "@react-native-picker/picker";
+import { RestaurantesContext } from "../context/RestaurantesContext";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function HomeScreen({navigation, route}:any) {
     const [restaurantes, setRestaurantes] = React.useState([]);
     const [nombre, setNombre] = React.useState("");
     const [categoria, setCategoria] = React.useState("");
     const [orden, setOrden] = React.useState(false);
-    const { token, refreshToken, cerrarSesion } = useContext( AuthContext );
+    const [loading, setLoading] = React.useState(true);
+    const { cerrarSesion, comprobarToken } = useContext( AuthContext );
+    const { listarRestaurantes } = useContext( RestaurantesContext );
 
     const onListarRestaurantes = () => {
         Keyboard.dismiss();
         console.log(`${nombre} + ${categoria} + ${orden}`)
-        listarRestauranteService(nombre, categoria, orden).then((data: any) => {
-            setRestaurantes(data);
-        });
+        listarRestaurantes(nombre, categoria, orden).then((res) => {
+            setRestaurantes(res)
+        })
     }
 
     const toggleSwitch = () => setOrden(previousState => !previousState);
     
     useEffect(() => {
-        console.log(`Bearer ${token}`);
-        console.log(`Bearer ${refreshToken}`);
-        axios({
-            method: "GET",
-            url: `${API_URL}/v1/cliente/listarAbiertos?nombre=${nombre}&categoria=${categoria}&orden=${orden}`,
-            headers: {
-                Authorization: `Bearer ${token}`,
-                RefreshAuthentication: `Bearer ${refreshToken}`,
-            },
-        }).then((res: any) => {
-            if (res.status === 200) {
-                console.log(res.data);
-                setRestaurantes(res.data);
+        let isMounted = true;
+        setLoading(true);
+        comprobarToken();
+        setRestaurantes([]);
+        listarRestaurantes(nombre, categoria, orden).then((res) => {
+            if (isMounted) {
+                setRestaurantes(res);
+                setLoading(false);
             }
-        }).catch((error) => {
-            console.log(error);
-        });
+        })
+        console.log("Cargo los restaurantes")
+        return () => { isMounted = false };
     }, [])
-    
+
+    const renderFooter = () => {
+        if(loading){
+            return(
+                <View style={{paddingVertical: 20}}>
+                    <ActivityIndicator size='large' color='blue'/>
+                </View>
+            );
+        }
+        else {
+            return null;
+        }
+    }
+
     return (
         <>
-        <View style={ styles.headerContainer } >
-        <Text style={ styles.title }>Restaurantes</Text>
+        <SafeAreaView>
+        {/* <View style={ styles.headerContainer } >
+        <Text style={ styles.title }>Restaurantes</Text> */}
         {/* <Ionicons 
         type='material-community'
         name='arrow-back-circle'
@@ -60,11 +70,12 @@ export default function HomeScreen({navigation, route}:any) {
         color={"#FD801E"}
         onPress={ () => navigation.replace('Login') }
         style={ styles.buttonReturn } /> */}
-        </View>
-        <KeyboardAwareScrollView
+        {/* </View> */}
+        
+        {/* <KeyboardAwareScrollView
         contentContainerStyle={ styles.formContainer }
-        keyboardShouldPersistTaps='always'
-        >
+        keyboardShouldPersistTaps='handled'
+        > */}
         <Input 
             placeholder="Nombre del restaurante"
             placeholderTextColor="rgba(255,80,40,0.3)"
@@ -96,6 +107,7 @@ export default function HomeScreen({navigation, route}:any) {
             thumbColor={orden ? "orange" : "#ffffff"}
             ios_backgroundColor="#3e3e3e"
             onValueChange={toggleSwitch}
+            style={styles.switch}
             value={orden}
         />
         <TouchableOpacity
@@ -106,19 +118,25 @@ export default function HomeScreen({navigation, route}:any) {
             <Text style={ styles.buttonText } >Buscar</Text>
         </TouchableOpacity>
 
-        {restaurantes.map((item: Restaurante, index: number) => {
+        <FlatList
+          data={restaurantes}
+          ListFooterComponent = {renderFooter}
+          keyExtractor={({correo}, index) => correo}
+          renderItem={({ item }:ListRenderItemInfo<Restaurante>) => (
             <RestauranteComponent nombre={item.nombre} descripcion={item.descripcion} imagen={item.imagen} calificacion={item.calificacion}/>
-        })}
+          )}
+        />
 
-        <RestauranteComponent nombre={"Mauricio"} descripcion={"el restaurante"} imagen={"img.com"} calificacion={4.5}/>
-        <RestauranteComponent nombre={"Mauricio"} descripcion={"el restaurante"} imagen={"img.com"} calificacion={3.2}/>
+        {/* <RestauranteComponent nombre={"Mauricio"} descripcion={"el restaurante"} imagen={"img.com"} calificacion={4.5}/>
+        <RestauranteComponent nombre={"Mauricio"} descripcion={"el restaurante"} imagen={"img.com"} calificacion={3.2}/> */}
         
         {/* <Button 
             title="cerrar sesion"
             color="#5856D6"
             onPress={ cerrarSesion }
         /> */}
-        </KeyboardAwareScrollView>
+        {/* </KeyboardAwareScrollView> */}
+        </SafeAreaView>
         </>
     )
 }
@@ -172,6 +190,9 @@ const styles = StyleSheet.create({
         padding: 10,
         borderWidth: 1,
         borderColor: "#666",
+    },
+    switch: {
+        position: 'relative',
     },
     inputField: {
         borderBottomWidth: 1,
