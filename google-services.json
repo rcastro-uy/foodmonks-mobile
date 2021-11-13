@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "71573409565",
+    "project_id": "pushnotification-foodmonks",
+    "storage_bucket": "pushnotification-foodmonks.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:71573409565:android:3d4ec1156190840d535bf4",
+        "android_client_info": {
+          "package_name": "live.foodmonks.foodmonksApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "71573409565-hogrjglpgu44a9q1csakpi55a6vrsts7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIQAjz-mLVghcPDOKpN-mvjf0iOEfMFPA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "71573409565-hogrjglpgu44a9q1csakpi55a6vrsts7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

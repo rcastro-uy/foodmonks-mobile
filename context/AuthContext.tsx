@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import foodMonksApi from "../api/foodMonksApi";
 import { LoginData, LoginResponse, NuevoCliente, UserInfoResponse } from "../interfaces/AppInterfaces";
 import { authReducer, AuthState } from "./AuthReducer";
+import { Alert } from "react-native";
 
 
 interface AuthContextProps {
@@ -21,6 +22,8 @@ interface AuthContextProps {
     quitarMensajeOk: () => void
     cambiarPrimerCarga: () => void;
     comprobarToken: () => void;
+    getTokenMobile: () => void;
+
 }
 
 const authInicialState: AuthState = {
@@ -39,6 +42,7 @@ export const AuthProvider = ({children}: any) =>{
 
     const [ state, dispatch ] = useReducer( authReducer, authInicialState);
     const [notification, setNotification] = useState<any>();
+    const [tokenNotificacion, setTokenNotification] = useState<string>('');
   const notificationListener = React.useRef<any>();
   const responseListener = React.useRef<any>();
 
@@ -110,14 +114,15 @@ export const AuthProvider = ({children}: any) =>{
 
     }
 
-    const getTokenMobile = async () => {
+    const getTokenMobile = async() => {
         const {status} = await Notifications.requestPermissionsAsync();
         if (status !== "granted") {
             return;
         }
 
         const token = await Notifications.getExpoPushTokenAsync();
-        console.log({token})
+        setTokenNotification (token.data)
+       
 
        
     }
@@ -138,13 +143,14 @@ export const AuthProvider = ({children}: any) =>{
         }
     }
     const iniciarSesion = async( {correo, contraseña} : LoginData) => {
-
-        getTokenMobile()
-
+       console.log(tokenNotificacion)
         try {
             let password = Buffer.from(contraseña, "utf8").toString('base64');
             let email = Buffer.from(correo, "utf8").toString('base64');
-            const resp1 = await foodMonksApi.post<LoginResponse>('/v1/auth/login', { email, password } );
+            let mobileToken = Buffer.from(tokenNotificacion, "utf8").toString('base64')
+            const resp1 = await foodMonksApi.post<LoginResponse>('/v1/auth/login', { email, password, mobileToken },{ headers: {
+                'User-Agent' : 'mobile'
+              }} );
             if (resp1.data.token != null){
                 try {
                     const resp = await foodMonksApi.get<UserInfoResponse>('/v1/auth/userinfo', {
@@ -209,7 +215,8 @@ export const AuthProvider = ({children}: any) =>{
             quitarError,
             quitarMensajeOk,
             cambiarPrimerCarga,
-            comprobarToken
+            comprobarToken,
+            getTokenMobile
         }}>
             {children}
         </AuthContext.Provider>

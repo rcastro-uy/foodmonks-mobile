@@ -2,16 +2,11 @@
   "expo": {
     "name": "FoodMonks",
     "slug": "FoodMonks",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "notification": {
-      "icon":"./assets/icon.png"
-    },
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "icon":"./assets/foodMonksNotificacion.png"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -21,13 +16,15 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "icon":"./assets/icon.png"
+      "icon": "./assets/icon.png"
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+      "googleServicesFile": "./google-services.json",
+           "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#FFFFFF"
-        }
+      },
+      "package": "live.foodmonks.foodmonksApp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
