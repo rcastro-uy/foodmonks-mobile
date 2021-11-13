@@ -10,6 +10,7 @@ import { fontPixel, pixelSizeHorizontal, pixelSizeVertical } from "../theme/Norm
 import { Picker } from "@react-native-picker/picker";
 import { RestaurantesContext } from "../context/RestaurantesContext";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Button } from "react-native-elements/dist/buttons/Button";
 
 export default function HomeScreen({navigation, route}:any) {
     const [restaurantes, setRestaurantes] = React.useState([]);
@@ -54,24 +55,15 @@ export default function HomeScreen({navigation, route}:any) {
             );
         }
         else {
-            return null;
+            return(
+                <Text>No hay mas restaurantes</Text>
+            );
         }
     }
 
     return (
         <>
-        <SafeAreaView>
-        {/* <View style={ styles.headerContainer } >
-        <Text style={ styles.title }>Restaurantes</Text> */}
-        {/* <Ionicons 
-        type='material-community'
-        name='arrow-back-circle'
-        size={35}
-        color={"#FD801E"}
-        onPress={ () => navigation.replace('Login') }
-        style={ styles.buttonReturn } /> */}
-        {/* </View> */}
-        
+        <SafeAreaView>        
         {/* <KeyboardAwareScrollView
         contentContainerStyle={ styles.formContainer }
         keyboardShouldPersistTaps='handled'
@@ -123,12 +115,12 @@ export default function HomeScreen({navigation, route}:any) {
           ListFooterComponent = {renderFooter}
           keyExtractor={({correo}, index) => correo}
           renderItem={({ item }:ListRenderItemInfo<Restaurante>) => (
-            <RestauranteComponent nombre={item.nombre} descripcion={item.descripcion} imagen={item.imagen} calificacion={item.calificacion}/>
-          )}
+            <RestauranteComponent correo={item.correo} nombre={item.nombre} descripcion={item.descripcion} imagen={item.imagen} calificacion={item.calificacion}/>
+            )}
         />
-
-        {/* <RestauranteComponent nombre={"Mauricio"} descripcion={"el restaurante"} imagen={"img.com"} calificacion={4.5}/>
-        <RestauranteComponent nombre={"Mauricio"} descripcion={"el restaurante"} imagen={"img.com"} calificacion={3.2}/> */}
+        
+        {/* <RestauranteComponent correo={"prueba"} nombre={"Mauricio"} descripcion={"el restaurante"} imagen={"img.com"} calificacion={4.5}/>
+        <RestauranteComponent correo={"prueba"}  nombre={"Mauricio"} descripcion={"el restaurante"} imagen={"img.com"} calificacion={3.2}/> */}
         
         {/* <Button 
             title="cerrar sesion"

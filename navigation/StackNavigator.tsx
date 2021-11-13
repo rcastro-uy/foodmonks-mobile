@@ -8,6 +8,7 @@ import SplashScreen from '../screens/SplashScreen';
 import { LoadingScreen } from "../screens/LoadingScreen";
 import { RegisterScreen } from "../screens/RegisterScreen";
 import RecoveryPasswordScreen from "../screens/RecoverPasswordScreen";
+import ProductosScreen from "../screens/ProductosScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -42,8 +43,9 @@ const MainStackNavigator = () => {
             )
           : (
               <>
-                 <Stack.Screen name="LoadingScreen" component={ LoadingScreen } />
+                <Stack.Screen name="LoadingScreen" component={ LoadingScreen } />
                 <Stack.Screen name="HomeDrawer" component={DrawerNavigator} options={{ headerShown: false }}/>
+                <Stack.Screen name="ProductosScreen" component={ProductosScreen} options={{ headerShown: false }}/>
               </>
             )
       }

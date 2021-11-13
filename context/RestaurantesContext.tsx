@@ -1,25 +1,15 @@
 import React, { createContext, useContext, useState } from 'react';
 import foodMonksApi from '../api/foodMonksApi';
-import { Restaurante, RestauranteComp } from '../interfaces/AppInterfaces';
+import { Producto, Restaurante, RestauranteComp } from '../interfaces/AppInterfaces';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
-import { AxiosResponse } from 'axios';
 
 type RestaurantesContextProps = {
     restaurantes: Restaurante[];
+    productos: Producto[];
     cargarRestaurantes: (restaurantes: Restaurante[]) => void;
     listarRestaurantes: (nombre: string, categoria: string, orden: boolean) => Promise<any>;
-
-    // correo: string;
-    // fechaRegistro: Date;
-    // rol: string;
-    // estado: EstadoRestaurante;
-    // rut: number;
-    // descripcion: string;
-    // nombre: string;
-    // telefono: number;
-    // calificacion: number;
-    // imagen: string;
+    listarProductos: (restauranteId: string, categoria: string, precioInicial: number, precioFinal: number) => Promise<any>;
 }
 
 type result = {
@@ -31,7 +21,8 @@ export const RestaurantesContext = createContext({} as RestaurantesContextProps)
 export const RestaurantesProvider = ({ children }: any ) => {
 
     const [restaurantes, setRestaurantes] = useState<Restaurante[]>([]);
-    
+    const [productos, setProductos] = useState<Producto[]>([]);
+
     const cargarRestaurantes = async (restaurantes : Restaurante[]) => {
             setRestaurantes(restaurantes)
     }
@@ -65,7 +56,33 @@ export const RestaurantesProvider = ({ children }: any ) => {
         } catch (error:any){
             result = false
             Alert.alert(
-                "Error direccion",
+                "Error listando los restaurantes",
+                error || 'Algo salió mal, intente mas tarde',
+                [
+                    { text: "OK", style: "default" }
+                ]
+            )
+        }
+    }
+
+    const listarProductos = async(restauranteId: string, categoria: string, precioInicial: number, precioFinal: number):Promise<any> => {
+        let result = true;   
+        try{ 
+            const token = await AsyncStorage.getItem('token');
+            console.log(token)
+            const refreshToken = await AsyncStorage.getItem('refreshToken')
+            const resp = await foodMonksApi.get<Producto[]>(`/v1/cliente/listarProductosRestaurante?id=${restauranteId}&categoria=${categoria}&precioInicial=${precioInicial}&precioFinal=${precioFinal}`,
+            { headers: {
+                    Authorization: "Bearer " + token,
+                    RefreshAuthentication: "Bearer " + refreshToken,
+                }
+            });
+            //setRestaurantes([ ...restaurantes, resp.data ]);
+            return resp.data;
+        } catch (error:any){
+            result = false
+            Alert.alert(
+                "Error listando los menus",
                 error || 'Algo salió mal, intente mas tarde',
                 [
                     { text: "OK", style: "default" }
@@ -77,8 +94,10 @@ export const RestaurantesProvider = ({ children }: any ) => {
     return(
         <RestaurantesContext.Provider value={{
             restaurantes,
+            productos,
             cargarRestaurantes,
-            listarRestaurantes
+            listarRestaurantes,
+            listarProductos
         }}>
             { children }
         </RestaurantesContext.Provider>

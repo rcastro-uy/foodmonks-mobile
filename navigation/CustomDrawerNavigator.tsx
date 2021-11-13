@@ -31,7 +31,7 @@ export const CustomDrawerNavigator = (props : DrawerContentComponentProps) => {
       <Text style={styles.textProfile}> {usuario?.apellido}</Text>
       <DrawerContentScrollView style={{top:30}} {...props}>
         <DrawerItemList {...props} />
-        <DrawerItem
+        {/* <DrawerItem
           label="Restaurantes"
           onPress={() => console.log()}
         />
@@ -45,7 +45,7 @@ export const CustomDrawerNavigator = (props : DrawerContentComponentProps) => {
             type='evilicon'
             color='#517fa4'
           />
-        </View>
+        </View> */}
       </DrawerContentScrollView>
       <DrawerItem
           label="Perfil"
