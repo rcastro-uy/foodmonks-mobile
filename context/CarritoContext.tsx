@@ -89,7 +89,7 @@ export  const CarritoProvider = ({children }: any) => {
     }
 
     const calcularTotal = () => {
-       
+        total= 0
         for (var i in productos){
             if (productos[i].producto.multiplicadorPromocion!=0)
                 total = total + parseInt((((productos[i].producto.price*(100-productos[i].producto.multiplicadorPromocion))/100)* productos[i].cantidad).toFixed(0))

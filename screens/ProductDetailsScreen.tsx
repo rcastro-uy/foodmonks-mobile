@@ -4,9 +4,10 @@ import { Alert, Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'rea
 import { Button, Card, Icon, Image } from 'react-native-elements';
 import { CarritoContext } from '../context/CarritoContext';
 import { RootStackParams } from '../navigation/StackNavigator';
+import { productDetailsStyles } from '../theme/PrductDetailsTheme';
 
 interface Props extends StackScreenProps<RootStackParams, 'ProductDetailsScreen'>{};
-const {width,height} = Dimensions.get('screen');
+const {width : width} = Dimensions.get('screen');
 export default function ProductDetailsScreen({navigation, route}:Props) {
 
     const [cantidad, setCantidad] = React.useState<number>(0);
@@ -61,7 +62,7 @@ export default function ProductDetailsScreen({navigation, route}:Props) {
       <>  
         <View style={{flex:0.47}}>
           <Image
-            style={styles.image}
+            style={productDetailsStyles.image}
             resizeMode="cover"
             source={{ uri: producto.imagen }}
           />
@@ -115,28 +116,27 @@ export default function ProductDetailsScreen({navigation, route}:Props) {
                             <Text style={{fontSize:30}} >+</Text>
                         </TouchableOpacity>
             </View>
-        </View>    
-            
-            <View style={styles.container}>
+        </View>               
+            <View style={productDetailsStyles.container}>
             { (producto.multiplicadorPromocion!=0) ?(
              <>
-              <Text style={[styles.itemDescripcion, {
+              <Text style={[productDetailsStyles.itemDescripcion, {
                 fontWeight: 'bold'
               }]} > {producto.multiplicadorPromocion}%OFF {producto.nombre} </Text>
-              <Text style={[styles.itemDescripcion, { fontSize: 15 }]}> {producto.descripcion}</Text>
+              <Text style={[productDetailsStyles.itemDescripcion, { fontSize: 15 }]}> {producto.descripcion}</Text>
              
-              <Text style={[styles.itemDescripcion, { marginTop: 8, fontSize: 15, color:"red", textDecorationLine:'line-through'}]}  >{'$ ' + producto.price}</Text>
-              <Text style={[styles.itemDescripcion, { marginTop: 8, fontSize: 22, color:"green" }]}  >{'$ ' + ((producto.price*(100-producto.multiplicadorPromocion))/100).toFixed(0)}</Text>
+              <Text style={[productDetailsStyles.itemDescripcion, { marginTop: 8, fontSize: 15, color:"red", textDecorationLine:'line-through'}]}  >{'$ ' + producto.price}</Text>
+              <Text style={[productDetailsStyles.itemDescripcion, { marginTop: 8, fontSize: 22, color:"green" }]}  >{'$ ' + ((producto.price*(100-producto.multiplicadorPromocion))/100).toFixed(0)}</Text>
               </>
               ):
               ( 
                <> 
-                <Text style={[styles.itemDescripcion, {
+                <Text style={[productDetailsStyles.itemDescripcion, {
                     fontWeight: 'bold'
                   }]} > {producto.nombre} </Text>
-                  <Text style={[styles.itemDescripcion, { fontSize: 15 }]}> {producto.descripcion}</Text>
+                  <Text style={[productDetailsStyles.itemDescripcion, { fontSize: 15 }]}> {producto.descripcion}</Text>
                  
-                <Text style={[styles.itemDescripcion, { marginTop: 8, fontSize: 22, color:"green" }]}  >{'$ ' + producto.price}</Text>
+                <Text style={[productDetailsStyles.itemDescripcion, { marginTop: 8, fontSize: 22, color:"green" }]}  >{'$ ' + producto.price}</Text>
                </>
               )
             }
@@ -153,55 +153,14 @@ export default function ProductDetailsScreen({navigation, route}:Props) {
                             />
                         }
                         type="outline"
-                        buttonStyle = {styles.button}
+                        buttonStyle = {productDetailsStyles.button}
                         activeOpacity={ 0.8 }
-                        style={ styles.button }
+                        style={ productDetailsStyles.button }
                         onPress={() => agregarAlCarrito()}
                         title = 'Agregar al carrito'
-                        titleStyle= {styles.title}
+                        titleStyle= {productDetailsStyles.title}
                     />
             </View>
-
-                           
-
-       
-    
-  
-
     </>
     )
 }
-
-const styles = StyleSheet.create({
-    image: {
-        width:width,
-        height:height/2.5,
-    },
-    container: {
-        flex:0.33,
-        backgroundColor:'white',
-        top:15,
-        paddingHorizontal: 11,
-        justifyContent:'center',
-        marginHorizontal:20,
-        borderRadius:10
-    },
-
-    itemDescripcion: {
-        textAlign: 'center',
-        fontSize: 18,
-        color: '#000000',
-    },
-    button: {
-        width: 250, 
-         backgroundColor:'#FD801E',
-         borderRadius: 100,
-         alignSelf: 'center'
-     },
-     title: {
-         alignItems: 'center',
-         color : 'white'
- 
-     },
-    
-});
