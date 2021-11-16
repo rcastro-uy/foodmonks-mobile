@@ -115,19 +115,16 @@ export default function HomeScreen({navigation, route}:any) {
           ListFooterComponent = {renderFooter}
           keyExtractor={({correo}, index) => correo}
           renderItem={({ item }:ListRenderItemInfo<Restaurante>) => (
-            <RestauranteComponent correo={item.correo} nombre={item.nombre} descripcion={item.descripcion} imagen={item.imagen} calificacion={item.calificacion}/>
+            <TouchableOpacity onPress={()=> navigation.navigate('ProductosScreen',{'id':item.correo,'nombre':item.nombreRestaurante})}  activeOpacity={0.8}>
+            
+            <RestauranteComponent correo={item.correo} nombre={item.nombreRestaurante} descripcion={item.descripcion} imagen={item.imagen} calificacion={item.calificacion}/>
+            </TouchableOpacity>   
+        
             )}
         />
         
         {/* <RestauranteComponent correo={"prueba"} nombre={"Mauricio"} descripcion={"el restaurante"} imagen={"img.com"} calificacion={4.5}/>
         <RestauranteComponent correo={"prueba"}  nombre={"Mauricio"} descripcion={"el restaurante"} imagen={"img.com"} calificacion={3.2}/> */}
-        
-        {/* <Button 
-            title="cerrar sesion"
-            color="#5856D6"
-            onPress={ cerrarSesion }
-        /> */}
-        {/* </KeyboardAwareScrollView> */}
         </SafeAreaView>
         </>
     )

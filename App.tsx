@@ -7,6 +7,7 @@ import { MainStackNavigator } from './navigation/StackNavigator';
 import { AuthProvider } from './context/AuthContext';
 import { AddressProvider } from './context/AddressContext';
 import { RestaurantesProvider } from './context/RestaurantesContext';
+import { CarritoProvider } from './context/CarritoContext';
 
 export default function App() {
   return (
@@ -23,7 +24,9 @@ const AppState = ({ children }: any ) => {
     <AuthProvider>
       <AddressProvider>
         <RestaurantesProvider>
-          { children }
+          <CarritoProvider>
+            { children }
+          </CarritoProvider>
         </RestaurantesProvider>
       </AddressProvider> 
     </AuthProvider>

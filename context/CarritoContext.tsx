@@ -9,7 +9,7 @@ export interface CarritoContext {
 
 // lo usamos para indicar como luce a React y que expone el context
 export interface CarritoContextProps {
-    agregarProducto: (item:Producto) => void;
+    agregarProducto: (item:Producto, cantidad:number) => void;
     listarProductos: () => ({productos : CarritoContext[]});
     vaciarCarrito: () => void;
     quitarProducto: (postId: number) => void;
@@ -27,7 +27,7 @@ export  const CarritoProvider = ({children }: any) => {
 
     const [productos, setProductos] = useState<CarritoContext[]>([]);
 
-    const  agregarProducto = (item : Producto) => {
+    const  agregarProducto = (item : Producto, cantidad:number) => {
         if (productos.length >0) {
             let i : number
             i = 0;
@@ -36,21 +36,21 @@ export  const CarritoProvider = ({children }: any) => {
                     if(i == productos.length-1 ){
                         const addCarrito : CarritoContext = {
                             producto : item,
-                            cantidad : 1
+                            cantidad : cantidad
                         } 
                         setProductos([...productos,addCarrito])
                     }
                 i++
               }
               else {
-                productos[i].cantidad++;
+                productos[i].cantidad= cantidad;
                 i = productos.length;
               }
             }
         }else{
             const addCarrito : CarritoContext = {
                 producto : item,
-                cantidad : 1
+                cantidad : cantidad
             } 
             setProductos([...productos,addCarrito])
           }
@@ -91,7 +91,10 @@ export  const CarritoProvider = ({children }: any) => {
     const calcularTotal = () => {
        
         for (var i in productos){
-            total = total + (productos[i].cantidad * productos[i].producto.price)
+            if (productos[i].producto.multiplicadorPromocion!=0)
+                total = total + parseInt((((productos[i].producto.price*(100-productos[i].producto.multiplicadorPromocion))/100)* productos[i].cantidad).toFixed(0))
+            else    
+                total = total + (productos[i].cantidad * productos[i].producto.price)
         }
         return(
             {total}

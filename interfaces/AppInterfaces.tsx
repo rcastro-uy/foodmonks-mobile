@@ -104,7 +104,7 @@ export const categorias = [
         value: "COMBOS"
     },
     {
-        label: "ComidaArabe",
+        label: "Comida Arabe",
         value: "COMIDAARABE"
     },
     {

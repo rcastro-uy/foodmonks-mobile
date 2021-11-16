@@ -31,7 +31,7 @@ export const RestaurantesProvider = ({ children }: any ) => {
         let result = true;   
         try{ 
             const token = await AsyncStorage.getItem('token');
-            console.log(token)
+            //console.log(token)
             const refreshToken = await AsyncStorage.getItem('refreshToken')
             const resp = await foodMonksApi.get<Restaurante[]>(`/v1/cliente/listarAbiertos?nombre=${nombre}&categoria=${categoria}&orden=${orden}`,
             { headers: {
@@ -69,7 +69,7 @@ export const RestaurantesProvider = ({ children }: any ) => {
         let result = true;   
         try{ 
             const token = await AsyncStorage.getItem('token');
-            console.log(token)
+            //console.log(token)
             const refreshToken = await AsyncStorage.getItem('refreshToken')
             const resp = await foodMonksApi.get<Producto[]>(`/v1/cliente/listarProductosRestaurante?id=${restauranteId}&categoria=${categoria}&precioInicial=${precioInicial}&precioFinal=${precioFinal}`,
             { headers: {

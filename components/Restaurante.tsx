@@ -8,18 +8,11 @@ import { fontPixel, heightPixel, pixelSizeHorizontal, pixelSizeVertical, widthPi
 import { useNavigation } from '@react-navigation/native'
 
 export const RestauranteComponent = ({correo, nombre, descripcion, imagen, calificacion}: RestauranteComp) => {
-    const { navigate } = useNavigation()
+    //const { navigate } = useNavigation()
     const { height, width } = useWindowDimensions();
     return (
         <>
-        <TouchableWithoutFeedback
-                onPress={() => {
-                    // Navegar al restaurante seleccionado 
-                    //navigation.navigate('ProductosScreen')
-                    console.log(correo)
-                    //navigate('ProductosScreen',{correo: correo});
-                }}>
-                <View style={styles.restauranteCard}>
+              <View style={styles.restauranteCard}>
                 {/* <View style={{flexDirection: 'row', alignItems: 'center'}}> */}
                     <View style={styles.imagen}>
                     <Avatar
@@ -82,7 +75,6 @@ export const RestauranteComponent = ({correo, nombre, descripcion, imagen, calif
 
                 {/* </View> */}
                 </View>
-        </TouchableWithoutFeedback>
         </>
     );
 }
