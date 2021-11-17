@@ -8,8 +8,27 @@ import SplashScreen from '../screens/SplashScreen';
 import { LoadingScreen } from "../screens/LoadingScreen";
 import { RegisterScreen } from "../screens/RegisterScreen";
 import RecoveryPasswordScreen from "../screens/RecoverPasswordScreen";
+import ProductosScreen from '../screens/ProductosScreen';
+import ProductDetailsScreen from "../screens/ProductDetailsScreen";
+import { Producto } from "../interfaces/AppInterfaces";
+import CartScreen from "../screens/CartScreen";
 
-const Stack = createNativeStackNavigator();
+export type RootStackParams = {
+  Login: undefined,
+  RegisterScreen: undefined,
+  RecoverPasswordScreen: undefined,
+  LoadingScreen: undefined,
+  HomeDrawer: undefined,
+  PaymentScreen: {amt: number},
+  ProductosScreen: {id: string, nombre:string},
+  ProductDetailsScreen: {producto:Producto, id:string,nombre:string},
+  CartScreen: {id: string, nombre:string}
+
+}
+
+
+
+const Stack = createNativeStackNavigator<RootStackParams>();
 
 const screenOptionStyle = {
   headerStyle: {
@@ -42,8 +61,12 @@ const MainStackNavigator = () => {
             )
           : (
               <>
-                 <Stack.Screen name="LoadingScreen" component={ LoadingScreen } />
+                <Stack.Screen name="LoadingScreen" component={ LoadingScreen } />
                 <Stack.Screen name="HomeDrawer" component={DrawerNavigator} options={{ headerShown: false }}/>
+                <Stack.Screen name="ProductosScreen" component={ProductosScreen} />
+                <Stack.Screen name="ProductDetailsScreen" component={ProductDetailsScreen} />
+                <Stack.Screen name="CartScreen" component={CartScreen} />
+            
               </>
             )
       }

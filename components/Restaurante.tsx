@@ -5,25 +5,25 @@ import { StyleSheet } from 'react-native'
 import { Avatar } from 'react-native-elements'
 import { AntDesign } from '@expo/vector-icons';
 import { fontPixel, heightPixel, pixelSizeHorizontal, pixelSizeVertical, widthPixel } from '../theme/Normalization'
+import { useNavigation } from '@react-navigation/native'
 
-export const RestauranteComponent = ({nombre, descripcion, imagen, calificacion}: RestauranteComp) => {
+export const RestauranteComponent = ({correo, nombre, descripcion, imagen, calificacion}: RestauranteComp) => {
+    //const { navigate } = useNavigation()
     const { height, width } = useWindowDimensions();
     return (
         <>
-        <TouchableWithoutFeedback
-                onPress={() => {
-                    // Navegar al restaurante seleccionado
-                    // this.redirectToChatConverstion(item);
-                }}>
-                <View style={styles.restauranteCard}>
+              <View style={styles.restauranteCard}>
                 {/* <View style={{flexDirection: 'row', alignItems: 'center'}}> */}
                     <View style={styles.imagen}>
                     <Avatar
                         size={65}
                         title="IMG"
-                        onPress={() => console.log("Works!")}
+                        //onPress={() => console.log("Works!")}
                         activeOpacity={0.7}
-                        source={ require('../images/foodMonks.png') }
+                        source={{
+                            uri:
+                              `${imagen}`,
+                          }}
                     />
                     </View>
                     <View style={styles.textos}>
@@ -75,7 +75,6 @@ export const RestauranteComponent = ({nombre, descripcion, imagen, calificacion}
 
                 {/* </View> */}
                 </View>
-        </TouchableWithoutFeedback>
         </>
     );
 }
