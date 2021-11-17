@@ -1,4 +1,4 @@
-import {API_URL} from '@env'
+import { API_URL } from '@env'
 import axios from "axios";
 import { Alert } from "react-native";
 import { validateEmail } from "../utils/helpers";

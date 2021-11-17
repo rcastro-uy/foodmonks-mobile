@@ -1,31 +1,38 @@
-import React, { createContext, useContext, useEffect, useReducer } from "react";
+import React, { createContext, useContext, useEffect, useReducer, useState } from "react";
 import { Buffer } from "buffer"
+import * as Notifications from 'expo-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import foodMonksApi from "../api/foodMonksApi";
 import { LoginData, LoginResponse, NuevoCliente, UserInfoResponse } from "../interfaces/AppInterfaces";
 import { authReducer, AuthState } from "./AuthReducer";
+import { Alert } from "react-native";
 
 
 interface AuthContextProps {
     MensajeOk: string
     MensajeError: string;
     token: string | null;
+    refreshToken: string | null;
     usuario: UserInfoResponse | null;
     estado: 'chequear' | 'autenticado' | 'no-autenticado';
     primerCarga: boolean;
     registrarCuenta: (NuevoCliente : NuevoCliente ) => void;
+    eliminarCuenta: () => void;
     iniciarSesion: ( loginData : LoginData ) => void;
     cerrarSesion: () => void;
     quitarError: () => void;
     quitarMensajeOk: () => void
     cambiarPrimerCarga: () => void;
     comprobarToken: () => void;
+    getTokenMobile: () => void;
+
 }
 
 const authInicialState: AuthState = {
     MensajeOk: '',
     MensajeError: '',
     token: null,
+    refreshToken: null,
     usuario: null,
     estado: 'chequear',
     primerCarga : true
@@ -37,12 +44,38 @@ export const AuthContext = createContext({} as AuthContextProps);
 export const AuthProvider = ({children}: any) =>{
 
     const [ state, dispatch ] = useReducer( authReducer, authInicialState);
+    const [notification, setNotification] = useState<any>();
+    const [tokenNotificacion, setTokenNotification] = useState<string>('');
+  const notificationListener = React.useRef<any>();
+  const responseListener = React.useRef<any>();
+
+
+    Notifications.setNotificationHandler({
+        handleNotification: async () => ({
+          shouldShowAlert: true,
+          shouldPlaySound: false,
+          shouldSetBadge: false,
+        }),
+      });
 
     useEffect(() =>{
-
+        // Este oyente se activa cada vez que se recibe una notificación mientras la aplicación está en primer plano
+        notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+            setNotification(notification);
+          });
+      // Este oyente se activa cada vez que un usuario toca una notificación o interactúa con ella (funciona cuando la aplicación está en primer plano, en segundo plano o eliminada)
+          responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+            console.log(response);
+          });
+          
         setTimeout(() => {
             comprobarToken();
            }, 2000)   
+
+           return () => {
+            Notifications.removeNotificationSubscription(notificationListener.current);
+            Notifications.removeNotificationSubscription(responseListener.current);
+          };
         
     }, [])
 
@@ -84,8 +117,21 @@ export const AuthProvider = ({children}: any) =>{
 
     }
 
-    const registrarCuenta = async ({nombre, apellido,correo,password,direccion} : NuevoCliente) => {
+    const getTokenMobile = async() => {
+        const {status} = await Notifications.requestPermissionsAsync();
+        if (status !== "granted") {
+            return;
+        }
 
+        const token = await Notifications.getExpoPushTokenAsync();
+        setTokenNotification (token.data)
+       
+
+       
+    }
+
+    const registrarCuenta = async ({nombre, apellido,correo,password,direccion} : NuevoCliente) => {
+            
          try{
             const resp1 = await foodMonksApi.post('/v1/cliente/altaCliente', { nombre,apellido,correo,password,direccion } );
             dispatch({ 
@@ -99,12 +145,45 @@ export const AuthProvider = ({children}: any) =>{
             });
         }
     }
+    const eliminarCuenta = async () => {
+        try{
+            const token = await AsyncStorage.getItem('token');
+            const refreshToken = await AsyncStorage.getItem('refreshToken')
+            const resp = await foodMonksApi.delete('/v1/cliente/eliminarCuenta',
+            {
+                headers: {
+                    Authorization: "Bearer " + token,
+                    RefreshAuthentication: "Bearer " + refreshToken,
+                }
+            }).then((res) => {
+                if(res.status == 200) {
+                    dispatch({ 
+                        type: 'exito', 
+                        payload: 'Su cuenta se elimino correctamente'
+                    });
+                }
+            }).catch((err) => {
+                dispatch({ 
+                    type: 'error', 
+                    payload: err || 'La cuenta ya fue eliminada'
+                });
+            });
+        } catch (error: any) {
+            dispatch({ 
+                type: 'error', 
+                payload: error || 'La cuenta ya fue eliminada'
+            });
+        }
+    }
     const iniciarSesion = async( {correo, contraseña} : LoginData) => {
-
+       console.log(tokenNotificacion)
         try {
             let password = Buffer.from(contraseña, "utf8").toString('base64');
             let email = Buffer.from(correo, "utf8").toString('base64');
-            const resp1 = await foodMonksApi.post<LoginResponse>('/v1/auth/login', { email, password } );
+            let mobileToken = Buffer.from(tokenNotificacion, "utf8").toString('base64')
+            const resp1 = await foodMonksApi.post<LoginResponse>('/v1/auth/login', { email, password, mobileToken },{ headers: {
+                'User-Agent' : 'mobile'
+              }} );
             if (resp1.data.token != null){
                 try {
                     const resp = await foodMonksApi.get<UserInfoResponse>('/v1/auth/userinfo', {
@@ -164,12 +243,14 @@ export const AuthProvider = ({children}: any) =>{
         <AuthContext.Provider value={{
             ...state,
             registrarCuenta,
+            eliminarCuenta,
             iniciarSesion,
             cerrarSesion,
             quitarError,
             quitarMensajeOk,
             cambiarPrimerCarga,
-            comprobarToken
+            comprobarToken,
+            getTokenMobile
         }}>
             {children}
         </AuthContext.Provider>

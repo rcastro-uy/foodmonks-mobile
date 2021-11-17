@@ -45,8 +45,9 @@ export default function LoginScreen({navigation}:Props) {
         return isValid
     }   
 
-     const { iniciarSesion, MensajeError, quitarError} = useContext( AuthContext );
+     const { iniciarSesion, MensajeError, quitarError, getTokenMobile} = useContext( AuthContext );
 
+     getTokenMobile();
      const onLogin = () => {
         if (!validateData()) return ;
         Keyboard.dismiss();
