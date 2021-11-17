@@ -6,6 +6,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { MainStackNavigator } from './navigation/StackNavigator';
 import { AuthProvider } from './context/AuthContext';
 import { AddressProvider } from './context/AddressContext';
+import { RestaurantesProvider } from './context/RestaurantesContext';
+import { CarritoProvider } from './context/CarritoContext';
 
 export default function App() {
   return (
@@ -21,7 +23,11 @@ const AppState = ({ children }: any ) => {
   return (
     <AuthProvider>
       <AddressProvider>
-       { children }
+        <RestaurantesProvider>
+          <CarritoProvider>
+            { children }
+          </CarritoProvider>
+        </RestaurantesProvider>
       </AddressProvider> 
     </AuthProvider>
   )

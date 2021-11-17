@@ -2,7 +2,7 @@ import { Picker } from '@react-native-picker/picker';
 import React from 'react';
 import { StyleSheet, Text, View, Platform } from 'react-native';
 
-export default function App(opcionesA: any[]) {
+export default function PickerMulti(opcionesA: any[]) {
     const [state, setState] = React.useState("");
     if(Platform.OS === "android") {
         return(

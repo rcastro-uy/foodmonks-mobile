@@ -10,7 +10,7 @@ import { FoodLogo } from "../components/FoodLogo";
 import { passRecoverService } from "../services/passRecoverService";
 import { recoverpassStyles } from "../theme/RecoverPasswordTheme";
 
-export default function RecoveryPasswordScreen({navigation}:any) {
+export default function RecoverPasswordScreen({navigation}:any) {
     const [email, setEmail] = React.useState("");
 
     const onRecoverPassword = () => {

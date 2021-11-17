@@ -5,6 +5,7 @@ export interface AuthState {
     primerCarga:boolean;
     estado: 'chequear' | 'autenticado' | 'no-autenticado';
     token: string | null;
+    refreshToken: string | null;
     MensajeError: string;
     MensajeOk: string
     usuario: UserInfoResponse | null;

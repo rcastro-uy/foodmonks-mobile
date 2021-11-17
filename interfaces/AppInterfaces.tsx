@@ -38,10 +38,6 @@ export interface ResponseAddDireccion {
     id: number;
 }
 
-
-
-
-
 export interface LoginData {
     correo: string,
     contraseña: string
@@ -56,10 +52,112 @@ export interface NuevoCliente {
 }
 
 export interface Direccion {
-    calle: string;
     numero: string;
+    calle: string;
     esquina: string;
     detalles: string;
     latitud: number;
     longitud: number;
+}
+
+export enum EstadoRestaurante {
+    PENDIENTE,
+    RECHAZADO,
+    ABIERTO,
+    CERRADO,
+    BLOQUEADO,
+    ELIMINADO
+}
+
+export interface Restaurante {
+    correo: string;
+    nombre: string;
+    apellido: string;
+    fechaRegistro: Date;
+    calificacion: number;
+    nombreRestaurante: string;
+    rut: number;
+    estado: EstadoRestaurante;
+    telefono: number;
+    descripcion: string;
+    cuentaPaypal: string;
+    imagen: string;
+    direcciones: Direccion[];
+    roles: string[];
+}
+
+export interface RestauranteComp {
+    correo: string;
+    nombre: string;
+    descripcion: string;
+    imagen: string;
+    calificacion: number;
+}
+
+export const categorias = [
+    {
+        label: "Bebidas",
+        value: "BEBIDAS"
+    },
+    {
+        label: "Combos",
+        value: "COMBOS"
+    },
+    {
+        label: "Comida Arabe",
+        value: "COMIDAARABE"
+    },
+    {
+        label: "Hamburguesas",
+        value: "HAMBURGUESAS"
+    },
+    {
+        label: "Minutas",
+        value: "MINUTAS"
+    },
+    {
+        label: "Pastas",
+        value: "PASTAS"
+    },
+    {
+        label: "Pizzas",
+        value: "PIZZAS"
+    },
+    {
+        label: "Postres",
+        value: "POSTRES"
+    },
+    {
+        label: "Sushi",
+        value: "SUSHI"
+    },
+    {
+        label: "Otros",
+        value: "OTROS"
+    },
+]
+
+export enum CategoriaMenu {
+    BEBIDAS,
+    COMBOS,
+    COMIDAARABE,
+    HAMBURGUESAS,
+    MINUTAS,
+    PASTAS,
+    PIZZAS,
+    POSTRES,
+    SUSHI,
+    OTROS
+}
+
+export interface Producto {
+    id: number;
+    nombre: string;
+    price: number;
+    descripcion: string;
+    visible: boolean;
+    multiplicadorPromocion: number;
+    imagen: string;
+    categoria: CategoriaMenu;
+    restaurante: Restaurante;
 }

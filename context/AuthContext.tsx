@@ -12,10 +12,12 @@ interface AuthContextProps {
     MensajeOk: string
     MensajeError: string;
     token: string | null;
+    refreshToken: string | null;
     usuario: UserInfoResponse | null;
     estado: 'chequear' | 'autenticado' | 'no-autenticado';
     primerCarga: boolean;
     registrarCuenta: (NuevoCliente : NuevoCliente ) => void;
+    eliminarCuenta: () => void;
     iniciarSesion: ( loginData : LoginData ) => void;
     cerrarSesion: () => void;
     quitarError: () => void;
@@ -30,6 +32,7 @@ const authInicialState: AuthState = {
     MensajeOk: '',
     MensajeError: '',
     token: null,
+    refreshToken: null,
     usuario: null,
     estado: 'chequear',
     primerCarga : true
@@ -142,6 +145,36 @@ export const AuthProvider = ({children}: any) =>{
             });
         }
     }
+    const eliminarCuenta = async () => {
+        try{
+            const token = await AsyncStorage.getItem('token');
+            const refreshToken = await AsyncStorage.getItem('refreshToken')
+            const resp = await foodMonksApi.delete('/v1/cliente/eliminarCuenta',
+            {
+                headers: {
+                    Authorization: "Bearer " + token,
+                    RefreshAuthentication: "Bearer " + refreshToken,
+                }
+            }).then((res) => {
+                if(res.status == 200) {
+                    dispatch({ 
+                        type: 'exito', 
+                        payload: 'Su cuenta se elimino correctamente'
+                    });
+                }
+            }).catch((err) => {
+                dispatch({ 
+                    type: 'error', 
+                    payload: err || 'La cuenta ya fue eliminada'
+                });
+            });
+        } catch (error: any) {
+            dispatch({ 
+                type: 'error', 
+                payload: error || 'La cuenta ya fue eliminada'
+            });
+        }
+    }
     const iniciarSesion = async( {correo, contraseña} : LoginData) => {
        console.log(tokenNotificacion)
         try {
@@ -210,6 +243,7 @@ export const AuthProvider = ({children}: any) =>{
         <AuthContext.Provider value={{
             ...state,
             registrarCuenta,
+            eliminarCuenta,
             iniciarSesion,
             cerrarSesion,
             quitarError,
