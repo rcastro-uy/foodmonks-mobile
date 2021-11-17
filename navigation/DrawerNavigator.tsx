@@ -6,6 +6,7 @@ import ProfileScreen from "../screens/ProfileScreen";
 import { CustomDrawerNavigator } from "./CustomDrawerNavigator";
 import { Icon } from 'react-native-elements';
 import AddressScreen from "../screens/AddressScreen";
+import ConfirmOrderScreen from "../screens/ConfirmOrderScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -39,7 +40,20 @@ const DrawerNavigator = () => {
         headerTitle:'',
         drawerActiveTintColor: '#FD801E' 
       }} />
+
+    {/*----------------- EXCLUSIVO PARA PRUEBAS, LUEGO SE VA-----------------*/}
+    <Drawer.Screen name="Confirmar Pedido (prueba)" component={ConfirmOrderScreen} options={{
+      drawerIcon: ({ focused }) => <Icon
+      name= {focused ? 'account' : 'account-outline' }
+      type='material-community'
+      color='black'
+      />,
+      headerTitle:'',
+      drawerActiveTintColor: '#FD801E' 
+    }} />
+    {/*-----------------FIN EXCLUSIVO-----------------*/}
     </Drawer.Navigator>
+    
   );
 };
 
