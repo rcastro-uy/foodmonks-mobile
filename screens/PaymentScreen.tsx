@@ -8,7 +8,7 @@ import { styles } from '../navigation/CustomDrawerNavigator';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import foodMonksApi from '../api/foodMonksApi';
 import { API_URL } from '@env';
-import { obtenerUri } from '../services/actions';
+import { obtenerUri, realizarPedido } from '../services/actions';
 import * as Animatable from 'react-native-animatable';
 
 const {width,height} = Dimensions.get('screen');
@@ -16,21 +16,23 @@ interface Props extends StackScreenProps<RootStackParams, 'PaymentScreen'>{};
 
 export default function PaymentScreen({ route, navigation }: Props) {
 
-    const monto = route.params.amt;
+    const total = route.params.total;
+    const restaurante = route.params.restaurante;
+    const direccion = route.params.direccion;
+    const menus = route.params.menus;
     const [uri, setUri]:any = useState()
-    const [token, setToken] = useState('')
     
    
   
     useEffect(() =>{
-      obtenerUri(monto,setUri )
+      obtenerUri(total,setUri )
      
       
   }, [] )
 
 
   const stateChng = (navState : any) => {
-    //console.log(navState);
+    console.log(navState);
    const { url, title, loading } = navState ;
    if(title == "PayPal Checkout" && loading == true && url.includes("token")){
       console.log("url",url);
@@ -40,9 +42,9 @@ export default function PaymentScreen({ route, navigation }: Props) {
       console.log("splitotherhalf",splitotherhalf);
       let token = splitotherhalf[0].replace("token=","");
       let PayerID = splitotherhalf[1].replace("PayerID=","");
-      navigation.replace('HomeDrawer')
-       console.log("token", token);
-       console.log("PayerID", PayerID);
+      navigation.navigate('ProcessOrderScreen',{'restaurante':restaurante, 'direccion':direccion ,'medioPago': 'PAYPAL' , 'ordenId': PayerID, 'linkAprobacion':'', 'total': total, 'menus': menus });
+     
+      //navigation.replace('HomeDrawer')
    }
   }
 

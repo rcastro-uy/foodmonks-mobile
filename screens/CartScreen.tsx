@@ -113,8 +113,8 @@ export default function CartScreen({navigation, route}:Props) {
                         buttonStyle = {styles.button}
                         activeOpacity={ 0.8 }
                         style={ styles.button }
-                        onPress={() => console.log(navigation.navigate('ProductosScreen',{'id':idRestaurante, 'nombre':nombreRestaurante }))}
-                        title = 'Continuar comprando'
+                        onPress={() => navigation.navigate('ProductosScreen',{'id':idRestaurante, 'nombre':nombreRestaurante })}
+                        title = 'Seguir comprando'
                         titleStyle= {styles.title}
                     />
                    <View style={{height:20}} />
@@ -128,7 +128,8 @@ export default function CartScreen({navigation, route}:Props) {
                        padding:10,
                        borderRadius:30,
                        margin:20
-                     }}>
+                     }}
+                     onPress={()=> navigation.navigate('ConfirmOrderScreen',{'id':idRestaurante})}>
                      <Text style={{
                          fontSize:24,
                          fontWeight:"bold",

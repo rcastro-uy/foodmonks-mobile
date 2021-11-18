@@ -34,6 +34,7 @@ export default function ProductosScreen({navigation, route}:Props) {
     useEffect(() => {
        //para sacar la advertencia. De momento es la solucion
        LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
+       
       navigation.setOptions({
         title:nombreRestaurante,
         headerTitleAlign:'center',

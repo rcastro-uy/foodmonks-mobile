@@ -161,3 +161,8 @@ export interface Producto {
     categoria: CategoriaMenu;
     restaurante: Restaurante;
 }
+
+export interface menuPedido {
+    id: number;
+    cantidad: number;
+}

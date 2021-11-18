@@ -11,8 +11,10 @@ import RecoveryPasswordScreen from "../screens/RecoverPasswordScreen";
 import PaymentScreen from '../screens/PaymentScreen';
 import ProductosScreen from '../screens/ProductosScreen';
 import ProductDetailsScreen from "../screens/ProductDetailsScreen";
-import { Producto } from "../interfaces/AppInterfaces";
+import { Producto, menuPedido } from '../interfaces/AppInterfaces';
 import CartScreen from "../screens/CartScreen";
+import ConfirmOrderScreen from '../screens/ConfirmOrderScreen';
+import ProcessOrderScreen from "../screens/ProcessOrderScreen";
 
 export type RootStackParams = {
   Login: undefined,
@@ -20,10 +22,12 @@ export type RootStackParams = {
   RecoverPasswordScreen: undefined,
   LoadingScreen: undefined,
   HomeDrawer: undefined,
-  PaymentScreen: {amt: number}
+  PaymentScreen: {restaurante: string, direccion: number,total: number, menus: menuPedido[]}
   ProductosScreen: {id: string, nombre:string},
   ProductDetailsScreen: {producto:Producto, id:string,nombre:string},
-  CartScreen: {id: string, nombre:string}
+  CartScreen: {id: string, nombre:string},
+  ConfirmOrderScreen : {id: string, bool?: boolean},
+  ProcessOrderScreen: {restaurante: string, direccion: number,medioPago: string, ordenId: string, linkAprobacion:string, total: number, menus: menuPedido[]}
 }
 
 
@@ -67,6 +71,8 @@ const MainStackNavigator = () => {
                 <Stack.Screen name="ProductosScreen" component={ProductosScreen} />
                 <Stack.Screen name="ProductDetailsScreen" component={ProductDetailsScreen} />
                 <Stack.Screen name="CartScreen" component={CartScreen} />
+                <Stack.Screen name="ConfirmOrderScreen" component={ConfirmOrderScreen} />
+                <Stack.Screen name="ProcessOrderScreen" component={ProcessOrderScreen} />
               </>
             )
       }

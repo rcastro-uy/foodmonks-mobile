@@ -40,18 +40,7 @@ const DrawerNavigator = () => {
         headerTitle:'',
         drawerActiveTintColor: '#FD801E' 
       }} />
-
-    {/*----------------- EXCLUSIVO PARA PRUEBAS, LUEGO SE VA-----------------*/}
-    <Drawer.Screen name="Confirmar Pedido (prueba)" component={ConfirmOrderScreen} options={{
-      drawerIcon: ({ focused }) => <Icon
-      name= {focused ? 'account' : 'account-outline' }
-      type='material-community'
-      color='black'
-      />,
-      headerTitle:'',
-      drawerActiveTintColor: '#FD801E' 
-    }} />
-    {/*-----------------FIN EXCLUSIVO-----------------*/}
+      
     </Drawer.Navigator>
     
   );

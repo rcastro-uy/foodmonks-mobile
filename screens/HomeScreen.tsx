@@ -115,7 +115,7 @@ export default function HomeScreen({navigation, route}:any) {
           ListFooterComponent = {renderFooter}
           keyExtractor={({correo}, index) => correo}
           renderItem={({ item }:ListRenderItemInfo<Restaurante>) => (
-            <TouchableOpacity onPress={()=> navigation.navigate('ProductosScreen',{'id':item.correo,'nombre':item.nombreRestaurante})}  activeOpacity={0.8}>
+            <TouchableOpacity onPress={()=> navigation.navigate('ProductosScreen',{'id':item.correo,'nombre':item.nombreRestaurante, 'imagen':item.imagen})}  activeOpacity={0.8}>
             
             <RestauranteComponent correo={item.correo} nombre={item.nombreRestaurante} descripcion={item.descripcion} imagen={item.imagen} calificacion={item.calificacion}/>
             </TouchableOpacity>   
