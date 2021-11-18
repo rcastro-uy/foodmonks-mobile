@@ -161,3 +161,34 @@ export interface Producto {
     categoria: CategoriaMenu;
     restaurante: Restaurante;
 }
+
+export enum MedioPago {
+    PAYPAL,
+    EFECTIVO,
+    CUALQUIERA
+}
+
+export enum EstadoPedido {
+    Pendiente,
+    Rechazado,
+    Confirmado,
+    Devuelto,
+    Finalizado,
+    Cualquiera
+}
+
+export interface Pedido {
+    id: number;
+    direccion: string;
+    total: number;
+    medioPago: MedioPago;
+    estadoPedido: EstadoPedido;
+    calificacionRestaurante: number;
+    calificacionRestauranteComentario: string;
+    categoria: CategoriaMenu;
+    restaurante: Restaurante;
+}
+
+export interface PedidoArray {
+    pedidos: Pedido[];
+}
