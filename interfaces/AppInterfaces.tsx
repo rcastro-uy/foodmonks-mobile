@@ -181,14 +181,60 @@ export interface Pedido {
     id: number;
     direccion: string;
     total: number;
-    medioPago: MedioPago;
-    estadoPedido: EstadoPedido;
-    calificacionRestaurante: number;
-    calificacionRestauranteComentario: string;
+    medioPago: string;
+    estadoPedido: string;
+    fechaHoraEntrega: string;
+    calificacionCliente: boolean;
+    calificacionRestaurante: boolean;
     categoria: CategoriaMenu;
-    restaurante: Restaurante;
+    nombreRestaurante: string;
+    menus: MenuCompra[];
+}
+
+export interface MenuCompra {
+    menu: string;
+    imagen: string;
+    precio: number;
+    multiplicadorPromocion: number;
+    precioPorCantidad: number;
+    calculado: number;
+    cantidad: number;
 }
 
 export interface PedidoArray {
     pedidos: Pedido[];
 }
+
+export const estadosPedido = [
+    {
+        label: "Pendiente",
+        value: "Pendiente"
+    },
+    {
+        label: "Rechazado",
+        value: "Rechazado"
+    },
+    {
+        label: "Confirmado",
+        value: "Confirmado"
+    },
+    {
+        label: "Devuelto",
+        value: "Devuelto"
+    },
+    {
+        label: "Finalizado",
+        value: "Finalizado"
+    }
+]
+
+export const mediosPago = [
+    {
+        label: "Paypal",
+        value: "PAYPAL"
+    },
+    {
+        label: "Efectivo",
+        value: "EFECTIVO"
+    }
+]
