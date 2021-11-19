@@ -20,7 +20,7 @@ export default function CartScreen({navigation, route}:Props) {
 
     useEffect(() => {
         navigation.setOptions({
-            title:'Carrito',
+            title:'Mi pedido',
             headerTitleAlign:'center',
             headerShown: true,
             headerBackTitle: '',

@@ -8,7 +8,7 @@ type RestaurantesContextProps = {
     restaurantes: Restaurante[];
     productos: Producto[];
     listarRestaurantes: (nombre: string, categoria: string, orden: boolean) => Promise<any>;
-    listarProductos: (restauranteId: string, categoria: string, precioInicial: number, precioFinal: number) => Promise<any>;
+    listarProductos: (restauranteId: string, categoria: string, precioInicial: string, precioFinal: string) => Promise<any>;
     obtenerRestaurante: (restauranteId: string) => Restaurante | undefined;
 
 }
@@ -52,7 +52,7 @@ export const RestaurantesProvider = ({ children }: any ) => {
         }
     }
 
-    const listarProductos = async(restauranteId: string, categoria: string, precioInicial: number, precioFinal: number):Promise<any> => {
+    const listarProductos = async(restauranteId: string, categoria: string, precioInicial: string, precioFinal: string):Promise<any> => {
         let result = true;   
         try{ 
             const token = await AsyncStorage.getItem('token');

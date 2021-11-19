@@ -2,7 +2,7 @@
 import { DefaultTheme } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack'
 import React, { useContext, useEffect, useState } from 'react'
-import {Alert, Dimensions, Image, Text, TouchableOpacity } from 'react-native';
+import {Alert, Dimensions, Image, ScrollView, Text, TouchableOpacity } from 'react-native';
 import { View } from 'react-native-animatable'
 import { Button, Icon } from 'react-native-elements';
 import { List, RadioButton } from 'react-native-paper'
@@ -70,7 +70,7 @@ export default function ConfirmOrderScreen({navigation, route}: Props) {
             return true
         }    
     return (
-        <>
+        <ScrollView>
         <View style={[confirmOrderStyles.container,{flexDirection:'row'}]}>
             <Image resizeMode={"cover"} style={{margin:10 ,width:50,height:50, overflow: "hidden", borderRadius:50/2}} source={{uri: restaurante?.imagen}} />
                          
@@ -159,7 +159,7 @@ export default function ConfirmOrderScreen({navigation, route}: Props) {
                 title = 'Enviar pedido'
                 titleStyle= {confirmOrderStyles.titleButton}
         />
-    </>
+    </ScrollView>
     )
 }
 
