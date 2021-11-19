@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { Text, StyleSheet, FlatList, TouchableOpacity, Keyboard, ListRenderItem, ListRenderItemInfo, View, ActivityIndicator } from "react-native";
+import { Text, StyleSheet, FlatList, TouchableOpacity, Keyboard, ListRenderItem, ListRenderItemInfo, View, ActivityIndicator, LogBox } from "react-native";
 import { AuthContext } from "../context/AuthContext";
 import { categorias, Restaurante } from "../interfaces/AppInterfaces";
 import { RestauranteComponent } from "../components/Restaurante";
@@ -11,6 +11,8 @@ import { Picker } from "@react-native-picker/picker";
 import { RestaurantesContext } from "../context/RestaurantesContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "react-native-elements/dist/buttons/Button";
+import { ScrollView } from "react-native-gesture-handler";
+import { homeStyles } from "../theme/HomeTheme";
 
 export default function HomeScreen({navigation, route}:any) {
     const [restaurantes, setRestaurantes] = React.useState([]);
@@ -32,6 +34,7 @@ export default function HomeScreen({navigation, route}:any) {
     const toggleSwitch = () => setOrden(previousState => !previousState);
     
     useEffect(() => {
+        LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
         let isMounted = true;
         setLoading(true);
         comprobarToken();
@@ -45,6 +48,13 @@ export default function HomeScreen({navigation, route}:any) {
         console.log("Cargo los restaurantes")
         return () => { isMounted = false };
     }, [])
+
+    const setCategoriaFlatList = (value: string)  => {
+        if(categoria === value)
+        setCategoria("")
+      else
+        setCategoria(value)
+      }
 
     const renderFooter = () => {
         if(loading){
@@ -63,12 +73,12 @@ export default function HomeScreen({navigation, route}:any) {
 
     return (
         <>
-        <SafeAreaView>        
+        <ScrollView>        
         {/* <KeyboardAwareScrollView
         contentContainerStyle={ styles.formContainer }
         keyboardShouldPersistTaps='handled'
         > */}
-        <Input 
+        {/* <Input 
             placeholder="Nombre del restaurante"
             placeholderTextColor="rgba(255,80,40,0.3)"
             inputContainerStyle={styles.inputField}
@@ -81,8 +91,8 @@ export default function HomeScreen({navigation, route}:any) {
             onSubmitEditing={ onListarRestaurantes }
             autoCapitalize="none"
             autoCorrect={ false }
-        />
-        <Picker
+        /> */}
+        {/* <Picker
         selectedValue={categoria}
         onValueChange={(value, index) => setCategoria(value)}
         mode="dropdown" // Android only
@@ -92,22 +102,55 @@ export default function HomeScreen({navigation, route}:any) {
         {categorias.map((i, index) => 
             <Picker.Item key={index} label={i.label} value={i.value} />
         )}
-        </Picker>
-        <Text style={ {fontSize: fontPixel(15), color: 'black', marginLeft: pixelSizeHorizontal(340)} }>Orden</Text>
+        </Picker> */}
+        <View style={homeStyles.containerBuscar}>
+                <View style={{flexDirection: "row", alignContent:'center'}} >
+                    <Input
+                        placeholder="Nombre del restaurante"
+                        placeholderTextColor="rgba(255,80,40,0.3)"
+                        inputContainerStyle={homeStyles.inputField}
+                        leftIcon={<Ionicons size={24} color={"#FD801E"} 
+                        type={'font-awesome'} name="person"/>}
+                        keyboardType="email-address"
+                        selectionColor="black"
+                        onChangeText = {setNombre}
+                        value={nombre}
+                        onSubmitEditing={ onListarRestaurantes }
+                        autoCapitalize="none"
+                        autoCorrect={ false }
+                    />
+                </View>     
+                <View style={homeStyles.flatCategorias}>
+                    <FlatList
+                      horizontal={true}
+                      data={categorias}
+                      renderItem={({ item }) => (
+                        <TouchableOpacity style={item.value == categoria ? homeStyles.selected : homeStyles.divCategorie}
+                        onPress={()=> setCategoriaFlatList(item.value)}>
+                            <Text style={{fontWeight:'bold',fontSize:15, color:'white'}}>{item.label}</Text>
+                        </TouchableOpacity>
+                      )}
+                      keyExtractor = { (item, index) => index.toString() }
+                      style={homeStyles.containerCategoria}
+                      showsHorizontalScrollIndicator={ false }
+                    />              
+                </View>
+        </View>
+        <Text style={homeStyles.labelSwitch}>Orden</Text>
         <Switch
             trackColor={{ false: "#767577", true: "#767577" }}
             thumbColor={orden ? "orange" : "#ffffff"}
             ios_backgroundColor="#3e3e3e"
             onValueChange={toggleSwitch}
-            style={styles.switch}
+            style={homeStyles.switch}
             value={orden}
         />
         <TouchableOpacity
             activeOpacity={ 0.8 }
-            style={ styles.button }
+            style={ homeStyles.button }
             onPress={ onListarRestaurantes }
         >
-            <Text style={ styles.buttonText } >Buscar</Text>
+            <Text style={ homeStyles.buttonText } >Buscar</Text>
         </TouchableOpacity>
 
         <FlatList
@@ -125,66 +168,7 @@ export default function HomeScreen({navigation, route}:any) {
         
         {/* <RestauranteComponent correo={"prueba"} nombre={"Mauricio"} descripcion={"el restaurante"} imagen={"img.com"} calificacion={4.5}/>
         <RestauranteComponent correo={"prueba"}  nombre={"Mauricio"} descripcion={"el restaurante"} imagen={"img.com"} calificacion={3.2}/> */}
-        </SafeAreaView>
+        </ScrollView>
         </>
     )
 }
-const styles = StyleSheet.create({
-    container: {
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    headerContainer: {
-        height: pixelSizeVertical(50),
-        marginTop: pixelSizeVertical(30),
-        borderBottomWidth:1
-    },
-    formContainer: {
-        top:-10,
-        marginTop:20,
-        paddingHorizontal: 11,
-        justifyContent:'center',
-    },
-    title: {
-        color: '#FD801E',
-        fontSize: fontPixel(25),
-        fontWeight: 'bold',
-        marginTop: 15,
-        textAlign: 'center'
-    },
-    button: {
-        borderWidth: 2,
-        borderColor: '#FD801E',
-        paddingHorizontal: 20,
-        paddingVertical: 5,
-        borderRadius: 100,
-        alignSelf:'center',
-        width: '45%',
-        marginBottom:20
-    },
-    buttonText: {
-        fontSize: 18,
-        color: '#FD801E',
-        alignSelf: 'center'
-    },
-    buttonReturn: {
-        position: 'absolute',
-        bottom: -3,
-        left: 5,
-    },
-    picker: {
-        marginVertical: 30,
-        width: 300,
-        padding: 10,
-        borderWidth: 1,
-        borderColor: "#666",
-    },
-    switch: {
-        position: 'relative',
-    },
-    inputField: {
-        borderBottomWidth: 1,
-        borderBottomColor:"black"
-    },
-});
