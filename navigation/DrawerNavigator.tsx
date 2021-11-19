@@ -7,6 +7,8 @@ import { CustomDrawerNavigator } from "./CustomDrawerNavigator";
 import { Icon } from 'react-native-elements';
 import AddressScreen from "../screens/AddressScreen";
 import ConfirmOrderScreen from "../screens/ConfirmOrderScreen";
+import PedidosScreen from "../screens/PedidosScreen";
+import { Ionicons } from "@expo/vector-icons";
 
 const Drawer = createDrawerNavigator();
 
@@ -31,6 +33,15 @@ const DrawerNavigator = () => {
         headerTitleAlign:'center',
         drawerActiveTintColor: '#FD801E' 
       }} />
+      <Drawer.Screen name="Pedidos"  component={PedidosScreen} options={{
+        drawerIcon: ({ focused }) => <Icon
+        name= {focused ? 'food' : 'food' }
+        type='material-community'
+        color='black'
+        />,
+        headerTitleAlign:'center',
+        drawerActiveTintColor: '#FD801E' 
+      }} />
       <Drawer.Screen name="Mi cuenta" component={ProfileScreen} options={{
         drawerIcon: ({ focused }) => <Icon
         name= {focused ? 'account' : 'account-outline' }
@@ -40,18 +51,7 @@ const DrawerNavigator = () => {
         headerTitle:'',
         drawerActiveTintColor: '#FD801E' 
       }} />
-
-    {/*----------------- EXCLUSIVO PARA PRUEBAS, LUEGO SE VA-----------------*/}
-    <Drawer.Screen name="Confirmar Pedido (prueba)" component={ConfirmOrderScreen} options={{
-      drawerIcon: ({ focused }) => <Icon
-      name= {focused ? 'account' : 'account-outline' }
-      type='material-community'
-      color='black'
-      />,
-      headerTitle:'',
-      drawerActiveTintColor: '#FD801E' 
-    }} />
-    {/*-----------------FIN EXCLUSIVO-----------------*/}
+      
     </Drawer.Navigator>
     
   );

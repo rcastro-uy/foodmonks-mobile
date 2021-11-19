@@ -33,14 +33,13 @@ export const productosStyles = StyleSheet.create ({
   
     },
     inputField: {
-      width: width/2.2,
       borderBottomWidth: 1,
       borderBottomColor:"black"
   },
   containerBuscar : {
     top: 20, 
     flex:0.3,
-    justifyContent:'center',
+    //justifyContent:'center',
     backgroundColor:'white',
     borderTopEndRadius: 30,
     borderTopStartRadius:30
