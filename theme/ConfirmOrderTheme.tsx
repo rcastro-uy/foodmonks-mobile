@@ -5,8 +5,17 @@ const { width: windowWidth } = Dimensions.get('window');
 export const confirmOrderStyles = StyleSheet.create ({
     container: {
         alignSelf: "center",
+        justifyContent:'center',
         alignItems: "center",
-        justifyContent: "center",
+        backgroundColor: 'white',
+        width: windowWidth/1.1,
+        top: 15,
+        elevation:5,
+        borderRadius:6,
+        marginBottom: 20
+    },
+    containerDetalles: {
+        alignSelf: "center",
         backgroundColor: 'white',
         width: windowWidth/1.1,
         top: 15,

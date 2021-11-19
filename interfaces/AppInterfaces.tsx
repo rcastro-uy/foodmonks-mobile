@@ -162,6 +162,10 @@ export interface Producto {
     restaurante: Restaurante;
 }
 
+export interface menuPedido {
+    id: number;
+    cantidad: number;
+}
 export enum MedioPago {
     PAYPAL,
     EFECTIVO,
