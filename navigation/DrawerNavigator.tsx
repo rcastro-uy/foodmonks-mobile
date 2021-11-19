@@ -7,6 +7,8 @@ import { CustomDrawerNavigator } from "./CustomDrawerNavigator";
 import { Icon } from 'react-native-elements';
 import AddressScreen from "../screens/AddressScreen";
 import ConfirmOrderScreen from "../screens/ConfirmOrderScreen";
+import PedidosScreen from "../screens/PedidosScreen";
+import { Ionicons } from "@expo/vector-icons";
 
 const Drawer = createDrawerNavigator();
 
@@ -25,6 +27,15 @@ const DrawerNavigator = () => {
        <Drawer.Screen name="Mis direcciones"  component={AddressScreen} options={{
         drawerIcon: ({ focused }) => <Icon
         name= {focused ? 'map-marker' : 'map-marker-outline' }
+        type='material-community'
+        color='black'
+        />,
+        headerTitleAlign:'center',
+        drawerActiveTintColor: '#FD801E' 
+      }} />
+      <Drawer.Screen name="Pedidos"  component={PedidosScreen} options={{
+        drawerIcon: ({ focused }) => <Icon
+        name= {focused ? 'food' : 'food' }
         type='material-community'
         color='black'
         />,
