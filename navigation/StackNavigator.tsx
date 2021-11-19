@@ -11,7 +11,7 @@ import RecoveryPasswordScreen from "../screens/RecoverPasswordScreen";
 import PaymentScreen from '../screens/PaymentScreen';
 import ProductosScreen from '../screens/ProductosScreen';
 import ProductDetailsScreen from "../screens/ProductDetailsScreen";
-import { EstadoPedido, Producto } from "../interfaces/AppInterfaces";
+import { MenuCompra, Producto } from "../interfaces/AppInterfaces";
 import CartScreen from "../screens/CartScreen";
 import PedidoDetailsScreen from "../screens/PedidoDetailsScreen";
 
@@ -25,7 +25,7 @@ export type RootStackParams = {
   ProductosScreen: {id: string, nombre:string},
   ProductDetailsScreen: {producto:Producto, id:string,nombre:string},
   CartScreen: {id: string, nombre:string},
-  PedidoDetailsScreen: {idPedido:string, estadoPedido:EstadoPedido, restaurante:string},
+  PedidoDetailsScreen: {idPedido:string, estadoPedido:string, calificacionRestaurante:boolean, menus:MenuCompra[]},
 }
 
 const Stack = createNativeStackNavigator<RootStackParams>();
