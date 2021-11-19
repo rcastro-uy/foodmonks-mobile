@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import foodMonksApi from '../api/foodMonksApi';
-import { EstadoPedido, MedioPago, Pedido, PedidoArray, Producto, Restaurante, RestauranteComp } from '../interfaces/AppInterfaces';
+import { Pedido, PedidoArray, Producto, Restaurante, RestauranteComp } from '../interfaces/AppInterfaces';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
 
@@ -10,7 +10,7 @@ type RestaurantesContextProps = {
     cargarRestaurantes: (restaurantes: Restaurante[]) => void;
     listarRestaurantes: (nombre: string, categoria: string, orden: boolean) => Promise<any>;
     listarProductos: (restauranteId: string, categoria: string, precioInicial: number, precioFinal: number) => Promise<any>;
-    listarPedidos: (nombreRestaurante: string, nombreMenu: string, estadoPedido: EstadoPedido, medioPago: MedioPago, ordenamiento: string, fecha: Date, total: string, page: string) => Promise<any>;
+    listarPedidos: (nombreRestaurante: string, nombreMenu: string, estadoPedido: string, medioPago: string, ordenamiento: string, fecha: Date, total: string, page: string) => Promise<any>;
 }
 
 type result = {
@@ -92,7 +92,7 @@ export const RestaurantesProvider = ({ children }: any ) => {
         }
     }
 
-    const listarPedidos = async(nombreRestaurante: string, nombreMenu: string, estadoPedido: EstadoPedido, medioPago: MedioPago, ordenamiento: string, fecha: Date, total: string, page: string):Promise<any> => {
+    const listarPedidos = async(nombreRestaurante: string, nombreMenu: string, estadoPedido: string, medioPago: string, ordenamiento: string, fecha: Date, total: string, page: string):Promise<any> => {
         let result = true;   
         try{ 
             const token = await AsyncStorage.getItem('token');
