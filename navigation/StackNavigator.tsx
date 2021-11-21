@@ -29,7 +29,7 @@ export type RootStackParams = {
   CartScreen: {id: string, nombre:string},
   ConfirmOrderScreen : {id: string, bool?: boolean},
   ProcessOrderScreen: {restaurante: string, direccion: number,medioPago: string, ordenId: string, linkAprobacion:string, total: number, menus: menuPedido[]}
-  PedidoDetailsScreen: {idPedido:string, estadoPedido:string, calificacionRestaurante:boolean, menus:MenuCompra[]},
+  PedidoDetailsScreen: {idPedido:string, estadoPedido:string, calificacionRestaurante:string , menus:MenuCompra[]},
 }
 
 const Stack = createNativeStackNavigator<RootStackParams>();

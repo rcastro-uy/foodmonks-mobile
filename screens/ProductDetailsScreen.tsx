@@ -1,6 +1,6 @@
 import { StackScreenProps } from '@react-navigation/stack';
 import React, { useContext, useEffect } from 'react'
-import { Alert, Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, Dimensions, LogBox, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Button, Card, Icon, Image } from 'react-native-elements';
 import { CarritoContext } from '../context/CarritoContext';
 import { RootStackParams } from '../navigation/StackNavigator';
@@ -13,6 +13,7 @@ export default function ProductDetailsScreen({navigation, route}:Props) {
     const [cantidad, setCantidad] = React.useState<number>(0);
     
     useEffect(() => {
+        LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
         navigation.setOptions({
             title:'Menu',
             headerTitleAlign:'center',

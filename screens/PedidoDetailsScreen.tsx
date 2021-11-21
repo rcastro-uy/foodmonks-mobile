@@ -6,6 +6,7 @@ import { Button, Card, Icon, Image } from 'react-native-elements';
 import HighScore from '../components/HighScore';
 import { MenuCompraComp } from '../components/MenuCompraComp';
 import Modal from '../components/Modal';
+import UpdateDeleteScore from '../components/UpdateDeleteScore';
 import { RootStackParams } from '../navigation/StackNavigator';
 import { pedidoDetailsStyles } from '../theme/PedidoDetailsTheme';
 
@@ -21,7 +22,7 @@ export default function PedidoDetailsScreen({navigation, route}:Props) {
     const [cantidad, setCantidad] = React.useState<number>(0);
     const toastRef = React.useRef<any>()
     const [ refrescar, setRefrescar ] = useState( false );
-    const [ existeCalificacion, setExisteCalificacion ] = useState( calificacionRestaurante );
+    const [ calificacion, setCalificacion ] = useState( calificacionRestaurante );
     const [mostrarModal, setMostrarModal] = useState(false)
     const [renderComponent, setRenderComponent] = useState(<HighScore />)
 
@@ -44,14 +45,22 @@ export default function PedidoDetailsScreen({navigation, route}:Props) {
 
     const altaBajaModificarPuntuacion =() => {
          
-        if (!existeCalificacion) {
+        if (calificacion=='false') {
             setRenderComponent(
                 <HighScore
-                toastRef={toastRef} idPedido={idPedido} setMostrarModal={setMostrarModal} setExisteCalificacion={setExisteCalificacion} setRefrescar ={setRefrescar}
+                toastRef={toastRef} idPedido={idPedido} setMostrarModal={setMostrarModal} setCalificacion={setCalificacion} setRefrescar ={setRefrescar}
                 />
             )
             setMostrarModal(true)
+            return;
         }
+            setRenderComponent(
+                <UpdateDeleteScore
+                toastRef={toastRef} idPedido={idPedido} setMostrarModal={setMostrarModal} setCalificacion={setCalificacion} setRefrescar ={setRefrescar} calificacion={calificacion}
+                />
+            )
+            setMostrarModal(true)
+
 
     }
 
@@ -62,36 +71,17 @@ export default function PedidoDetailsScreen({navigation, route}:Props) {
         {
             (estadoPedido == 'Rechazado' || estadoPedido == 'Finalizado' || estadoPedido == 'Devuelto') ?
             (
-
                 <Button
-                    // icon={
-                    //     <Icon
-                    //         name="plus"
-                    //         type="material-community"
-                    //         size={25}
-                    //         color="#FD801E"
-                    //         style={{alignItems:'center'}}
-                    //     />
-                    // }
                     type="outline"
                     buttonStyle = {pedidoDetailsStyles.button}
                     activeOpacity={ 0.8 }
                     style={ pedidoDetailsStyles.button }
                     onPress={() => altaBajaModificarPuntuacion()}
-                    title = {(existeCalificacion== false)? ('Calificar'):('Modificar/Eliminar Calificacion')}
+                    title = {(calificacion== 'false')? ('Calificar'):('Modificar/Eliminar Calificacion')}
                     titleStyle= {pedidoDetailsStyles.title}
                 />
             ):(null )}
-            <Button
-            // icon={
-            //     <Icon
-            //         name="plus"
-            //         type="material-community"
-            //         size={25}
-            //         color="#FD801E"
-            //         style={{alignItems:'center'}}
-            //     />
-            // }
+        <Button
             type="outline"
             buttonStyle = {pedidoDetailsStyles.button}
             activeOpacity={ 0.8 }
@@ -99,7 +89,7 @@ export default function PedidoDetailsScreen({navigation, route}:Props) {
             //onPress={() => agregarAlCarrito()}
             title = 'Reclamar'
             titleStyle= {pedidoDetailsStyles.title}
-        />
+            />
            
         </View>
         <View style={{ flex: 0.7,backgroundColor:"#f2f2f2"}}>           

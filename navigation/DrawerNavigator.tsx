@@ -35,8 +35,8 @@ const DrawerNavigator = () => {
       }} />
       <Drawer.Screen name="Pedidos"  component={PedidosScreen} options={{
         drawerIcon: ({ focused }) => <Icon
-        name= {focused ? 'food' : 'food' }
-        type='material-community'
+        name= {focused ? 'fast-food' : 'fast-food-outline' }
+        type='ionicon'
         color='black'
         />,
         headerTitleAlign:'center',
@@ -48,7 +48,8 @@ const DrawerNavigator = () => {
         type='material-community'
         color='black'
         />,
-        headerTitle:'',
+        headerTitle:'Mi cuenta',
+        headerTitleAlign: 'center',
         drawerActiveTintColor: '#FD801E' 
       }} />
       

@@ -4,24 +4,33 @@ import { StyleSheet, Text, View } from 'react-native';
 import { AirbnbRating, Rating, Button } from 'react-native-elements';
 import { TextInput } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { altaCalificacion } from '../services/actions';
+import { altaCalificacion, eliminarCalificacion, modificarCalificacion } from '../services/actions';
 
-export default function HighScore({toastRef, idPedido, setMostrarModal,setCalificacion, setRefrescar } : any) {
+export default function UpdateDeleteScore({toastRef, idPedido, setMostrarModal,setCalificacion, setRefrescar, calificacion } : any) {
     const [text, setText] = useState('');
-    const [calificar, setCalificar] = useState(5);
-    const [id, setID] = useState('');
+    const [calificar, setCalificar] = useState(calificacion);
     const [loading, setLoading] = useState(false)
+    const [deleteLoading, setDeleteLoading] = useState(false)
 
    
    
-    const cancelar = () => {
+    const onDelete = async () => {
+        setDeleteLoading(true)
+        const resp = await eliminarCalificacion(idPedido)
+        setDeleteLoading(false)
+
+        if (!resp){
+            return
+        }
+        setCalificacion('false')
+        setRefrescar(true)
+        toastRef.current.show("Se eliminó correctamente la calificacion.", 3000)
         setMostrarModal(false)
-        return;
     }
 
-    const onSubmit = async () => {
+    const onUpdate = async () => {
         setLoading(true)
-        const resp = await altaCalificacion(idPedido,calificar.toString(),text)
+        const resp = await modificarCalificacion(idPedido,calificar.toString(),text)
         setLoading(false)
 
         if (!resp){
@@ -29,7 +38,7 @@ export default function HighScore({toastRef, idPedido, setMostrarModal,setCalifi
         }
         setCalificacion(calificar.toString())
         setRefrescar(true)
-        toastRef.current.show("Se envió correctamente la calificacion.", 3000)
+        toastRef.current.show("Se actualizó correctamente la calificacion.", 3000)
         setMostrarModal(false)
     }
 
@@ -38,7 +47,7 @@ export default function HighScore({toastRef, idPedido, setMostrarModal,setCalifi
         <>
         <KeyboardAwareScrollView>
         <View style={{margin:5}}>
-            <Text style={{fontSize:25, fontWeight:'bold', textAlign:'center',bottom:10, width:'100%', borderBottomWidth:1}}>¿Como estuvo el servicio? </Text>
+            <Text style={{fontSize:25, fontWeight:'bold', textAlign:'center',bottom:10, width:'100%', borderBottomWidth:1}}>Calificación</Text>
             <AirbnbRating
                 count={5}
                 reviews={["Muy malo", "Malo", "Bueno", "Muy bueno", "Excelente"]}
@@ -66,9 +75,9 @@ export default function HighScore({toastRef, idPedido, setMostrarModal,setCalifi
                         buttonStyle = {styles.button}
                         activeOpacity={ 0.8 }
                         style={ styles.button }
-                        onPress={cancelar}
-                        //loading= {loading}
-                        title = 'Cancelar'
+                        onPress={onUpdate}
+                        loading= {loading}
+                        title = 'Actualizar'
                         titleStyle= {styles.title}
                     />
 
@@ -78,9 +87,9 @@ export default function HighScore({toastRef, idPedido, setMostrarModal,setCalifi
                         buttonStyle = {styles.button}
                         activeOpacity={ 0.8 }
                         style={ styles.button }
-                        onPress={ onSubmit }
-                        loading= {loading}
-                        title = 'Enviar'
+                        onPress={ onDelete }
+                        loading= {deleteLoading}
+                        title = 'Eliminar'
                         titleStyle= {styles.title}
                     />
 
