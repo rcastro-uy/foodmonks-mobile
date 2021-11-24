@@ -19,6 +19,8 @@ export const modificarPerfil = async (nombre : string, apellido: string): Promis
                 Authorization: "Bearer " + token,
                 RefreshAuthentication: "Bearer " + refreshToken,
               },
+            }).then((resp) => {
+              checkTokens( resp.config.headers!.Authorization, resp.config.headers!.RefreshAuthentication)
             });
              
        } catch (error:any){
@@ -35,6 +37,111 @@ export const modificarPerfil = async (nombre : string, apellido: string): Promis
      
       return result
     }
+
+    export const altaCalificacion = async (idPedido : string, puntaje: string, comentario: string): Promise<boolean> => {
+      let result = true;
+      const data = {
+        idPedido: idPedido,
+        puntaje: puntaje,
+        comentario: comentario,
+      }
+      try{ 
+          const token = await AsyncStorage.getItem('token');
+          const refreshToken = await AsyncStorage.getItem('refreshToken')
+          const resp = axios({
+            method: "POST",
+            url: `${API_URL}/v1/cliente/calificarRestaurante`,
+            data: data,
+            headers: {
+              Authorization: "Bearer " + token,
+              RefreshAuthentication: "Bearer " + refreshToken,
+            },
+          }).then((resp) => {
+            checkTokens( resp.config.headers!.Authorization, resp.config.headers!.RefreshAuthentication)
+          });
+           
+     } catch (error:any){
+      result = false
+      Alert.alert(
+          "Error al calificar",
+          error.response.data || 'Algo salió mal, intente mas tarde',
+          [
+              { text: "OK", style: "default" }
+          ]
+      )
+
+    }
+   
+    return result
+  }
+
+  export const modificarCalificacion = async (idPedido : string, puntaje: string, comentario: string): Promise<boolean> => {
+    let result = true;
+    const data = {
+      idPedido: idPedido,
+      puntaje: puntaje,
+      comentario: comentario,
+    }
+    try{ 
+        const token = await AsyncStorage.getItem('token');
+        const refreshToken = await AsyncStorage.getItem('refreshToken')
+        const resp = axios({
+          method: "PUT",
+          url: `${API_URL}/v1/cliente/modificarCalificacionRestaurante`,
+          data: data,
+          headers: {
+            Authorization: "Bearer " + token,
+            RefreshAuthentication: "Bearer " + refreshToken,
+          },
+        }).then((resp) => {
+          checkTokens( resp.config.headers!.Authorization, resp.config.headers!.RefreshAuthentication)
+        });
+         
+   } catch (error:any){
+    result = false
+    Alert.alert(
+        "Error al modificar calificacion",
+        error.response.data || 'Algo salió mal, intente mas tarde',
+        [
+            { text: "OK", style: "default" }
+        ]
+    )
+
+  }
+ 
+  return result
+}
+
+export const eliminarCalificacion = async (idPedido : string): Promise<boolean> => {
+  let result = true;
+  try{ 
+      const token = await AsyncStorage.getItem('token');
+      const refreshToken = await AsyncStorage.getItem('refreshToken')
+      const resp = axios({
+        method: "DELETE",
+        url: `${API_URL}/v1/cliente/eliminarCalificacionRestaurante?idPedido=${idPedido}`,
+        headers: {
+          Authorization: "Bearer " + token,
+          RefreshAuthentication: "Bearer " + refreshToken,
+        },
+      }).then((resp) => {
+        checkTokens( resp.config.headers!.Authorization, resp.config.headers!.RefreshAuthentication)
+      });
+       
+ } catch (error:any){
+  result = false
+  Alert.alert(
+      "Error al eliminar calificacion",
+      error.response.data || 'Algo salió mal, intente mas tarde',
+      [
+          { text: "OK", style: "default" }
+      ]
+  )
+
+}
+
+return result
+}
 
     export const realizarPedido = async (restaurante : string, direccionId: number, medioPago: string, ordenId: string, linkAprobacion: string, total: number, menus: menuPedido[]): Promise<boolean> => {
       let result = true;

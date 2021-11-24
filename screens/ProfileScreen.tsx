@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react"
-import { View,Image, Text, Button, StyleSheet, FlatList, TouchableOpacity} from "react-native"
+import { View,Image, Text, Button, StyleSheet, FlatList, TouchableOpacity, Alert} from "react-native"
 import { AuthContext } from "../context/AuthContext";
 import { profileStyles } from '../theme/ProfileTheme';
 import { Icon } from "react-native-elements";
@@ -22,6 +22,17 @@ export default function ProfileScreen({navigation}:any) {
         comprobarToken()
         setRefrescar(false)
   },[refrescar])
+
+    const bajarCuenta = () => {
+        Alert.alert("Estas seguro?", "Si elimina la cuenta, no volvera acceder ", [
+            {
+              text: "Cancelar",
+              onPress: () => null,
+              style: "cancel"
+            },
+            { text: "Eliminar", onPress: () => { eliminarCuenta(), cerrarSesion()} }
+          ]);
+    }
      
       
     const generarOpciones = () => {
@@ -73,9 +84,10 @@ export default function ProfileScreen({navigation}:any) {
         <>
         <View style={ profileStyles.container }>
             <Image
-        source={ require('../images/monjeNegro.png') }
-        style={profileStyles.imageProfile}
-      />
+                source={ require('../images/profile-icon.png') }
+                style={profileStyles.imageProfile}
+
+            />
            <View style={profileStyles.infoUser}>
                 <Text style={profileStyles.displayName}>
                     {
@@ -84,8 +96,13 @@ export default function ProfileScreen({navigation}:any) {
                 </Text>
                 <Text>{usuario?.correo}</Text>
                 <View style={{top:15}}>
+                <Text style={{fontWeight: "bold", bottom:5}}>Fecha de registro: {usuario?.fechaRegistro}</Text>
                     <Text style={{fontWeight: "bold", bottom:5}}>Mi valoracion: {usuario?.calificacion}/5</Text>
                     <Rating  fractions="{1}"  imageSize={20}  showRating={false} startingValue={usuario?.calificacion.toString()} />
+                    {(usuario!.cantidadCalificaciones <10 )?
+                        ( <Text style={{borderWidth:0,padding:2, color:'#FD801E',fontWeight: "bold", backgroundColor:'#8CF9E5', alignSelf:'flex-start' }}>Nuevo</Text> ) : (null)
+                    }
+                   
                 </View>
             </View>
         </View>
@@ -132,7 +149,7 @@ export default function ProfileScreen({navigation}:any) {
 
     <Text style={ profileStyles.title}>Administrar</Text>
       <View style={profileStyles.optionContainer}>
-        <TouchableOpacity style={ profileStyles.containerList } activeOpacity={0.8} onPress={()=> { eliminarCuenta(); cerrarSesion()} }> 
+        <TouchableOpacity style={ profileStyles.containerList } activeOpacity={0.8} onPress={()=> {bajarCuenta()} }> 
                 <Icon
                     type="material-community"
                     name="delete"

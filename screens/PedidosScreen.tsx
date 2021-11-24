@@ -40,6 +40,8 @@ export default function PedidosScreen({navigation, route}:any) {
     useEffect(() => {
         LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
         let isMounted = true;
+        const unsubscribe = navigation.addListener('focus', () => {
+            
         setLoading(true);
         comprobarToken();
         setPedidos([]);
@@ -50,8 +52,11 @@ export default function PedidosScreen({navigation, route}:any) {
             }
         })
         console.log("Cargo los pedidos")
-        return () => { isMounted = false };
-    }, [])
+    });
+        return () => { isMounted = false, unsubscribe };
+    }, [navigation])
+
+    //console.log(JSON.stringify(pedidos))
 
     const seleccionarEstado = (value: string)  => {
         if(estadoPedido === value)

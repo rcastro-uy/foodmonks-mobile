@@ -4,9 +4,13 @@ import { color } from "react-native-reanimated";
 
 export const profileStyles = StyleSheet.create ({
     container: {
+        backgroundColor:'white',
         alignItems: "center",
         justifyContent: "center",
         flexDirection: "row",
+        margin: 15,
+        borderRadius:15,
+        elevation:6,
         paddingVertical: 30,
     },
     containerList: {
