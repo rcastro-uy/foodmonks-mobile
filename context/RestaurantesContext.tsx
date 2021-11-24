@@ -80,7 +80,7 @@ export const RestaurantesProvider = ({ children }: any ) => {
 
     const obtenerRestaurante = (id :string) => {
         return restaurantes.find(restaurante => restaurante.correo === id);
-    }    
+        
     const listarPedidos = async(nombreRestaurante: string, nombreMenu: string, estadoPedido: string, medioPago: string, ordenamiento: string, fecha: Date, total: string, page: string):Promise<any> => {
         let result = true;   
         try{ 
@@ -113,7 +113,7 @@ export const RestaurantesProvider = ({ children }: any ) => {
             productos,
             listarRestaurantes,
             listarProductos,
-            obtenerRestaurante,
+            obtenerRestaurante
             listarPedidos
         }}>
             { children }

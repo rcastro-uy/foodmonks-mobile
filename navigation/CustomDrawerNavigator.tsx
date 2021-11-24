@@ -24,20 +24,36 @@ export const CustomDrawerNavigator = (props : DrawerContentComponentProps) => {
     return (
     <SafeAreaView style={{flex: 1, maxWidth:windowWidth}}>
       <Image
-        source={ require('../images/profile-icon.png') }
+        source={ require('../images/monjeNegro.png') }
         style={styles.sideMenuProfileIcon}
       />
       <Text style={styles.textProfile}> {usuario?.nombre}</Text>
       <Text style={styles.textProfile}> {usuario?.apellido}</Text>
       <DrawerContentScrollView style={{top:30}} {...props}>
         <DrawerItemList {...props} />
+        {/* <DrawerItem
+          label="Restaurantes"
+          onPress={() => console.log()}
+        />
+        <View style={styles.customItem}>
+            <DrawerItem
+              label="Restaurantes"
+              onPress={() => props.navigation.navigate('Home')}
+            />
+          <Icon
+            name='sc-telegram'
+            type='evilicon'
+            color='#517fa4'
+          />
+        </View> */}
       </DrawerContentScrollView>
-     
       <DrawerItem
-      
+          label="Perfil"
+          onPress={() => props.navigation.navigate('Mi cuenta')}
+        />
+      <DrawerItem
           label="Cerrar sesion"
           onPress={ cerrarSesion }
-          icon= {() => <Icon  type='material-community' name='logout' />}
         />
     </SafeAreaView>
   );
