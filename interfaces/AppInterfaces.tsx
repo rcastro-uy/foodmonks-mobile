@@ -207,6 +207,9 @@ export interface MenuCompra {
 
 export interface PedidoArray {
     pedidos: Pedido[];
+    currentPage: number;
+    totalItems: number;
+    totalPages: number;
 }
 
 export const estadosPedido = [
