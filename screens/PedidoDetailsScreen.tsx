@@ -81,16 +81,19 @@ export default function PedidoDetailsScreen({navigation, route}:Props) {
                     titleStyle= {pedidoDetailsStyles.title}
                 />
             ):(null )}
-        <Button
-            type="outline"
-            buttonStyle = {pedidoDetailsStyles.button}
-            activeOpacity={ 0.8 }
-            style={ pedidoDetailsStyles.button }
-            //onPress={() => agregarAlCarrito()}
-            title = 'Reclamar'
-            titleStyle= {pedidoDetailsStyles.title}
-            />
-           
+        {
+            (estadoPedido == 'Finalizado') ?
+            (
+                <Button
+                    type="outline"
+                    buttonStyle = {pedidoDetailsStyles.button}
+                    activeOpacity={ 0.8 }
+                    style={ pedidoDetailsStyles.button }
+                    //onPress={() => agregarAlCarrito()}
+                    title = 'Reclamar'
+                    titleStyle= {pedidoDetailsStyles.title}
+                />
+            ):(null )}
         </View>
         <View style={{ flex: 0.7,backgroundColor:"#f2f2f2"}}>           
             <View style={{width: width, padding:15, alignItems:'center' }}>
