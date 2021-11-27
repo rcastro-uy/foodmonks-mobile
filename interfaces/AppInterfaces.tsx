@@ -192,7 +192,15 @@ export interface Pedido {
     calificacionRestaurante: string;
     categoria: CategoriaMenu;
     nombreRestaurante: string;
+    reclamo: Reclamo;
     menus: MenuCompra[];
+}
+
+export interface Reclamo {
+    id: number;
+    fecha: Date;
+    razon: string;
+    comentario: string;
 }
 
 export interface MenuCompra {

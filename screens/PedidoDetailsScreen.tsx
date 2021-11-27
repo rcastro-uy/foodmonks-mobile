@@ -17,6 +17,7 @@ export default function PedidoDetailsScreen({navigation, route}:Props) {
     const idPedido = route.params.idPedido;
     const estadoPedido = route.params.estadoPedido;
     const calificacionRestaurante = route.params.calificacionRestaurante; //Es true si el restaurante ya tiene calificacion
+    const reclamo = route.params.reclamo;
     const menus = route.params.menus;
 
     const [cantidad, setCantidad] = React.useState<number>(0);
@@ -82,14 +83,14 @@ export default function PedidoDetailsScreen({navigation, route}:Props) {
                 />
             ):(null )}
         {
-            (estadoPedido == 'Finalizado') ?
+            (estadoPedido == 'Finalizado' && reclamo == undefined) ?
             (
                 <Button
                     type="outline"
                     buttonStyle = {pedidoDetailsStyles.button}
                     activeOpacity={ 0.8 }
                     style={ pedidoDetailsStyles.button }
-                    //onPress={() => agregarAlCarrito()}
+                    onPress={()=> navigation.navigate('ReclamoScreen',{'idPedido':idPedido,'reclamo':reclamo}) }
                     title = 'Reclamar'
                     titleStyle= {pedidoDetailsStyles.title}
                 />
