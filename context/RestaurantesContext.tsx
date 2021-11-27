@@ -11,6 +11,7 @@ type RestaurantesContextProps = {
     listarProductos: (restauranteId: string, categoria: string, precioInicial: string, precioFinal: string) => Promise<any>;
     obtenerRestaurante: (restauranteId: string) => Restaurante | undefined;
     listarPedidos: (nombreRestaurante: string, nombreMenu: string, estadoPedido: string, medioPago: string, ordenamiento: string, fecha: Date, total: string, page: number) => Promise<any>;
+    realizarReclamo: (idPedido: number, razon: string, comentario: string) => Promise<any>;
 }
 
 type result = {
@@ -106,6 +107,34 @@ export const RestaurantesProvider = ({ children }: any ) => {
             )
         }
     }
+    const realizarReclamo = async(idPedido: number, razon: string, comentario: string):Promise<any> => {
+        let result = true;   
+        try{ 
+            const token = await AsyncStorage.getItem('token');
+            const refreshToken = await AsyncStorage.getItem('refreshToken')
+            const resp = await foodMonksApi.post(`/v1/cliente/agregarReclamo`,
+            {
+                pedidoId: idPedido,
+                razon: razon,
+                comentario: comentario
+            }
+            ,{ headers: {
+                    Authorization: "Bearer " + token,
+                    RefreshAuthentication: "Bearer " + refreshToken,
+                }
+            });
+            return resp;
+        } catch (error:any){
+            result = false
+            Alert.alert(
+                "Error realizando el reclamo",
+                error || 'Algo salió mal, intente mas tarde',
+                [
+                    { text: "OK", style: "default" }
+                ]
+            )
+        }
+    }
 
     return(
         <RestaurantesContext.Provider value={{
@@ -114,7 +143,8 @@ export const RestaurantesProvider = ({ children }: any ) => {
             listarRestaurantes,
             listarProductos,
             obtenerRestaurante,
-            listarPedidos
+            listarPedidos,
+            realizarReclamo
         }}>
             { children }
         </RestaurantesContext.Provider>

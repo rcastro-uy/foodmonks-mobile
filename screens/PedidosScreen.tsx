@@ -44,6 +44,7 @@ export default function PedidosScreen({navigation, route}:any) {
     useEffect(() => {
         LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
         let isMounted = true;
+        setPage(1);
         const unsubscribe = navigation.addListener('focus', () => {
             setLoading(true);
             comprobarToken();
@@ -185,7 +186,7 @@ export default function PedidosScreen({navigation, route}:any) {
             onEndReached = {cargarMas}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }:ListRenderItemInfo<Pedido>) => (
-            <TouchableOpacity onPress={()=> navigation.navigate('PedidoDetailsScreen',{'idPedido':item.id,'estadoPedido':item.estadoPedido,'calificacionRestaurante':item.calificacionRestaurante,'menus':item.menus}) }  activeOpacity={0.8}>
+            <TouchableOpacity onPress={()=> navigation.navigate('PedidoDetailsScreen',{'idPedido':item.id,'estadoPedido':item.estadoPedido,'calificacionRestaurante':item.calificacionRestaurante,'reclamo':item.reclamo, 'menus':item.menus}) }  activeOpacity={0.8}>
                 <View style={pedidosStyles.pedidoItemContainer}>
                     {/* <Text style={pedidosStyles.atributoDestacado}>Id Pedido: {item.id}</Text> */}
                     <Text style={pedidosStyles.atributo}>Dirección: {item.direccion}</Text>
