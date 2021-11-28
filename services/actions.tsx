@@ -7,14 +7,15 @@ import foodMonksApi from '../api/foodMonksApi';
 import { menuPedido } from '../interfaces/AppInterfaces';
 
 export const modificarPerfil = async (nombre : string, apellido: string): Promise<boolean> => {
-        let result = true;
+      console.log(API_URL)  
+      let result = true;
         try{ 
             const token = await AsyncStorage.getItem('token');
             console.log(token)
             const refreshToken = await AsyncStorage.getItem('refreshToken')
             const resp = axios({
               method: "PUT",
-              url: `${API_URL}/v1/cliente/modificarCliente?nombre=${nombre}&apellido=${apellido}`,
+              url: `${ API_URL }/v1/cliente/modificarCliente?nombre=${nombre}&apellido=${apellido}`,
               headers: {
                 Authorization: "Bearer " + token,
                 RefreshAuthentication: "Bearer " + refreshToken,

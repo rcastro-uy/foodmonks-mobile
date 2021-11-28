@@ -28,7 +28,7 @@ export default function ProcessOrderScreen({route, navigation}: Props) {
         setLoading(true);
         realizarPedido(restaurante, direccion,medioPago,ordenId,linkAprobacion,total,menus)
         .then((res) => {
-           
+          setTimeout(() => {   
             if (isMounted) {
                 setLoading(false);
                 isMounted = false;
@@ -37,7 +37,8 @@ export default function ProcessOrderScreen({route, navigation}: Props) {
             setTimeout(() => {
                 vaciarCarrito()
                 navigation.navigate('HomeDrawer')
-            },4000);
+            },3500);
+          },3000 ); 
         })
         .catch((error) => {
             Alert.alert("Ocurrio un error", error.response.data || "por favor, vuelva a intentar ", [

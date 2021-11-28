@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, StyleSheet, Button, TouchableHighlight, DrawerLayoutAndroid, TextInput, Platform, TouchableOpacity, KeyboardAvoidingView, Image, Keyboard, Alert } from "react-native";
+import { View, Text,TouchableOpacity, Keyboard, Alert, ActivityIndicator } from 'react-native';
 import { Background } from "../components/Background";
 import { FoodLogo } from "../components/FoodLogo";
 import { loginStyles } from "../theme/LoginTheme";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Input } from "react-native-elements";
+import { Button, Input } from "react-native-elements";
 import { Ionicons } from '@expo/vector-icons';
 import InputPassword from "../components/InputPassword";
 import { useForm } from "../hooks/useForm";
@@ -16,6 +16,7 @@ interface Props extends StackScreenProps<any, any> {}
 
 export default function LoginScreen({navigation}:Props) {
     const [hidePassword, setHidePassword] = useState(true)
+    const [loading, setLoading] = useState(false)
     
     const { email, password, onChange } = useForm({
         email: '',
@@ -51,7 +52,9 @@ export default function LoginScreen({navigation}:Props) {
      const onLogin = () => {
         if (!validateData()) return ;
         Keyboard.dismiss();
+        setLoading(true)
         iniciarSesion({ correo: email, contraseña : password });
+        setLoading(false)
     }
 
     useEffect(() => {
@@ -65,6 +68,15 @@ export default function LoginScreen({navigation}:Props) {
     }, [ MensajeError ])
 
     const getPassword = (value : string) => onChange(value, 'password')
+
+    if ( loading ) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignContent: 'center' }}>
+                <ActivityIndicator color="black" size={ 60 } />
+            </View>
+        )
+    }
+
     return (
         <>
                    
@@ -87,7 +99,7 @@ export default function LoginScreen({navigation}:Props) {
                     leftIcon={<Ionicons size={24} color={"#FD801E"} 
                     type={'font-awesome'} name="person"/>}
                     keyboardType="email-address"
-                    selectionColor="black"
+                    selectionColor="gray"
                     errorMessage={errorEmail}
                     onChangeText = {(value) => onChange(value, 'email')}
                     value={email}
@@ -114,24 +126,27 @@ export default function LoginScreen({navigation}:Props) {
                 </View>
                 {/* Boton login */}
                 <View style={ loginStyles.buttonContainer }>
-                            <TouchableOpacity
+                            <Button
+                                type="outline"
                                 activeOpacity={ 0.8 }
-                                style={ loginStyles.button }
+                                title="Ingresar"
+                                titleStyle={loginStyles.buttonText}
+                                buttonStyle={loginStyles.button}
                                 onPress={ onLogin }
-                            >
-                                <Text style={ loginStyles.buttonText } >Ingresar</Text>
-                            </TouchableOpacity>
+                            />
+                               
+                          
                 </View>
 
                 {/* Boton Nueva cuenta */}        
                 <View style={ loginStyles.buttonContainer  }>
-                            <TouchableOpacity
+                            <Button
                                 activeOpacity={ 0.8 }
-                                style={loginStyles.buttonRegistrar}
+                                title="Registrarse"
+                                titleStyle={loginStyles.buttonTextRegistrar}
+                                buttonStyle={loginStyles.buttonRegistrar}
                                 onPress={ () => navigation.navigate('RegisterScreen') }
-                            >
-                                <Text style={ loginStyles.buttonTextRegistrar }>Registrarse </Text>
-                            </TouchableOpacity>
+                            />
                 </View>
 
                             

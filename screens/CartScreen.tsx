@@ -24,8 +24,9 @@ export default function CartScreen({navigation, route}:Props) {
             headerTitleAlign:'center',
             headerShown: true,
             headerBackTitle: '',
-            headerBackTitleStyle:{color:'black'},
             headerTintColor: 'black',
+            headerTitleStyle:({color:'white'}),
+            headerStyle:({backgroundColor:'#FD801E'}),
           })
     }, [])
 

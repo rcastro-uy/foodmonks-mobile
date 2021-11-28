@@ -39,6 +39,7 @@ export const registerStyles = StyleSheet.create ({
     button: {
         borderWidth: 2,
         borderColor: '#FD801E',
+        backgroundColor:'transparent',
         paddingHorizontal: 20,
         paddingVertical: 5,
         borderRadius: 100,

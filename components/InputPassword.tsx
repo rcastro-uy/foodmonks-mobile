@@ -21,7 +21,7 @@ export default function InputPassword(props : Props){
         inputContainerStyle={loginStyles.inputField}
         leftIcon={<Ionicons size={24} color={"#FD801E"} 
         type={'font-awesome'} name="lock-closed"/>}
-        selectionColor="black"
+        selectionColor="gray"
         rightIcon={
         <TouchableOpacity activeOpacity = { 0.8 } style={loginStyles.btnVisibility} onPress = {props.onPress}>
         <Image style={ loginStyles.btnImage}  

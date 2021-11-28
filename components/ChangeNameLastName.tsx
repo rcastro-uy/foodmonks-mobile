@@ -64,7 +64,7 @@ export default function ChangeNameLastName({toastRef, setMostrarModal, setRefres
             inputContainerStyle={registerStyles.inputField}
             leftIcon={<Ionicons size={24} color={"#FD801E"} 
             type={'font-awesome'} name="person"/>}
-            selectionColor="white"
+            selectionColor="gray"
             errorMessage={errorNombre}
             onChangeText = {(value) => onChange(value, 'nombre')}
             value={nombre}
@@ -80,7 +80,7 @@ export default function ChangeNameLastName({toastRef, setMostrarModal, setRefres
             inputContainerStyle={registerStyles.inputField}
             leftIcon={<Ionicons size={24} color={"#FD801E"} 
             type={'font-awesome'} name="person"/>}
-            selectionColor="white"
+            selectionColor="gray"
             errorMessage={errorApellido}
             onChangeText = {(value) => onChange(value, 'apellido')}
             value={apellido}
