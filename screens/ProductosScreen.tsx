@@ -10,6 +10,7 @@ import { Icon, Input } from "react-native-elements";
 import { PromotionMenu } from "../components/PromotionMenu";
 import { productosStyles } from "../theme/ProductosTheme";
 import { useForm } from "../hooks/useForm";
+import { color } from 'react-native-reanimated';
 
 
 
@@ -46,12 +47,14 @@ export default function ProductosScreen({navigation, route}:Props) {
        
       navigation.setOptions({
         title:nombreRestaurante,
+        headerTitleStyle:({color:'white'}),
         headerTitleAlign:'center',
         headerShown: true,
         headerBackTitle: 'Atras',
         headerBackTitleStyle:{color:'black'},
         headerTintColor: 'black',
         gestureEnabled: false,
+        headerStyle:({backgroundColor:'#FD801E'}),
         headerRight: () =>( 
           
           <View style={productosStyles.iconContainer}>
@@ -210,7 +213,7 @@ export default function ProductosScreen({navigation, route}:Props) {
                     leftIcon={<Icon size={24} color={"#FD801E"} 
                     type={'material-community'} name="cash"/>}
                     keyboardType="numeric"
-                    selectionColor="white"
+                    selectionColor="gray"
                     //errorMessage={errorEmail}
                     onChangeText = {(value) => onChange(value, 'precioI')}
                     //value={precioI}
@@ -226,7 +229,7 @@ export default function ProductosScreen({navigation, route}:Props) {
                         leftIcon={<Icon size={24} color={"#FD801E"} 
                         type={'material-community'} name="cash"/>}
                         keyboardType="numeric"
-                        selectionColor="white"
+                        selectionColor="gray"
                         //errorMessage={errorEmail}
                         onChangeText = {(value) => onChange(value, 'precioF')}
                         //value={precioF}

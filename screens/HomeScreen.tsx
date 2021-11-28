@@ -112,7 +112,7 @@ export default function HomeScreen({navigation, route}:any) {
                         leftIcon={<Ionicons size={24} color={"#FD801E"} 
                         type={'font-awesome'} name="person"/>}
                         keyboardType="email-address"
-                        selectionColor="black"
+                        selectionColor="gray"
                         onChangeText = {setNombre}
                         value={nombre}
                         onSubmitEditing={ onListarRestaurantes }

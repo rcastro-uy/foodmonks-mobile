@@ -147,7 +147,7 @@ export default function UpdateDeleteAddress({setMostrarModal, toastRef, address,
             inputContainerStyle={registerStyles.inputField}
             leftIcon={<Entypo  size={24} color={"#FD801E"} 
             type={'font-awesome'} name="address"/>}
-            selectionColor="white"
+            selectionColor="gray"
             errorMessage={errorEsquina}
             onChangeText = {(value) => onChange(value, 'esquina')}
             value={esquina}
@@ -163,7 +163,7 @@ export default function UpdateDeleteAddress({setMostrarModal, toastRef, address,
             inputContainerStyle={registerStyles.inputField}
             leftIcon={<Entypo  size={24} color={"#FD801E"} 
             type={'font-awesome'} name="address"/>}
-            selectionColor="white"
+            selectionColor="gray"
 
             onChangeText = {(value) => onChange(value, 'detalles')}
             value={detalles}

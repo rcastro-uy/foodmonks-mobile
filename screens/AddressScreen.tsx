@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     },
     direccionItem: {
         bottom: 10,
-        shadowColor: 'transparent',
+        shadowColor: 'transparent'
        
     },
     containerList: {
@@ -141,6 +141,7 @@ const styles = StyleSheet.create({
         backgroundColor:"white",
         marginVertical: 10,
         borderRadius:20,
+        elevation: 7
     
     },
 })

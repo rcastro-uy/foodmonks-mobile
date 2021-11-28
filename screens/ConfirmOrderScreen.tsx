@@ -38,6 +38,8 @@ export default function ConfirmOrderScreen({navigation, route}: Props) {
             headerBackTitle: 'Atras',
             headerBackTitleStyle:{color:'black'},
             headerTintColor: 'black',
+            headerTitleStyle:({color:'white'}),
+            headerStyle:({backgroundColor:'#FD801E'}),
           })
         setRestaurante(obtenerRestaurante(idRestaurante))
     }, [])

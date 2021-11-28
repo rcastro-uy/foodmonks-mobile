@@ -5,13 +5,12 @@ import { color } from "react-native-reanimated";
 export const profileStyles = StyleSheet.create ({
     container: {
         backgroundColor:'white',
-        alignItems: "center",
-        justifyContent: "center",
         flexDirection: "row",
         margin: 15,
+        justifyContent:'space-evenly',
         borderRadius:15,
         elevation:6,
-        paddingVertical: 30,
+        padding:20
     },
     containerList: {
         alignItems: "center",
@@ -27,14 +26,6 @@ export const profileStyles = StyleSheet.create ({
         backgroundColor: 'transparent',
         bottom:5,
     },
-    menuItem: {
-        borderBottomWidth: 1,
-        borderBottomColor: "white",
-        bottom:2,
-        borderRadius:10,
-        shadowColor: 'transparent',
-        elevation: 6,
-    },
     title: {
         color: '#FD801E',
         fontSize: 23,
@@ -42,9 +33,6 @@ export const profileStyles = StyleSheet.create ({
         marginTop: 10,
         bottom:10,
         paddingStart: 15
-    },
-    infoUser: {
-        marginLeft: 20
     },
     displayName: {
         fontWeight: "bold",
@@ -58,10 +46,6 @@ export const profileStyles = StyleSheet.create ({
         overflow: 'hidden',
         borderColor: '#FFFFFF',
         alignSelf: 'center',
-    },
-    separador: {
-        borderBottomWidth:1
-        
     },
      optionText: {
         color: 'black',

@@ -1,13 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, View, Dimensions, Image, Text } from 'react-native';
 import { WebView } from 'react-native-webview';
-import { useRoute } from '@react-navigation/native';
 import { RootStackParams } from '../navigation/StackNavigator';
 import { StackScreenProps } from '@react-navigation/stack';
-import { styles } from '../navigation/CustomDrawerNavigator';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import foodMonksApi from '../api/foodMonksApi';
-import { API_URL } from '@env';
 import { obtenerUri, realizarPedido } from '../services/actions';
 import * as Animatable from 'react-native-animatable';
 
