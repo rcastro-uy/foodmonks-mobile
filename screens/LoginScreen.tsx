@@ -54,12 +54,12 @@ export default function LoginScreen({navigation}:Props) {
         Keyboard.dismiss();
         setLoading(true)
         iniciarSesion({ correo: email, contraseña : password });
-        setLoading(false)
+        //setLoading(false)
     }
 
     useEffect(() => {
         if( MensajeError.length === 0 ) return;
-
+        setLoading(false)
         Alert.alert( 'Inicio de sesion fallido ', MensajeError,[{
             text: 'Ok',
             onPress: quitarError

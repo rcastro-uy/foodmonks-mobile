@@ -181,7 +181,7 @@ export const AuthProvider = ({children}: any) =>{
             let password = Buffer.from(contraseña, "utf8").toString('base64');
             let email = Buffer.from(correo, "utf8").toString('base64');
             let mobileToken = Buffer.from(tokenNotificacion, "utf8").toString('base64')
-            const resp1 = await foodMonksApi.post<LoginResponse>('/v1/auth/login', { email, password, mobileToken },{ headers: {
+            const resp1 = await foodMonksApi.post<LoginResponse>('/v1/auth/login', { email, password, mobileToken },{ timeout:4000, headers: {
                 'User-Agent' : 'mobile'
               }} );
             if (resp1.data.token != null){
@@ -205,6 +205,7 @@ export const AuthProvider = ({children}: any) =>{
                  await AsyncStorage.setItem('token', resp1.data.token)
            
                 } catch (error: any) {
+                    console.log("inicio sesion obtener info" + error)
                     dispatch({ 
                         type: 'error', 
                         payload: "Algo Salio mal! Vuelva a intentar" || 'Información incorrecta'
@@ -214,12 +215,25 @@ export const AuthProvider = ({children}: any) =>{
            
             
         } catch (error : any) {
-            dispatch({ 
-                type: 'error', 
-                payload: "Algo Salio mal! Usuario o contraseña incorrecto" || 'Información incorrecta'
-            });
-            //console.log(error.response.data.message);
-            
+            console.log("inicio sesion " + error)
+            if (error == "Error: Network Error"){
+                dispatch({ 
+                    type: 'error', 
+                    payload: "No se pudo conectar con el servidor, intente más tarde"
+                });
+            }
+            else if (error.response.status == "408") {
+                dispatch({ 
+                    type: 'error', 
+                    payload: "No se obtuvo respuesta del servidor, intente mas tarde"
+                });
+            }
+            else {
+                dispatch({ 
+                    type: 'error', 
+                    payload: "Algo salió mal! Usuario o contraseña incorrecto" || 'Información incorrecta'
+                });
+            }
         }
     }
     const cerrarSesion = async() => {
