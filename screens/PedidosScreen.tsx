@@ -11,7 +11,7 @@ import { Button } from "react-native-elements/dist/buttons/Button";
 import { pedidosStyles } from "../theme/PedidosTheme";
 
 export default function PedidosScreen({navigation, route}:any) {
-    const [pedidos, setPedidos] = React.useState([]);
+    const [pedidos, setPedidos] = React.useState<any>([]);
     const [allPedidos, setAllPedidos] = React.useState([]);
 
     const [nombreRestaurante, setNombreRestaurante] = React.useState("");
