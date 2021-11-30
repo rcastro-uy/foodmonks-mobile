@@ -192,7 +192,15 @@ export interface Pedido {
     calificacionRestaurante: string;
     categoria: CategoriaMenu;
     nombreRestaurante: string;
+    reclamo: Reclamo;
     menus: MenuCompra[];
+}
+
+export interface Reclamo {
+    id: number;
+    fecha: Date;
+    razon: string;
+    comentario: string;
 }
 
 export interface MenuCompra {
@@ -207,6 +215,9 @@ export interface MenuCompra {
 
 export interface PedidoArray {
     pedidos: Pedido[];
+    currentPage: number;
+    totalItems: number;
+    totalPages: number;
 }
 
 export const estadosPedido = [

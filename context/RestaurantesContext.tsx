@@ -10,7 +10,8 @@ type RestaurantesContextProps = {
     listarRestaurantes: (nombre: string, categoria: string, orden: boolean) => Promise<any>;
     listarProductos: (restauranteId: string, categoria: string, precioInicial: string, precioFinal: string) => Promise<any>;
     obtenerRestaurante: (restauranteId: string) => Restaurante | undefined;
-    listarPedidos: (nombreRestaurante: string, nombreMenu: string, estadoPedido: string, medioPago: string, ordenamiento: string, fecha: Date, total: string, page: string) => Promise<any>;
+    listarPedidos: (nombreRestaurante: string, nombreMenu: string, estadoPedido: string, medioPago: string, ordenamiento: string, fecha: Date, total: string, page: number) => Promise<any>;
+    realizarReclamo: (idPedido: number, razon: string, comentario: string) => Promise<any>;
 }
 
 type result = {
@@ -81,7 +82,7 @@ export const RestaurantesProvider = ({ children }: any ) => {
     const obtenerRestaurante = (id :string) => {
         return restaurantes.find(restaurante => restaurante.correo === id);
     }    
-    const listarPedidos = async(nombreRestaurante: string, nombreMenu: string, estadoPedido: string, medioPago: string, ordenamiento: string, fecha: Date, total: string, page: string):Promise<any> => {
+    const listarPedidos = async(nombreRestaurante: string, nombreMenu: string, estadoPedido: string, medioPago: string, ordenamiento: string, fecha: Date, total: string, page: number):Promise<any> => {
         let result = true;   
         try{ 
             const token = await AsyncStorage.getItem('token');
@@ -94,11 +95,39 @@ export const RestaurantesProvider = ({ children }: any ) => {
                 }
             });
             //setRestaurantes([ ...restaurantes, resp.data ]);
-            return resp.data.pedidos;
+            return resp.data;
         } catch (error:any){
             result = false
             Alert.alert(
                 "Error listando los pedidos",
+                error || 'Algo salió mal, intente mas tarde',
+                [
+                    { text: "OK", style: "default" }
+                ]
+            )
+        }
+    }
+    const realizarReclamo = async(idPedido: number, razon: string, comentario: string):Promise<any> => {
+        let result = true;   
+        try{ 
+            const token = await AsyncStorage.getItem('token');
+            const refreshToken = await AsyncStorage.getItem('refreshToken')
+            const resp = await foodMonksApi.post(`/v1/cliente/agregarReclamo`,
+            {
+                pedidoId: idPedido,
+                razon: razon,
+                comentario: comentario
+            }
+            ,{ headers: {
+                    Authorization: "Bearer " + token,
+                    RefreshAuthentication: "Bearer " + refreshToken,
+                }
+            });
+            return resp;
+        } catch (error:any){
+            result = false
+            Alert.alert(
+                "Error realizando el reclamo",
                 error || 'Algo salió mal, intente mas tarde',
                 [
                     { text: "OK", style: "default" }
@@ -114,7 +143,8 @@ export const RestaurantesProvider = ({ children }: any ) => {
             listarRestaurantes,
             listarProductos,
             obtenerRestaurante,
-            listarPedidos
+            listarPedidos,
+            realizarReclamo
         }}>
             { children }
         </RestaurantesContext.Provider>

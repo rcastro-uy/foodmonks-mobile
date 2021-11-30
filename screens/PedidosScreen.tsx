@@ -1,22 +1,19 @@
 import React, { useContext, useEffect } from "react";
 import { Text, StyleSheet, FlatList, Image, TouchableOpacity, Keyboard, ListRenderItem, ListRenderItemInfo, View, ActivityIndicator, ScrollView, LogBox } from "react-native";
 import { AuthContext } from "../context/AuthContext";
-import { categorias, EstadoPedido, estadosPedido, MedioPago, mediosPago, Pedido, Restaurante } from "../interfaces/AppInterfaces";
-import { RestauranteComponent } from "../components/Restaurante";
+import { estadosPedido, mediosPago, Pedido } from "../interfaces/AppInterfaces";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Icon, Input, Switch } from "react-native-elements";
 import { Ionicons } from "@expo/vector-icons";
-import { fontPixel, pixelSizeHorizontal, pixelSizeVertical } from "../theme/Normalization";
-import { Picker } from "@react-native-picker/picker";
 import { RestaurantesContext } from "../context/RestaurantesContext";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button } from "react-native-elements/dist/buttons/Button";
 import { pedidosStyles } from "../theme/PedidosTheme";
-import PickerMulti from "../components/PickerMultiPlatform";
-import { List } from "react-native-paper";
 
 export default function PedidosScreen({navigation, route}:any) {
     const [pedidos, setPedidos] = React.useState([]);
+    const [allPedidos, setAllPedidos] = React.useState([]);
+
     const [nombreRestaurante, setNombreRestaurante] = React.useState("");
     const [nombreMenu, setNombreMenu] = React.useState("");
     const [estadoPedido, setEstadoPedido] = React.useState("");
@@ -24,53 +21,67 @@ export default function PedidosScreen({navigation, route}:any) {
     const [ordenamiento, setOrdenamiento] = React.useState("");
     const [fecha, setFecha] = React.useState(new Date());
     const [total, setTotal] = React.useState("");
-    const [page, setPage] = React.useState("");
+    const [page, setPage] = React.useState(1);
+    const [totalPages, setTotalPages] = React.useState(1);
     const [loading, setLoading] = React.useState(true);
     const { comprobarToken } = useContext( AuthContext );
     const { listarPedidos } = useContext( RestaurantesContext );
 
     const onListarPedidos = () => {
         Keyboard.dismiss();
+        setLoading(true)
+        setNombreRestaurante(nombreRestaurante.toLowerCase());
         console.log(`${nombreRestaurante} + ${nombreMenu} + ${estadoPedido} + ${medioPago}`)
-        listarPedidos(nombreRestaurante, nombreMenu, estadoPedido, medioPago, ordenamiento, fecha, total, page).then((res) => {
-            setPedidos(res)
+        listarPedidos(nombreRestaurante, nombreMenu, estadoPedido, medioPago, ordenamiento, fecha, total, 0).then((res) => {
+            setPedidos(res.pedidos)
+            setTotalPages((Number(res.totalPages)))
+            setPage((Number(res.currentPage))+1)
+            console.log("Pedidos listados")
+            setLoading(false)
         })
     }
 
     useEffect(() => {
         LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
         let isMounted = true;
+        setPage(1);
         const unsubscribe = navigation.addListener('focus', () => {
-            
-        setLoading(true);
-        comprobarToken();
-        setPedidos([]);
-        listarPedidos(nombreRestaurante, nombreMenu, estadoPedido, medioPago, ordenamiento, fecha, total, page).then((res) => {
-            if (isMounted) {
-                setPedidos(res);
-                setLoading(false);
-            }
-        })
-        console.log("Cargo los pedidos")
-    });
+            setLoading(true);
+            comprobarToken();
+            setPedidos([]);
+            console.log(`Pido la pagina al cargar: ${(page-1)}`)
+            listarPedidos(nombreRestaurante, nombreMenu, estadoPedido, medioPago, ordenamiento, fecha, total, (page-1)).then((res) => {
+                if (isMounted) {
+                    setPedidos(res.pedidos)
+                    setTotalPages((Number(res.totalPages)))
+                    setPage((Number(res.currentPage))+1)
+                    console.log("Pagina actual al cargar " + page);
+                    console.log("Paginas totales " + (Number(res.totalPages)))
+                    setLoading(false)
+                }
+            })
+            console.log("Cargo los pedidos")
+        });
         return () => { isMounted = false, unsubscribe };
     }, [navigation])
 
     //console.log(JSON.stringify(pedidos))
 
     const seleccionarEstado = (value: string)  => {
-        if(estadoPedido === value)
-        setEstadoPedido("")
-      else 
-        setEstadoPedido(value)
-      }
+        if(estadoPedido === value) {
+            setEstadoPedido("")
+        } else {
+            setEstadoPedido(value)
+        }
+    }
 
-      const seleccionarMedioPago = (value: string)  => {
-        if(medioPago === value)
-        setMedioPago("")
-      else 
-        setMedioPago(value)
-      }
+    const seleccionarMedioPago = (value: string)  => {
+        if(medioPago === value) {
+            setMedioPago("")
+        } else {
+            setMedioPago(value)
+        }
+    }
 
     const renderFooter = () => {
         if(loading){
@@ -86,6 +97,20 @@ export default function PedidosScreen({navigation, route}:any) {
             );
         }
     }
+    const cargarMas = () => {
+        console.log(totalPages)
+        if (page < totalPages) {
+            setLoading(true);
+            console.log("Pido la pagina" + page)
+            listarPedidos(nombreRestaurante, nombreMenu, estadoPedido, medioPago, ordenamiento, fecha, total, page).then((res) => {
+                setPedidos([...pedidos, ...res.pedidos]);
+                console.log(res.currentPage);
+            })
+            setPage(page + 1);
+        } else {
+            setLoading(false);
+        }
+    };
     return (
         <>
         <ScrollView>
@@ -105,21 +130,21 @@ export default function PedidosScreen({navigation, route}:any) {
                         autoCapitalize="none"
                         autoCorrect={ false }
                     />
-                </View>     
+                </View>
                 <View style={pedidosStyles.flatCategorias}>
                     <FlatList
-                      horizontal={true}
-                      data={estadosPedido}
-                      renderItem={({ item }) => (
-                        <TouchableOpacity style={item.value == estadoPedido ? pedidosStyles.selected : pedidosStyles.divCategorie}
-                        onPress={()=> seleccionarEstado(item.value)}>
-                          <Text style={{fontWeight:'bold',fontSize:15, color:'white'}}>{item.label}</Text>
-                        </TouchableOpacity>
-                      )}
-                      keyExtractor = { (item, index) => index.toString() }
-                      style={pedidosStyles.containerCategoria}
-                      showsHorizontalScrollIndicator={ false }
-                    />              
+                        horizontal={true}
+                        data={estadosPedido}
+                        renderItem={({ item }) => (
+                            <TouchableOpacity style={item.value == estadoPedido ? pedidosStyles.selected : pedidosStyles.divCategorie}
+                            onPress={()=> seleccionarEstado(item.value)}>
+                                <Text style={{fontWeight:'bold',fontSize:15, color:'white'}}>{item.label}</Text>
+                            </TouchableOpacity>
+                        )}
+                        keyExtractor = { (item, index) => index.toString() }
+                        style={pedidosStyles.containerCategoria}
+                        showsHorizontalScrollIndicator={ false }
+                    />
                 </View>
                 <View style={pedidosStyles.flatCategorias}>
                     <FlatList
@@ -127,7 +152,7 @@ export default function PedidosScreen({navigation, route}:any) {
                         data={mediosPago}
                         renderItem={({ item }) => (
                             <TouchableOpacity style={item.value == medioPago ? pedidosStyles.selected : pedidosStyles.divCategorie}
-                                onPress={()=> seleccionarMedioPago(item.value)}>
+                            onPress={()=> seleccionarMedioPago(item.value)}>
                                 <Text style={{fontWeight:'bold',fontSize:15, color:'white'}}>{item.label}</Text>
                             </TouchableOpacity>
                         )}
@@ -148,15 +173,22 @@ export default function PedidosScreen({navigation, route}:any) {
         >
             <Text style={ pedidosStyles.buttonText } >Buscar</Text>
         </TouchableOpacity> */}
-
+        <TouchableOpacity
+            activeOpacity={ 0.8 }
+            style={ pedidosStyles.button }
+            onPress={ onListarPedidos }
+        >
+            <Text style={ pedidosStyles.buttonText } >Buscar</Text>
+        </TouchableOpacity>
         <FlatList
-          data={pedidos}
-          ListFooterComponent = {renderFooter}
-          keyExtractor={({id}, index) => id.toString()}
-          renderItem={({ item }:ListRenderItemInfo<Pedido>) => (
-            <TouchableOpacity onPress={()=> navigation.navigate('PedidoDetailsScreen',{'idPedido':item.id,'estadoPedido':item.estadoPedido,'calificacionRestaurante':item.calificacionRestaurante,'menus':item.menus}) }  activeOpacity={0.8}>
+            data={pedidos}
+            ListFooterComponent = {renderFooter}
+            onEndReached = {cargarMas}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }:ListRenderItemInfo<Pedido>) => (
+            <TouchableOpacity onPress={()=> navigation.navigate('PedidoDetailsScreen',{'idPedido':item.id,'estadoPedido':item.estadoPedido,'calificacionRestaurante':item.calificacionRestaurante,'reclamo':item.reclamo, 'menus':item.menus}) }  activeOpacity={0.8}>
                 <View style={pedidosStyles.pedidoItemContainer}>
-                    <Text style={pedidosStyles.atributoDestacado}>Id Pedido: {item.id}</Text>
+                    {/* <Text style={pedidosStyles.atributoDestacado}>Id Pedido: {item.id}</Text> */}
                     <Text style={pedidosStyles.atributo}>Dirección: {item.direccion}</Text>
                     <Text style={pedidosStyles.atributo}>Restaurante: {item.nombreRestaurante}</Text>
                     <Text style={pedidosStyles.atributo}>Medio de Pago: {item.medioPago}</Text>
