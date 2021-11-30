@@ -5,7 +5,7 @@ import { Button,Input } from 'react-native-elements'
 import { Icon } from 'react-native-elements/dist/icons/Icon'
 import { AuthContext } from '../context/AuthContext'
 import { useForm } from '../hooks/useForm'
-import { modificarPerfil } from '../services/actions'
+import { modificarPerfil } from '../api/actions'
 import { registerStyles } from '../theme/RegisterTheme'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AddressContext } from '../context/AddressContext'

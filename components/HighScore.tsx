@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { AirbnbRating, Rating, Button } from 'react-native-elements';
 import { TextInput } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { altaCalificacion } from '../services/actions';
+import { altaCalificacion } from '../api/actions';
 
 export default function HighScore({toastRef, idPedido, setMostrarModal,setCalificacion, setRefrescar } : any) {
     const [text, setText] = useState('');

@@ -20,6 +20,7 @@ interface AuthContextProps {
     eliminarCuenta: () => void;
     iniciarSesion: ( loginData : LoginData ) => void;
     cerrarSesion: () => void;
+    recuperarContrasenia:(email: string) => void,
     quitarError: () => void;
     quitarMensajeOk: () => void
     cambiarPrimerCarga: () => void;
@@ -94,13 +95,6 @@ export const AuthProvider = ({children}: any) =>{
                     RefreshAuthentication: "Bearer " + refreshToken,
                 }
              });
-             
-             const newAuth = resp.config.headers!.Authorization.substring(7);
-             const newRefreshAuth = resp.config.headers!.RefreshAuthentication.substring(7);
-                if(newAuth !== token || newRefreshAuth !== refreshToken) {
-                  localStorage.setItem("token", newAuth);
-                  localStorage.setItem("refreshToken", newRefreshAuth);
-                }
                 dispatch({ 
                     type: 'iniciarSesion',
                     payload: {
@@ -125,14 +119,12 @@ export const AuthProvider = ({children}: any) =>{
 
         const token = await Notifications.getExpoPushTokenAsync();
         setTokenNotification (token.data)
-       
-
-       
     }
 
     const registrarCuenta = async ({nombre, apellido,correo,password,direccion} : NuevoCliente) => {
             
          try{
+            
             const resp1 = await foodMonksApi.post('/v1/cliente/altaCliente', { nombre,apellido,correo,password,direccion } );
             dispatch({ 
                 type: 'exito', 
@@ -147,15 +139,8 @@ export const AuthProvider = ({children}: any) =>{
     }
     const eliminarCuenta = async () => {
         try{
-            const token = await AsyncStorage.getItem('token');
-            const refreshToken = await AsyncStorage.getItem('refreshToken')
-            const resp = await foodMonksApi.delete('/v1/cliente/eliminarCuenta',
-            {
-                headers: {
-                    Authorization: "Bearer " + token,
-                    RefreshAuthentication: "Bearer " + refreshToken,
-                }
-            }).then((res) => {
+            const resp = await foodMonksApi.delete('/v1/cliente/eliminarCuenta')
+            .then((res) => {
                 if(res.status == 200) {
                     dispatch({ 
                         type: 'exito', 
@@ -185,13 +170,10 @@ export const AuthProvider = ({children}: any) =>{
                 'User-Agent' : 'mobile'
               }} );
             if (resp1.data.token != null){
+                await AsyncStorage.setItem("token", resp1.data.token);
+                await  AsyncStorage.setItem("refreshToken", resp1.data.refreshToken);
                 try {
-                    const resp = await foodMonksApi.get<UserInfoResponse>('/v1/auth/userinfo', {
-                        headers: {
-                            Authorization: "Bearer " + resp1.data.token,
-                            RefreshAuthentication: "Bearer " + resp1.data.refreshToken,
-                          }
-                    });
+                    const resp = await foodMonksApi.get<UserInfoResponse>('/v1/auth/userinfo');
                    
                     dispatch({ 
                         type: 'iniciarSesion',
@@ -236,6 +218,27 @@ export const AuthProvider = ({children}: any) =>{
             }
         }
     }
+
+    const recuperarContrasenia = async (correo: string) => {
+        let email = Buffer.from(correo, "utf8").toString('base64');
+        try{
+            const resp = await foodMonksApi.post('/v1/password/recuperacion/solicitud', {email})    
+            Alert.alert(
+                "Solicitud enviada",
+                `Email: ${correo}`,
+                [
+                    { text: "OK", style: "default" }
+                ]
+            )
+        } catch (error: any) {
+            console.log(error)
+            dispatch({ 
+                type: 'error', 
+                payload: 'Solicitud no enviada, intente mas tarde'
+            });
+        }
+    }
+
     const cerrarSesion = async() => {
         await AsyncStorage.removeItem('token');
         await AsyncStorage.removeItem('refreshToken');
@@ -260,6 +263,7 @@ export const AuthProvider = ({children}: any) =>{
             eliminarCuenta,
             iniciarSesion,
             cerrarSesion,
+            recuperarContrasenia,
             quitarError,
             quitarMensajeOk,
             cambiarPrimerCarga,
