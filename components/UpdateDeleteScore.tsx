@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { AirbnbRating, Rating, Button } from 'react-native-elements';
 import { TextInput } from 'react-native-paper';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { altaCalificacion, eliminarCalificacion, modificarCalificacion } from '../services/actions';
+import { altaCalificacion, eliminarCalificacion, modificarCalificacion } from '../api/actions';
 
 export default function UpdateDeleteScore({toastRef, idPedido, setMostrarModal,setCalificacion, setRefrescar, calificacion } : any) {
     const [text, setText] = useState('');

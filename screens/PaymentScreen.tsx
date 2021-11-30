@@ -3,7 +3,7 @@ import { ActivityIndicator, View, Dimensions, Image, Text } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { RootStackParams } from '../navigation/StackNavigator';
 import { StackScreenProps } from '@react-navigation/stack';
-import { obtenerUri, realizarPedido } from '../services/actions';
+import { obtenerUri, realizarPedido } from '../api/actions';
 import * as Animatable from 'react-native-animatable';
 
 const {width,height} = Dimensions.get('screen');

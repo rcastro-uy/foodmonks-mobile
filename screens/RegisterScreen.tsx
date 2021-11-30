@@ -132,8 +132,9 @@ export const RegisterScreen = ({navigation}:Props) => {
             longitud: lng
         }
         let passBase = Buffer.from(password, "utf8").toString('base64');
+        let correo = Buffer.from(email, "utf8").toString('base64');
         setLoading(true)
-        await registrarCuenta({nombre,apellido,correo : email,password : passBase, direccion: direccion})
+        await registrarCuenta({nombre,apellido,correo,password : passBase, direccion: direccion})
         setLoading(false)
         Keyboard.dismiss();
     }

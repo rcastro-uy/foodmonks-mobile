@@ -2,7 +2,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 import React, { useContext, useEffect } from 'react'
 import { Alert, Dimensions, StyleSheet, View } from 'react-native';
 import { RootStackParams } from '../navigation/StackNavigator';
-import { realizarPedido } from '../services/actions';
+import { realizarPedido } from '../api/actions';
 import * as Animatable from 'react-native-animatable';
 import { CarritoContext } from '../context/CarritoContext';
 

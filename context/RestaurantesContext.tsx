@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import foodMonksApi from '../api/foodMonksApi';
+import { Buffer } from "buffer"
 import { Pedido, PedidoArray, Producto, Restaurante, RestauranteComp } from '../interfaces/AppInterfaces';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Alert } from 'react-native';
@@ -30,15 +31,7 @@ export const RestaurantesProvider = ({ children }: any ) => {
     const listarRestaurantes = async(nombre: string, categoria: string, orden: boolean):Promise<any> => {
         let result = true;   
         try{ 
-            const token = await AsyncStorage.getItem('token');
-            //console.log(token)
-            const refreshToken = await AsyncStorage.getItem('refreshToken')
-            const resp = await foodMonksApi.get<Restaurante[]>(`/v1/cliente/listarAbiertos?nombre=${nombre}&categoria=${categoria}&orden=${orden}`,
-            { headers: {
-                    Authorization: "Bearer " + token,
-                    RefreshAuthentication: "Bearer " + refreshToken,
-                }
-            });
+            const resp = await foodMonksApi.get<Restaurante[]>(`/v1/cliente/listarAbiertos?nombre=${nombre}&categoria=${categoria}&orden=${orden}`);
             setRestaurantes(resp.data)
             return resp.data;
         } catch (error:any){
@@ -53,18 +46,12 @@ export const RestaurantesProvider = ({ children }: any ) => {
         }
     }
 
-    const listarProductos = async(restauranteId: string, categoria: string, precioInicial: string, precioFinal: string):Promise<any> => {
-        let result = true;   
+    const listarProductos = async(restaurante: string, categoria: string, precioInicial: string, precioFinal: string):Promise<any> => {
+        let result = true;  
+        let restauranteId = Buffer.from(restaurante, "utf8").toString('base64');
+          
         try{ 
-            const token = await AsyncStorage.getItem('token');
-            //console.log(token)
-            const refreshToken = await AsyncStorage.getItem('refreshToken')
-            const resp = await foodMonksApi.get<Producto[]>(`/v1/cliente/listarProductosRestaurante?id=${restauranteId}&categoria=${categoria}&precioInicial=${precioInicial}&precioFinal=${precioFinal}`,
-            { headers: {
-                    Authorization: "Bearer " + token,
-                    RefreshAuthentication: "Bearer " + refreshToken,
-                }
-            });
+            const resp = await foodMonksApi.get<Producto[]>(`/v1/cliente/listarProductosRestaurante?id=${restauranteId}&categoria=${categoria}&precioInicial=${precioInicial}&precioFinal=${precioFinal}`);
             //setRestaurantes([ ...restaurantes, resp.data ]);
             return resp.data;
         } catch (error:any){

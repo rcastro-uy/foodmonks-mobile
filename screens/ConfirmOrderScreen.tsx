@@ -11,7 +11,7 @@ import { CarritoContext } from '../context/CarritoContext';
 import { RestaurantesContext } from '../context/RestaurantesContext';
 import { Restaurante, Direccione, menuPedido } from '../interfaces/AppInterfaces';
 import { RootStackParams } from '../navigation/StackNavigator';
-import { realizarPedido } from '../services/actions';
+import { realizarPedido } from '../api/actions';
 import { confirmOrderStyles } from '../theme/ConfirmOrderTheme'
 
 interface Props extends StackScreenProps<RootStackParams, 'ConfirmOrderScreen'> {}

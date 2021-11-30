@@ -106,6 +106,7 @@ export default function ProductosScreen({navigation, route}:Props) {
         
       BackHandler.addEventListener("hardwareBackPress",backAction);
       
+    
 
       let isMounted = true;
       filtroPrecio()
@@ -114,21 +115,43 @@ export default function ProductosScreen({navigation, route}:Props) {
       setMenus([]);
       setPromociones([]);
       listarProductos(idRestaurante, categoria, precioInicial, precioFinal).then((res:Producto[]) => {
-          if (isMounted) {
-              setMenus(res.filter((res) => 
-              (res.multiplicadorPromocion ==0)) );
-              const promos = res.filter((res) => 
-              (res.multiplicadorPromocion !=0)) 
-              setPromociones(promos)
-              setLoading(false);
-          }
+     
+        setMenus(res.filter((res) => 
+        (res.multiplicadorPromocion ==0)) );
+        const promos = res.filter((res) => 
+        (res.multiplicadorPromocion !=0)) 
+        setPromociones(promos)
+        setLoading(false);  
       })
+      
       return () => { isMounted = false; BackHandler.removeEventListener('hardwareBackPress', backAction);
     };
        
-    }, [contextCarrito.listarProductos().productos, precioInicial])
+    }, [contextCarrito.listarProductos().productos])
 
-    const filtroPrecio = () => {
+
+   const listarProd = async() => { 
+   await listarProductos(idRestaurante, categoria, precioInicial, precioFinal).then((res:Producto[]) => {
+     
+          setMenus(res.filter((res) => 
+          (res.multiplicadorPromocion ==0)) );
+          const promos = res.filter((res) => 
+          (res.multiplicadorPromocion !=0)) 
+          setPromociones(promos)
+          setLoading(false);
+      
+  })
+}
+    const filtroPrecio = async () => {
+      if((precioInicial != '' && precioFinal =='') || (precioFinal != '' && precioInicial =='') ){
+        Alert.alert("Atencion", "Debe completar el precio inicial y precio final para este filtro", [
+          {
+            text: "Ok",
+            onPress: () => null,
+            style: "cancel"
+          }
+        ]); 
+      }
       if ( parseInt(precioI) > parseInt(precioF)){
           Alert.alert("Atencion", "El precio final debe ser mayor al precio inicial", [
             {
@@ -138,17 +161,18 @@ export default function ProductosScreen({navigation, route}:Props) {
             }
           ]); 
       }else{
-        setPrecioInicial(precioI)
-        setPrecioFinal(precioF)
+        setRefreshing(true);
+        await listarProd()
+        setPrecioInicial('')
+        setPrecioFinal('')
+        setRefreshing(false);
       }
     }
 
-    const onRefresh = () => {
+    const onRefresh = async () => {
+      
       setRefreshing(true);
-      onChange(" ", 'precioF')
-      onChange("", 'precioI')
-      setPrecioFinal('')
-      setPrecioInicial ('')
+      await listarProd()
       setRefreshing(false);
     }
 
@@ -215,8 +239,8 @@ export default function ProductosScreen({navigation, route}:Props) {
                     keyboardType="numeric"
                     selectionColor="gray"
                     //errorMessage={errorEmail}
-                    onChangeText = {(value) => onChange(value, 'precioI')}
-                    //value={precioI}
+                    onChangeText = {setPrecioInicial}
+                    value={precioInicial}
                 autoCapitalize="none"
                     autoCorrect={ false }
                 />
@@ -231,8 +255,8 @@ export default function ProductosScreen({navigation, route}:Props) {
                         keyboardType="numeric"
                         selectionColor="gray"
                         //errorMessage={errorEmail}
-                        onChangeText = {(value) => onChange(value, 'precioF')}
-                        //value={precioF}
+                        onChangeText = {setPrecioFinal}
+                        value={precioFinal}
                         onSubmitEditing={ filtroPrecio }
                     autoCapitalize="none"
                         autoCorrect={ false }
