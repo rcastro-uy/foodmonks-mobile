@@ -58,12 +58,12 @@ export default function ProfileScreen({navigation}:any) {
                     }
                 </Text>
                 <Text>{usuario?.correo}</Text>
-                <View style={{top:15}}>
+                <View style={{top:15,alignItems:'flex-start'}}>
                 <Text style={{fontWeight: "bold", bottom:5}}>Fecha de registro: {usuario?.fechaRegistro}</Text>
-                    <Text style={{fontWeight: "bold", bottom:5}}>Mi valoracion: {usuario?.calificacion}/5</Text>
+                    <Text style={{fontWeight: "bold", bottom:5}}>Mi calificación: {usuario?.calificacion}/5</Text>
                     <Rating  fractions="{1}"  imageSize={20}  showRating={false} startingValue={usuario?.calificacion.toString()} />
                     {(usuario!.cantidadCalificaciones <10 )?
-                        ( <Text style={{borderWidth:0,padding:2, color:'#FD801E',fontWeight: "bold", backgroundColor:'#8CF9E5', alignSelf:'flex-start' }}>Nuevo</Text> ) : (null)
+                        ( <Text style={{borderWidth:0,padding:2,textAlign:'center', color:'black',fontWeight: "bold", backgroundColor:'#6DC36D', alignSelf:'flex-start' }}>Nuevo</Text> ) : (null)
                     }
                    
                 </View>

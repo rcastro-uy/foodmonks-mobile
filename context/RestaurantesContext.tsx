@@ -9,10 +9,10 @@ type RestaurantesContextProps = {
     restaurantes: Restaurante[];
     productos: Producto[];
     listarRestaurantes: (nombre: string, categoria: string, orden: boolean) => Promise<any>;
-    listarProductos: (restauranteId: string, categoria: string, precioInicial: string, precioFinal: string) => Promise<any>;
+    listarProductos: (restauranteId: string, categoria: string, precioInicial: string, precioFinal: string) => void;
     obtenerRestaurante: (restauranteId: string) => Restaurante | undefined;
     listarPedidos: (nombreRestaurante: string, nombreMenu: string, estadoPedido: string, medioPago: string, ordenamiento: string, fecha: Date, total: string, page: number) => Promise<any>;
-    realizarReclamo: (idPedido: number, razon: string, comentario: string) => Promise<any>;
+    realizarReclamo: (idPedido: number, razon: string, comentario: string) => Promise<Boolean>;
 }
 
 type result = {
@@ -46,15 +46,14 @@ export const RestaurantesProvider = ({ children }: any ) => {
         }
     }
 
-    const listarProductos = async(restaurante: string, categoria: string, precioInicial: string, precioFinal: string):Promise<any> => {
-        let result = true;  
+    const listarProductos = async(restaurante: string, categoria: string, precioInicial: string, precioFinal: string) => {
         let restauranteId = Buffer.from(restaurante, "utf8").toString('base64');
           
         try{ 
             const resp = await foodMonksApi.get<Producto[]>(`/v1/cliente/listarProductosRestaurante?id=${restauranteId}&categoria=${categoria}&precioInicial=${precioInicial}&precioFinal=${precioFinal}`);
-            return resp.data;
+            setProductos(resp.data)
+           
         } catch (error:any){
-            result = false
             Alert.alert(
                 "Error listando los menus",
                 error || 'Algo salió mal, intente mas tarde',
@@ -82,7 +81,8 @@ export const RestaurantesProvider = ({ children }: any ) => {
             )
         }
     }
-    const realizarReclamo = async(idPedido: number, razon: string, comentario: string):Promise<any> => {
+    const realizarReclamo = async(idPedido: number, razon: string, comentario: string):Promise<Boolean> => {
+        let value = true
         try{ 
             const resp = await foodMonksApi.post(`/v1/cliente/agregarReclamo`,
             {
@@ -90,16 +90,17 @@ export const RestaurantesProvider = ({ children }: any ) => {
                 razon: razon,
                 comentario: comentario
             });
-            return resp;
         } catch (error:any){
+            value = false
             Alert.alert(
                 "Error realizando el reclamo",
-                error || 'Algo salió mal, intente mas tarde',
+                error.response.data || 'Algo salió mal, intente mas tarde',
                 [
                     { text: "OK", style: "default" }
                 ]
             )
         }
+        return value
     }
 
     return(

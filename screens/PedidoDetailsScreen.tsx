@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Alert, Dimensions, LogBox, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Toast from 'react-native-easy-toast';
 import { Button, Card, Icon, Image } from 'react-native-elements';
+import { ScrollView } from 'react-native-gesture-handler';
 import HighScore from '../components/HighScore';
 import { MenuCompraComp } from '../components/MenuCompraComp';
 import Modal from '../components/Modal';
@@ -37,7 +38,10 @@ export default function PedidoDetailsScreen({navigation, route}:Props) {
             headerBackTitle: 'Atras',
             headerBackTitleStyle:{color:'black'},
             headerTintColor: 'black',
+            headerTitleStyle:({color:'white'}),
+            headerStyle:({backgroundColor:'#FD801E'})
         })
+        console.log('Prueba')
         setRefrescar(false)
 
     }, [refrescar])
@@ -67,8 +71,14 @@ export default function PedidoDetailsScreen({navigation, route}:Props) {
 
     return (
       <>       
-            
-        <View style={{flex:0.2, justifyContent:'space-evenly'}}>
+        <ScrollView>    
+        <View style={{ flex: 1,backgroundColor:"#f2f2f2"}}>           
+            <View style={{width: width, padding:15, alignItems:'center' }}>
+              <Text style={{fontWeight: 'bold', fontSize:20,paddingStart:5}}> Menus</Text>
+              <MenuCompraComp vertical={true} productos={menus} width={150} height={250} />         
+            </View>
+        
+        <View style={{flex:1, justifyContent:'center'}}>
         {
             (estadoPedido == 'Rechazado' || estadoPedido == 'Finalizado' || estadoPedido == 'Devuelto') ?
             (
@@ -78,7 +88,7 @@ export default function PedidoDetailsScreen({navigation, route}:Props) {
                     activeOpacity={ 0.8 }
                     style={ pedidoDetailsStyles.button }
                     onPress={() => altaBajaModificarPuntuacion()}
-                    title = {(calificacion== 'false')? ('Calificar'):('Modificar/Eliminar Calificacion')}
+                    title = {(calificacion== 'false')? ('Calificar'):('Modificar calificacion')}
                     titleStyle= {pedidoDetailsStyles.title}
                 />
             ):(null )}
@@ -95,19 +105,15 @@ export default function PedidoDetailsScreen({navigation, route}:Props) {
                     titleStyle= {pedidoDetailsStyles.title}
                 />
             ):(null )}
-        </View>
-        <View style={{ flex: 0.7,backgroundColor:"#f2f2f2"}}>           
-            <View style={{width: width, padding:15, alignItems:'center' }}>
-              <Text style={{fontWeight: 'bold', fontSize:20,paddingStart:5}}> Menus</Text>
-              <MenuCompraComp vertical={true} productos={menus} width={150} height={250} />         
-            </View>
+        </View>    
             <Modal visible={mostrarModal} setVisible={setMostrarModal}>
                 {
                     renderComponent
                 }
             </Modal>
         </View>
-        <Toast ref={toastRef} position="bottom" opacity={0.9}/>    
+        <Toast ref={toastRef} position="bottom" opacity={0.9}/> 
+        </ScrollView>    
     </>
     )
 }

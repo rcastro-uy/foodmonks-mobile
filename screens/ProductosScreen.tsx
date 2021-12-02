@@ -31,8 +31,7 @@ export default function ProductosScreen({navigation, route}:Props) {
   const [precioInicial, setPrecioInicial] = useState("")
   const [precioFinal, setPrecioFinal] = useState("")
   const [loading, setLoading] = useState(true);
-  const { comprobarToken } = useContext(AuthContext);
-  const { listarProductos } = useContext(RestaurantesContext);
+  const { listarProductos, productos } = useContext(RestaurantesContext);
 
   const { precioI, precioF, onChange } = useForm({
     precioI: '',
@@ -83,64 +82,59 @@ export default function ProductosScreen({navigation, route}:Props) {
          ),
       }
       )
-
-      const backAction = () => {
-        if (!navigation.isFocused()) {
-          return false;
-       }
-       if (contextCarrito.listarProductos().productos.length != 0){
-          Alert.alert("Estas seguro?", "Si regresa, el carrito se vaciará ", [
-            {
-              text: "Cancelar",
-              onPress: () => null,
-              style: "cancel"
-            },
-            { text: "Regresar", onPress: () => { contextCarrito.vaciarCarrito(), navigation.navigate('HomeDrawer')} }
-          ]);
-         
-        }
-         else navigation.navigate('HomeDrawer')
-          
-          return true;
-        };
-        
+  
       BackHandler.addEventListener("hardwareBackPress",backAction);
       
-    
-
-      let isMounted = true;
-      filtroPrecio()
       setLoading(true);
-      comprobarToken();
-      setMenus([]);
-      setPromociones([]);
-      listarProductos(idRestaurante, categoria, precioInicial, precioFinal).then((res:Producto[]) => {
-     
-        setMenus(res.filter((res) => 
-        (res.multiplicadorPromocion ==0)) );
-        const promos = res.filter((res) => 
-        (res.multiplicadorPromocion !=0)) 
-        setPromociones(promos)
-        setLoading(false);  
-      })
+      //setMenus([]);
+      //setPromociones([]);
+      listarProd()
+      setLoading(false);
+        
       
-      return () => { isMounted = false; BackHandler.removeEventListener('hardwareBackPress', backAction);
-    };
+      return () => { BackHandler.removeEventListener('hardwareBackPress', backAction) };
        
     }, [contextCarrito.listarProductos().productos])
 
-
-   const listarProd = async() => { 
-   await listarProductos(idRestaurante, categoria, precioInicial, precioFinal).then((res:Producto[]) => {
-     
-          setMenus(res.filter((res) => 
-          (res.multiplicadorPromocion ==0)) );
-          const promos = res.filter((res) => 
-          (res.multiplicadorPromocion !=0)) 
+    useEffect(() => {
+      setLoading(true);
+      setMenus(productos.filter((prod) => 
+          (prod.multiplicadorPromocion ==0)) );
+          const promos = productos.filter((prod) => 
+          (prod.multiplicadorPromocion !=0)) 
           setPromociones(promos)
+
           setLoading(false);
-      
-  })
+  }, [productos])
+
+    
+
+
+    const backAction = () => {
+      if (!navigation.isFocused()) {
+        return false;
+     }
+     if (contextCarrito.listarProductos().productos.length != 0){
+        Alert.alert("Estas seguro?", "Si regresa, el carrito se vaciará ", [
+          {
+            text: "Cancelar",
+            onPress: () => null,
+            style: "cancel"
+          },
+          { text: "Regresar", onPress: () => { contextCarrito.vaciarCarrito(), navigation.navigate('HomeDrawer')} }
+        ]);
+       
+      }
+       else navigation.navigate('HomeDrawer')
+        
+        return true;
+      };
+
+
+   const listarProd = async () => { 
+  
+        await listarProductos(idRestaurante, categoria, precioInicial, precioFinal)
+       
 }
     const filtroPrecio = async () => {
       if((precioInicial != '' && precioFinal =='') || (precioFinal != '' && precioInicial =='') ){
@@ -152,7 +146,7 @@ export default function ProductosScreen({navigation, route}:Props) {
           }
         ]); 
       }
-      if ( parseInt(precioI) > parseInt(precioF)){
+      if ( parseInt(precioInicial) > parseInt(precioFinal)){
           Alert.alert("Atencion", "El precio final debe ser mayor al precio inicial", [
             {
               text: "Ok",
@@ -175,6 +169,8 @@ export default function ProductosScreen({navigation, route}:Props) {
       await listarProd()
       setRefreshing(false);
     }
+
+    
 
     const alertaCarrito = () =>{
       if (contextCarrito.listarProductos().productos.length != 0){

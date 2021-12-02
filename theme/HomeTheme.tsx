@@ -32,9 +32,8 @@ export const homeStyles = StyleSheet.create ({
         paddingHorizontal: 20,
         paddingVertical: 5,
         borderRadius: 100,
-        alignSelf:'center',
-        width: '45%',
-        marginBottom:20
+        width: '30%',
+       
     },
     buttonText: {
         fontSize: 18,
@@ -46,23 +45,14 @@ export const homeStyles = StyleSheet.create ({
         bottom: -3,
         left: 5,
     },
-    // picker: {
-    //     marginVertical: 30,
-    //     width: 300,
-    //     padding: 10,
-    //     borderWidth: 1,
-    //     borderColor: "#666",
-    // },
+    imageNotFound: {
+        flex: 1,
+        //justifyContent: 'center',
+        margin:30,
+     },
     labelSwitch: {
         fontSize: fontPixel(15),
         color: 'black',
-        width: 40,
-        marginLeft: pixelSizeHorizontal(320),
-        marginTop: pixelSizeVertical(30),
-        position: 'relative'
-    },
-    switch: {
-        position: 'relative',
     },
     inputField: {
         borderBottomWidth: 1,
@@ -70,14 +60,15 @@ export const homeStyles = StyleSheet.create ({
     },
     containerBuscar : {
         top: 20, 
-        flex:0.3,
         justifyContent:'center',
         backgroundColor:'white',
         borderTopEndRadius: 30,
-        borderTopStartRadius:30
+        borderTopStartRadius:30,
+        padding:5
     },
     flatCategorias : {
         width:width, 
+        top:-10,
         height:50,
         borderRadius:20,  
         backgroundColor:'transparent',
