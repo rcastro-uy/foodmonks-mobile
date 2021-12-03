@@ -8,16 +8,13 @@ export const pedidosStyles = StyleSheet.create ({
     borderBottomColor:"black"
   },
   button: {
-    borderWidth: 2,
-    borderColor: '#FD801E',
-    paddingHorizontal: 20,
-    paddingVertical: 5,
+    borderColor:'#FD801E',
+    borderWidth:2,
     borderRadius: 100,
-    alignSelf:'center',
-    width: '45%',
-    top:-10
+    
   },
   buttonText: {
+    padding:5,
     fontSize: 18,
     color: '#FD801E',
     alignSelf: 'center'
@@ -93,7 +90,8 @@ export const pedidosStyles = StyleSheet.create ({
     borderBottomColor:"black"
   },
   containerBuscar : {
-    top: 20, 
+    top: 20,
+    padding:5,
     justifyContent:'center',
     backgroundColor:'white',
     borderTopEndRadius: 30,

@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { Text, FlatList, Image, TouchableOpacity, Keyboard, ListRenderItem, ListRenderItemInfo, View, ActivityIndicator, ScrollView, LogBox } from "react-native";
 import { AuthContext } from "../context/AuthContext";
 import { estadosPedido, mediosPago, Pedido } from "../interfaces/AppInterfaces";
-import { Icon, Input, Switch } from "react-native-elements";
+import { Button, Icon, Input, Switch } from "react-native-elements";
 import { Ionicons } from "@expo/vector-icons";
 import { RestaurantesContext } from "../context/RestaurantesContext";
 import { pedidosStyles } from "../theme/PedidosTheme";
@@ -20,20 +20,20 @@ export default function PedidosScreen({navigation, route}:any) {
     const [page, setPage] = React.useState(1);
     const [totalPages, setTotalPages] = React.useState(1);
     const [loading, setLoading] = React.useState(true);
+    const [cargaBoton, setCargaBoton] = React.useState(false);
     const { listarPedidos } = useContext( RestaurantesContext );
 
-    const onListarPedidos = () => {
+    const onListarPedidos = async () => {
         Keyboard.dismiss();
-        setLoading(true)
+        setCargaBoton(true)
         setNombreRestaurante(nombreRestaurante.toLowerCase());
-        console.log(`${nombreRestaurante} + ${nombreMenu} + ${estadoPedido} + ${medioPago}`)
-        listarPedidos(nombreRestaurante, nombreMenu, estadoPedido, medioPago, ordenamiento, fecha, total, 0).then((res) => {
+        await listarPedidos(nombreRestaurante, nombreMenu, estadoPedido, medioPago, ordenamiento, fecha, total, 0).then((res) => {
             setPedidos(res.pedidos)
             setTotalPages((Number(res.totalPages)))
             setPage((Number(res.currentPage))+1)
-            console.log("Pedidos listados")
-            setLoading(false)
+            
         })
+        setCargaBoton(false)
     }
 
     useEffect(() => {
@@ -44,15 +44,13 @@ export default function PedidosScreen({navigation, route}:any) {
             setLoading(true);
             setMedioPago('')
             setEstadoPedido('')
+            setNombreRestaurante('')
             setPedidos([]);
-            console.log(`Pido la pagina al cargar: ${(page-1)}`)
             listarPedidos(nombreRestaurante, nombreMenu, estadoPedido, medioPago, ordenamiento, fecha, total, (page-1)).then((res) => {
                 if (isMounted) {
                     setPedidos(res.pedidos)
                     setTotalPages((Number(res.totalPages)))
                     setPage((Number(res.currentPage))+1)
-                    console.log("Pagina actual al cargar " + page);
-                    console.log("Paginas totales " + (Number(res.totalPages)))
                     setLoading(false)
                 }
             })
@@ -60,8 +58,7 @@ export default function PedidosScreen({navigation, route}:any) {
         return () => { isMounted = false, unsubscribe };
     }, [navigation])
 
-    //console.log(JSON.stringify(pedidos))
-
+   
     const seleccionarEstado = (value: string)  => {
         if(estadoPedido === value) {
             setEstadoPedido("")
@@ -93,13 +90,10 @@ export default function PedidosScreen({navigation, route}:any) {
         }
     }
     const cargarMas = () => {
-        console.log(totalPages)
         if (page < totalPages) {
             setLoading(true);
-            console.log("Pido la pagina" + page)
             listarPedidos(nombreRestaurante, nombreMenu, estadoPedido, medioPago, ordenamiento, fecha, total, page).then((res) => {
                 setPedidos([...pedidos, ...res.pedidos]);
-                console.log(res.currentPage);
             })
             setPage(page + 1);
         } else {
@@ -123,7 +117,6 @@ export default function PedidosScreen({navigation, route}:any) {
                         selectionColor="black"
                         onChangeText = {setNombreRestaurante}
                         value={nombreRestaurante}
-                        onSubmitEditing={ onListarPedidos }
                         autoCapitalize="none"
                         autoCorrect={ false }
                     />
@@ -159,15 +152,20 @@ export default function PedidosScreen({navigation, route}:any) {
                     /> 
                 </View>
         
-      
-        <TouchableOpacity
+      <View style={{flexDirection:'row', alignItems:'center', justifyContent:'space-evenly', }} >      
+        <Button
+            type='outline'
             activeOpacity={ 0.8 }
-            style={ pedidosStyles.button }
+            //style={ pedidosStyles.button }
+            buttonStyle={ pedidosStyles.button }
             onPress={ onListarPedidos }
-        >
-            <Text style={ pedidosStyles.buttonText } >Buscar</Text>
-        </TouchableOpacity>
+            title="Buscar"
+            titleStyle={pedidosStyles.buttonText}
+            loading={cargaBoton}
+           
+        />
         </View>
+    </View>    
         <View style={{flex:1,top:20}}>
         <FlatList
             data={pedidos}

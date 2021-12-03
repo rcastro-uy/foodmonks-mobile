@@ -35,8 +35,9 @@ export default function ProcessOrderScreen({route, navigation}: Props) {
             }
        
             setTimeout(() => {
-                vaciarCarrito()
+                
                 navigation.navigate('HomeDrawer')
+                vaciarCarrito()
             },3500);
           },3000 ); 
         })
@@ -50,7 +51,7 @@ export default function ProcessOrderScreen({route, navigation}: Props) {
                
               ]);
           });
-    
+          return () => { isMounted = false };
     }, [])
     return loading==true ? (
         <View style={styles.image}>

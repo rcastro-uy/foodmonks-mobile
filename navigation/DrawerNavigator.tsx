@@ -22,7 +22,7 @@ const DrawerNavigator = () => {
         type='material-community'
         color='black'
       />,
-      title:'Restaurantes',
+      title:'Inicio',
       headerTitleAlign: 'center',
       headerTitleStyle:({color:'white'}),
       headerStyle:({backgroundColor:'#FD801E'}),

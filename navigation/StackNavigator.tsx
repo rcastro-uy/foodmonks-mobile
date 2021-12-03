@@ -33,7 +33,6 @@ export type RootStackParams = {
   ProcessOrderScreen: {restaurante: string, direccion: number,medioPago: string, ordenId: string, linkAprobacion:string, total: number, menus: menuPedido[]}
   PedidoDetailsScreen: {idPedido:number, estadoPedido:string, calificacionRestaurante:string, reclamo: Reclamo, menus:MenuCompra[]},
   ReclamoScreen: {idPedido:number, reclamo: Reclamo},
-  PedidosScreen: undefined,
 }
 
 const Stack = createNativeStackNavigator<RootStackParams>();
@@ -78,8 +77,7 @@ const MainStackNavigator = () => {
                 <Stack.Screen name="ConfirmOrderScreen" component={ConfirmOrderScreen} />
                 <Stack.Screen name="ProcessOrderScreen" component={ProcessOrderScreen} />
                 <Stack.Screen name="PedidoDetailsScreen" component={PedidoDetailsScreen} />
-                <Stack.Screen name="ReclamoScreen" component={ReclamoScreen} />
-                <Stack.Screen name="PedidosScreen" component={PedidosScreen} />  
+                <Stack.Screen name="ReclamoScreen" component={ReclamoScreen} />  
               </>
             )
       }

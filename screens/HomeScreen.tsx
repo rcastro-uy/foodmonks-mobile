@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { Text, StyleSheet, FlatList, TouchableOpacity, Keyboard, ListRenderItem, ListRenderItemInfo, View, ActivityIndicator, LogBox } from "react-native";
+import { Text, StyleSheet, FlatList, TouchableOpacity, Keyboard, ListRenderItem, ListRenderItemInfo, View, ActivityIndicator, LogBox, RefreshControl } from "react-native";
 import { AuthContext } from "../context/AuthContext";
 import { categorias, Restaurante } from "../interfaces/AppInterfaces";
 import { RestauranteComponent } from "../components/Restaurante";
@@ -16,6 +16,7 @@ import { homeStyles } from "../theme/HomeTheme";
 
 export default function HomeScreen({navigation, route}:any) {
     //const [restaurantes, setRestaurantes] = React.useState([]);
+    const [refreshing, setRefreshing] = React.useState (false);
     const [nombre, setNombre] = React.useState("");
     const [limpiar, setLimpiar] = React.useState(false);
     const [categoria, setCategoria] = React.useState("");
@@ -25,19 +26,24 @@ export default function HomeScreen({navigation, route}:any) {
 
     const onListarRestaurantes = async () => {
         Keyboard.dismiss();
-        console.log(`${nombre} + ${categoria} + ${orden}`)
         setLoading(true)
         await listarRestaurantes(nombre, categoria, orden)
         setLoading(false)
-        setCategoria('')
-        setOrden(false)
-        setNombre('')
+      
     }
 
     const toggleSwitch = () => setOrden(previousState => !previousState);
     
     useEffect(() => {
         LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
+        navigation.setOptions({
+            headerTitle:'Restaurantes',
+            headerTitleAlign:'center',
+            headerShown: true,
+            headerTitleStyle:({color:'white'}),
+            
+        })
+        
         let isMounted = true;
         setLoading(true);
     
@@ -59,12 +65,22 @@ export default function HomeScreen({navigation, route}:any) {
         } 
       }
 
-    
+    const limpiarFiltros = () => {
+        setCategoria('')
+        setNombre('')
+        setOrden(false)
+        setLimpiar((previousState => !previousState))
+    }
         
 
     return (
         <>
-        <ScrollView>        
+        <ScrollView  refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={limpiarFiltros}
+          />}>
+
         <View style={homeStyles.containerBuscar}>
                     <Input
                         placeholder="Nombre del restaurante"
@@ -76,7 +92,6 @@ export default function HomeScreen({navigation, route}:any) {
                         selectionColor="gray"
                         onChangeText = {setNombre}
                         value={nombre}
-                        onSubmitEditing={ onListarRestaurantes }
                         autoCapitalize="none"
                         autoCorrect={ false }
                     />
@@ -116,15 +131,15 @@ export default function HomeScreen({navigation, route}:any) {
             >
                 <Text style={ homeStyles.buttonText } >Buscar</Text>
             </TouchableOpacity>
-
+           {(categoria!='' || nombre!='' || orden!=false)? (             
             <TouchableOpacity
                 activeOpacity={ 0.8 }
                 style={ homeStyles.button }
-                onPress={() => setLimpiar(previousState => !previousState) }
+                onPress={() => limpiarFiltros() }
             >
-                <Text style={ homeStyles.buttonText } >Limpiar</Text>
+                <Text style={ homeStyles.buttonText } >Restablecer</Text>
             </TouchableOpacity>
-
+           ):(null)}
             </View>  
     </View>
         

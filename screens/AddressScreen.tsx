@@ -14,7 +14,6 @@ import { AddressContext } from '../context/AddressContext';
 
 export default function AddressScreen({navigation, route}:any) {
 
-    //const { comprobarToken } = useContext( AuthContext );
     const toastRef = React.useRef<any>()
     const { direcciones} = useContext( AddressContext );
     const [ refrescar, setRefrescar ] = useState( false );
