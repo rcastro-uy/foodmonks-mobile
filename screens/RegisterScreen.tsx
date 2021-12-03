@@ -214,7 +214,6 @@ export const RegisterScreen = ({navigation}:Props) => {
                 setLat(details!.geometry.location.lat);
                 setLng(details!.geometry.location.lng);
     
-                //console.log(details!.address_components[0].long_name)
               }
             }}
             query={{

@@ -2,30 +2,27 @@ import React from 'react'
 import { View, Text, TouchableWithoutFeedback, useWindowDimensions } from 'react-native'
 import { RestauranteComp } from '../interfaces/AppInterfaces'
 import { StyleSheet } from 'react-native'
-import { Avatar } from 'react-native-elements'
+import { Avatar, Rating } from 'react-native-elements'
 import { AntDesign } from '@expo/vector-icons';
 import { fontPixel, heightPixel, pixelSizeHorizontal, pixelSizeVertical, widthPixel } from '../theme/Normalization'
 import { useNavigation } from '@react-navigation/native'
 
-export const RestauranteComponent = ({correo, nombre, descripcion, imagen, calificacion}: RestauranteComp) => {
+export const RestauranteComponent = ({correo, nombre, descripcion, imagen, calificacion, cantidadCalificaciones}: RestauranteComp) => {
     //const { navigate } = useNavigation()
     const { height, width } = useWindowDimensions();
     return (
         <>
               <View style={styles.restauranteCard}>
-                {/* <View style={{flexDirection: 'row', alignItems: 'center'}}> */}
-                    <View style={styles.imagen}>
                     <Avatar
-                        size={65}
+                        size="large"
                         title="IMG"
-                        //onPress={() => console.log("Works!")}
+                        rounded
                         activeOpacity={0.7}
                         source={{
                             uri:
                               `${imagen}`,
                           }}
                     />
-                    </View>
                     <View style={styles.textos}>
                     <Text
                         style={{
@@ -34,7 +31,7 @@ export const RestauranteComponent = ({correo, nombre, descripcion, imagen, calif
                             height: heightPixel(21),
                             marginLeft: pixelSizeHorizontal(0),
                             marginTop: pixelSizeVertical(5),
-                        fontSize: fontPixel(18),
+                        fontSize: fontPixel(20),
                         color: "black",
                         fontWeight: 'bold',
                         textTransform: 'capitalize',
@@ -44,7 +41,7 @@ export const RestauranteComponent = ({correo, nombre, descripcion, imagen, calif
                     <Text
                         style={{
                             color: "gray",
-                            fontSize: fontPixel(12),
+                            fontSize: fontPixel(15),
                             width: widthPixel(200),
                         }}>
                         {descripcion}
@@ -53,24 +50,13 @@ export const RestauranteComponent = ({correo, nombre, descripcion, imagen, calif
 
                     <View
                         style={styles.calificacion}>
-                        <AntDesign name="staro" size={20} color="black" />
-                        <Text
-                            style={{
-                                position: 'absolute',
-                                //width: widthPixel(17),
-                                //height: heightPixel(14),
-                                //left: pixelSizeHorizontal(150),
-                                //top: pixelSizeVertical(14),
-                                marginTop: pixelSizeVertical(2),
-                                marginLeft: pixelSizeHorizontal(25),
-                                fontSize: fontPixel(15),
-                                color: "black",
-                                fontWeight: 'bold',
-                                textTransform: 'capitalize',
-                                alignItems: 'center'
-                            }}>
-                            {calificacion}
-                    </Text>
+                        <Rating  fractions="{1}"  imageSize={17}  showRating={false} startingValue={calificacion} />
+                        <Text style={{alignSelf:'center'}}>{calificacion}</Text>
+                    {(cantidadCalificaciones <10 )?
+                        ( <Text style={{borderWidth:0,padding:2, color:'black',fontWeight: "bold", backgroundColor:'#6DC36D', alignSelf:'center' }}>Nuevo</Text> ) : (null)
+                    }
+                           
+                    
                     </View>
 
                 {/* </View> */}
@@ -83,47 +69,17 @@ const styles = StyleSheet.create({
     restauranteCard: {
         flexDirection: 'row',
         //alignItems: 'center',
-        //flex: 1,
-        position: "relative",
+        alignContent:'center',
+        flex: 1,
+        backgroundColor:'white',
+        alignSelf:'center',
         //alignItems: "center",
-        //justifyContent: "center",
-        height: heightPixel(100),
-        width: widthPixel(370),
-        marginLeft: pixelSizeHorizontal(5),
-        marginTop: pixelSizeVertical(20),
+        justifyContent: "center",
+        padding:10,
+        margin:10,
         borderRadius: 10,
         borderWidth: 1,
-        // height: 90,
-        // alignItems: 'center',
-        // justifyContent: 'center',
-        // backgroundColor: "white",//Colors.white,
-        // borderRadius: 15,
-        // shadowColor: "#f0f",//Colors.shadow,
-        // shadowOffset: {width: 0, height: 0},
-        // shadowOpacity: 1,
-        // shadowRadius: 8,
-        // elevation: 8,
-        // //flexDirection: 'column',
-        // paddingLeft: 16,
-        // paddingRight: 14,
-        // marginTop: 6,
-        // marginBottom: 6,
-        // marginLeft: 16,
-        // marginRight: 16,
-    },
-    imagen: {
-        position: 'relative',
-        height: heightPixel(65),
-        width: widthPixel(65),
-        borderRadius: 10,
-        //backgroundColor: "black",
-        //borderColor: "#eeeeee",
-        //borderWidth: 10,
-        marginTop: pixelSizeVertical(10),
-        marginLeft: pixelSizeHorizontal(10),
-        //borderStyle: 'solid',
-        //alignItems: 'center',
-        //justifyContent: 'center',
+       
     },
     textos: {
         position: 'relative',
@@ -133,21 +89,9 @@ const styles = StyleSheet.create({
         margin: pixelSizeVertical(5),
         borderRadius: 5,
         borderColor: "#eeeeee",
-        //height: heightPixel(0),
-        //width: widthPixel(0),
-        //borderWidth: 5,
-        //borderStyle: 'solid',
-        //alignItems: 'center',
-        //justifyContent: 'center',
+        paddingStart:10
     },
     calificacion: {
-        position: 'relative',
-        width: widthPixel(60),
-        height: heightPixel(30),
-        marginLeft: pixelSizeHorizontal(20),
-        marginTop: pixelSizeVertical(10),
-        //backgroundColor: 'red'
-        //alignItems: 'center',
-        //justifyContent: 'center',
+        
     },
 });

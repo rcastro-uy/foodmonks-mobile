@@ -27,14 +27,10 @@ export default function PaymentScreen({ route, navigation }: Props) {
 
 
   const stateChng = (navState : any) => {
-    console.log(navState);
    const { url, title, loading } = navState ;
    if(title == "PayPal Checkout" && loading == true && url.includes("token")){
-      console.log("url",url);
       let spliturl = url.split('?');
-      // console.log("spliturl",spliturl);
       let splitotherhalf = spliturl[1].split('&');
-      console.log("splitotherhalf",splitotherhalf);
       let token = splitotherhalf[0].replace("token=","");
       let PayerID = splitotherhalf[1].replace("PayerID=","");
       navigation.navigate('ProcessOrderScreen',{'restaurante':restaurante, 'direccion':direccion ,'medioPago': 'PAYPAL' , 'ordenId': PayerID, 'linkAprobacion':'', 'total': total, 'menus': menus });

@@ -17,6 +17,7 @@ import ProcessOrderScreen from "../screens/ProcessOrderScreen";
 import { MenuCompra, Producto, menuPedido, Reclamo } from "../interfaces/AppInterfaces";
 import PedidoDetailsScreen from "../screens/PedidoDetailsScreen";
 import ReclamoScreen from "../screens/ReclamoScreen";
+import PedidosScreen from "../screens/PedidosScreen";
 
 export type RootStackParams = {
   Login: undefined,
@@ -76,7 +77,7 @@ const MainStackNavigator = () => {
                 <Stack.Screen name="ConfirmOrderScreen" component={ConfirmOrderScreen} />
                 <Stack.Screen name="ProcessOrderScreen" component={ProcessOrderScreen} />
                 <Stack.Screen name="PedidoDetailsScreen" component={PedidoDetailsScreen} />
-                <Stack.Screen name="ReclamoScreen" component={ReclamoScreen} />
+                <Stack.Screen name="ReclamoScreen" component={ReclamoScreen} />  
               </>
             )
       }

@@ -213,7 +213,7 @@ export const AuthProvider = ({children}: any) =>{
             else {
                 dispatch({ 
                     type: 'error', 
-                    payload: "Algo salió mal! Usuario o contraseña incorrecto" || 'Información incorrecta'
+                    payload: error.response.data || 'Algo salió mal! Usuario o contraseña incorrecto'
                 });
             }
         }
@@ -234,7 +234,7 @@ export const AuthProvider = ({children}: any) =>{
             console.log(error)
             dispatch({ 
                 type: 'error', 
-                payload: 'Solicitud no enviada, intente mas tarde'
+                payload: error.response.data || 'Solicitud no enviada, intente mas tarde'
             });
         }
     }

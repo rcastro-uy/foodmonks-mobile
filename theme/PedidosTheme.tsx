@@ -8,26 +8,35 @@ export const pedidosStyles = StyleSheet.create ({
     borderBottomColor:"black"
   },
   button: {
-    borderWidth: 2,
-    borderColor: '#FD801E',
-    paddingHorizontal: 20,
-    paddingVertical: 5,
+    borderColor:'#FD801E',
+    borderWidth:2,
     borderRadius: 100,
-    alignSelf:'center',
-    width: '45%',
-    marginBottom:20
+    
   },
   buttonText: {
+    padding:5,
     fontSize: 18,
     color: '#FD801E',
     alignSelf: 'center'
   },
+  imagedetalle: {
+    resizeMode: 'contain',
+    width: 100,
+    height: 100,
+    flex:0.3,
+    margin:5,
+    overflow: 'hidden',
+    borderColor: '#FFFFFF',
+    alignSelf: 'center',
+},
   pedidoItemContainer: {
+    flexDirection: "row",
+    justifyContent:'space-evenly',
+    backgroundColor:'white',
     flex: 1,
     marginTop: 30,
     marginLeft: 10,
     marginRight: 10,
-    justifyContent: 'center',
     alignItems: 'center',
     height: 215,
     borderColor: '#cccccc',
@@ -42,6 +51,7 @@ export const pedidosStyles = StyleSheet.create ({
     marginTop: 8
   },
   atributo: {
+    flex:1,
     marginTop: 3,
     marginBottom: 5
   },
@@ -49,6 +59,7 @@ export const pedidosStyles = StyleSheet.create ({
     backgroundColor:'#FD801E',
     borderColor: '#FD801E',
     margin:5, alignItems:'center',
+    justifyContent:'center',
     borderWidth:2,
     borderRadius:10,
     padding:10
@@ -57,15 +68,17 @@ export const pedidosStyles = StyleSheet.create ({
     borderColor: '#FD801E',
     borderWidth: 2,
     backgroundColor:'black',
+    justifyContent:'center',
     margin:5, alignItems:'center',
     borderRadius:10,
     padding:10
   },
   containerCategoria : {
     backgroundColor:'transparent',
+    alignSelf:'center'
   },
   flatCategorias : {
-    width:width, 
+    top:-12, 
     height:50,
     borderRadius:20,  
     backgroundColor:'transparent',
@@ -77,8 +90,8 @@ export const pedidosStyles = StyleSheet.create ({
     borderBottomColor:"black"
   },
   containerBuscar : {
-    top: 20, 
-    flex:0.3,
+    top: 20,
+    padding:5,
     justifyContent:'center',
     backgroundColor:'white',
     borderTopEndRadius: 30,

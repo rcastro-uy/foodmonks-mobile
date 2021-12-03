@@ -1,10 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
 import { StackScreenProps } from "@react-navigation/stack";
 import React, { useContext, useEffect } from "react"
-import { View, Text, TextInput, Button, StyleSheet, Image, Keyboard, LogBox, Dimensions, Alert } from "react-native"
-import { Input } from "react-native-elements";
+import { View, Text, StyleSheet, Image, Keyboard, LogBox, Dimensions, Alert } from "react-native"
+import { Input, Button, Icon } from "react-native-elements";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { TextInput } from "react-native-paper";
 
 import { Background } from "../components/Background";
 import { RestaurantesContext } from "../context/RestaurantesContext";
@@ -17,6 +18,7 @@ export default function ReclamoScreen({navigation, route}:Props) {
     //const [email, setEmail] = React.useState("");
     const [razon, setRazon] = React.useState("");
     const [comentario, setComentario] = React.useState("");
+    const [loading, setLoading] = React.useState(false);
     const { realizarReclamo } = useContext( RestaurantesContext );
 
     const idPedido = route.params.idPedido;
@@ -31,11 +33,13 @@ export default function ReclamoScreen({navigation, route}:Props) {
             headerBackTitle: 'Atras',
             headerBackTitleStyle:{color:'black'},
             headerTintColor: 'black',
+            headerTitleStyle:({color:'white'}),
+            headerStyle:({backgroundColor:'#FD801E'})
         })
-        //setRefrescar(false)
+        
     }, [])
 
-    const onRealizarReclamo = () => {
+    const onRealizarReclamo = async () => {
         Keyboard.dismiss();
         if (razon === "") {
             Alert.alert(
@@ -54,19 +58,15 @@ export default function ReclamoScreen({navigation, route}:Props) {
                 ]
             )
         } else {
-            realizarReclamo(idPedido, razon, comentario)
-            .then((res) => {
-                navigation.goBack();
-            })
-            .catch((err) => {
-                Alert.alert(
-                    "Reclamo cancelado",
-                    `Error de comunicacion ${err}`,
-                    [
-                        { text: "OK", style: "default" }
-                    ]
-                )
-            });
+            setLoading(true)
+            const resp= await realizarReclamo(idPedido, razon, comentario)
+            if (resp){
+                Alert.alert("Reclamo con exito", "Se le ha enviado un mail, para dar seguimiento del reclamo", [
+                    
+                    { text: "Ok", onPress: () => { navigation.goBack()} }
+                  ]);
+            }
+            setLoading(false)
         }
     }
 
@@ -82,8 +82,8 @@ export default function ReclamoScreen({navigation, route}:Props) {
                         placeholder="Razon"
                         placeholderTextColor="rgba(255,80,40,0.3)"
                         inputContainerStyle={reclamoStyles.inputField}
-                        leftIcon={<Ionicons size={24} color={"#FD801E"} 
-                        type={'font-awesome'} name="person"/>}
+                        leftIcon={<Icon size={24} color={"#FD801E"} 
+                        type={'material-community'} name="file"/>}
                         keyboardType="default"
                         selectionColor="black"
                         onChangeText = {setRazon}
@@ -93,29 +93,30 @@ export default function ReclamoScreen({navigation, route}:Props) {
                         autoCorrect={ false }
                     />
                     <Text style={ reclamoStyles.label }>Comentario</Text>
-                    <Input 
-                        placeholder="Comentario"
-                        placeholderTextColor="rgba(255,80,40,0.3)"
-                        inputContainerStyle={reclamoStyles.inputField}
-                        leftIcon={<Ionicons size={24} color={"#FD801E"} 
-                        type={'font-awesome'} name="person"/>}
-                        keyboardType="default"
-                        selectionColor="black"
-                        onChangeText = {setComentario}
-                        value={comentario}
-                        onSubmitEditing={ onRealizarReclamo }
-                        autoCapitalize="none"
-                        autoCorrect={ false }
-                    />
+                    <TextInput
+                mode="outlined"
+                label="escriba su comentario..."
+                placeholder="escriba su comentario"
+                value={comentario}
+                activeOutlineColor="orange"
+                multiline = {true}
+                numberOfLines= {3}
+                maxLength={100}
+                onChangeText={text => setComentario(text)}
+                right={<TextInput.Affix text="/100" />} onPressIn={undefined} onPressOut={undefined}   
+            />
                 </View>
                 <View style={ reclamoStyles.buttonContainer }>
-                    <TouchableOpacity
+                    <Button
                         activeOpacity={ 0.8 }
-                        style={ reclamoStyles.button }
+                        type='outline'
+                        buttonStyle={ reclamoStyles.button }
                         onPress={ onRealizarReclamo }
-                        >
-                        <Text style={ reclamoStyles.buttonText } >Reclamar</Text>
-                    </TouchableOpacity>
+                        loading={loading}
+                        title="Reclamar"
+                        titleStyle={reclamoStyles.buttonText}
+                        />
+                        
                 </View>
             </KeyboardAwareScrollView>
         </>
