@@ -30,6 +30,7 @@ export const pedidosStyles = StyleSheet.create ({
     alignSelf: 'center',
 },
   pedidoItemContainer: {
+    elevation: 6,
     flexDirection: "row",
     justifyContent:'space-evenly',
     backgroundColor:'white',
