@@ -30,8 +30,6 @@ export const PromotionMenu = ({vertical,categoria,productos, width,height, onPre
               <Text style={[styles.itemDescripcion, {
                 fontWeight: 'bold'
               }]} > {item.multiplicadorPromocion}%OFF {item.nombre} </Text>
-              <Text style={[styles.itemDescripcion, { fontSize: 15 }]}> {item.nombre}</Text>
-             
               <Text style={[styles.itemDescripcion, { marginTop: 8, fontSize: 15, color:"red", textDecorationLine:'line-through'}]}  >{'$ ' + item.price}</Text>
               <Text style={[styles.itemDescripcion, { marginTop: 8, fontSize: 22, color:"green" }]}  >{'$ ' + ((item.price*(100-item.multiplicadorPromocion))/100).toFixed(0)}</Text>
               </>
@@ -41,7 +39,6 @@ export const PromotionMenu = ({vertical,categoria,productos, width,height, onPre
                 <Text style={[styles.itemDescripcion, {
                     fontWeight: 'bold'
                   }]} > {item.nombre} </Text>
-                  <Text style={[styles.itemDescripcion, { fontSize: 15 }]}> {item.nombre}</Text>
                  
                 <Text style={[styles.itemDescripcion, { marginTop: 8, fontSize: 22, color:"green" }]}  >{'$ ' + item.price}</Text>
                </>
