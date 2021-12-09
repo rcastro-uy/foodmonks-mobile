@@ -34,6 +34,16 @@ export const homeStyles = StyleSheet.create ({
         borderRadius: 100,
        
     },
+    direccionSeleccionada: {
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "row",
+    },
+    text: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 'bold'
+    },
     buttonText: {
         fontSize: 18,
         color: '#FD801E',

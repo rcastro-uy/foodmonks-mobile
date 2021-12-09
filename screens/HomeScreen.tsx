@@ -1,33 +1,34 @@
 import React, { useContext, useEffect } from "react";
-import { Text, StyleSheet, FlatList, TouchableOpacity, Keyboard, ListRenderItem, ListRenderItemInfo, View, ActivityIndicator, LogBox, RefreshControl } from "react-native";
-import { AuthContext } from "../context/AuthContext";
+import { Text, FlatList, TouchableOpacity, Keyboard, ListRenderItem, ListRenderItemInfo, View, ActivityIndicator, LogBox, RefreshControl } from "react-native";
 import { categorias, Restaurante } from "../interfaces/AppInterfaces";
 import { RestauranteComponent } from "../components/Restaurante";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Icon, Image, Input, Switch } from "react-native-elements";
-import { Ionicons } from "@expo/vector-icons";
-import { fontPixel, pixelSizeHorizontal, pixelSizeVertical } from "../theme/Normalization";
-import { Picker } from "@react-native-picker/picker";
 import { RestaurantesContext } from "../context/RestaurantesContext";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Button } from "react-native-elements/dist/buttons/Button";
 import { ScrollView } from "react-native-gesture-handler";
 import { homeStyles } from "../theme/HomeTheme";
+import { AddressContext } from "../context/AddressContext";
+import ChangeSelectedAddress from '../components/ChangeSelectedAddress';
+import Modal from "../components/Modal";
 
 export default function HomeScreen({navigation, route}:any) {
-    //const [restaurantes, setRestaurantes] = React.useState([]);
+
     const [refreshing, setRefreshing] = React.useState (false);
     const [nombre, setNombre] = React.useState("");
     const [limpiar, setLimpiar] = React.useState(false);
     const [categoria, setCategoria] = React.useState("");
     const [orden, setOrden] = React.useState(false);
     const [loading, setLoading] = React.useState(true);
+    const { direcciones, direccionSeleccionada} = useContext( AddressContext );
+    const [mostrarModal, setMostrarModal] = React.useState(false)
+    const [renderComponent, setRenderComponent] = React.useState(<ChangeSelectedAddress />)
+   
+  
     const { listarRestaurantes, restaurantes } = useContext( RestaurantesContext );
 
     const onListarRestaurantes = async () => {
         Keyboard.dismiss();
         setLoading(true)
-        await listarRestaurantes(nombre, categoria, orden)
+        await listarRestaurantes(nombre, categoria, orden, direccionSeleccionada!.id)
         setLoading(false)
       
     }
@@ -37,24 +38,33 @@ export default function HomeScreen({navigation, route}:any) {
     useEffect(() => {
         LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
         navigation.setOptions({
-            headerTitle:'Restaurantes',
+            headerTitle:() => ( <TouchableOpacity style={ homeStyles.direccionSeleccionada } activeOpacity={0.8} onPress={()=> {cambiarDireccion()} }> 
+           
+            <Text style={homeStyles.text} >{direccionSeleccionada!.calle + ' ' + direccionSeleccionada!.numero}</Text> 
+            <Icon
+                type="material-community"
+                name="chevron-down"
+                color="white"
+            /> 
+    </TouchableOpacity>),
             headerTitleAlign:'center',
             headerShown: true,
             headerTitleStyle:({color:'white'}),
             
+    
         })
         
         let isMounted = true;
         setLoading(true);
     
-        listarRestaurantes(nombre, categoria, orden).then((res) => {
+        listarRestaurantes(nombre, categoria, orden,direccionSeleccionada!.id).then((res) => {
             if (isMounted) {
                 setLoading(false);
             }
         })
         
         return () => { isMounted = false };
-    }, [limpiar])
+    }, [limpiar, direccionSeleccionada])
 
 
     const setCategoriaFlatList = (value: string)  => {
@@ -71,7 +81,15 @@ export default function HomeScreen({navigation, route}:any) {
         setOrden(false)
         setLimpiar((previousState => !previousState))
     }
-        
+    
+    const cambiarDireccion = () => {
+        setRenderComponent(
+            <ChangeSelectedAddress
+            setMostrarModal={setMostrarModal}
+            />
+        )
+        setMostrarModal(true)
+    }
 
     return (
         <>
@@ -175,7 +193,11 @@ export default function HomeScreen({navigation, route}:any) {
         )}
     </View>    
     )}
-    
+        <Modal visible={mostrarModal} setVisible={setMostrarModal}>
+                {
+                    renderComponent
+                }
+        </Modal>
         </ScrollView>
         </>
     )

@@ -24,10 +24,12 @@ export const confirmOrderStyles = StyleSheet.create ({
         marginBottom: 20
     },
     containerAddress: {
+        flex:1,
         alignSelf: "center",
         backgroundColor: 'white',
         width: windowWidth/1.1,
         elevation:5,
+        padding:5,
         borderRadius:6,
         marginBottom: 20
     },

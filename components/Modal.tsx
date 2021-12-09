@@ -13,6 +13,7 @@ export default function Modal({ visible, setVisible, children } : props) {
     return (
         <Overlay
             isVisible={visible}
+            animationType='fade'
             overlayStyle={styles.overlay}
             onBackdropPress={() => setVisible(false)}
         >

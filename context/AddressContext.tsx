@@ -8,6 +8,8 @@ import { Alert } from 'react-native';
 
 type AddressContextProps = {
     direcciones: Direccione[];
+    direccionSeleccionada: Direccione | null;
+    cambiarDireccionSeleccionada: (direccion: Direccione) => void;
     cargarDirecciones: (direcciones : Direccione[]) => void;
     agregarDireccion: ( numero: number, calle: string, esquina: string, detalles: string, latitud:  number, longitud: number ) => Promise<boolean>;
     modificarDireccion: ( id:number, numero: number, calle: string, esquina: string, detalles: string, latitud:  number, longitud: number ) => Promise<boolean>;
@@ -29,10 +31,16 @@ export const AddressProvider = ({ children }: any ) => {
 
 
     const [direcciones, setDirecciones] = useState<Direccione[]>([]);
+    const [direccionSeleccionada, setDireccionSeleccionada] = useState<Direccione | null>(null);
+   
     
-    
+    const cambiarDireccionSeleccionada = (direccion : Direccione) => {
+        setDireccionSeleccionada(direccion)
+    }
+
     const cargarDirecciones = async (direcciones : Direccione[]) => {
             setDirecciones(direcciones)
+            setDireccionSeleccionada(direcciones[0])
     }
 
     const agregarDireccion = async(numero: number, calle: string, esquina: string, detalles: string, latitud:  number, longitud: number ):Promise<boolean> => {
@@ -145,6 +153,8 @@ export const AddressProvider = ({ children }: any ) => {
     return(
         <AddressContext.Provider value={{
             direcciones,
+            direccionSeleccionada,
+            cambiarDireccionSeleccionada,
             cargarDirecciones,
             agregarDireccion,
             modificarDireccion,

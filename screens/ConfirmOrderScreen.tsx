@@ -1,17 +1,14 @@
-
-import { DefaultTheme } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack'
 import React, { useContext, useEffect, useState } from 'react'
-import {Alert, Dimensions, Image, ScrollView, Text, TouchableOpacity } from 'react-native';
+import {Dimensions, Image, ScrollView, Text, TouchableOpacity } from 'react-native';
 import { View } from 'react-native-animatable'
 import { Button, Icon } from 'react-native-elements';
-import { List, RadioButton } from 'react-native-paper'
+import { RadioButton } from 'react-native-paper'
 import { AddressContext } from '../context/AddressContext';
 import { CarritoContext } from '../context/CarritoContext';
 import { RestaurantesContext } from '../context/RestaurantesContext';
-import { Restaurante, Direccione, menuPedido } from '../interfaces/AppInterfaces';
+import { Restaurante, menuPedido } from '../interfaces/AppInterfaces';
 import { RootStackParams } from '../navigation/StackNavigator';
-import { realizarPedido } from '../api/actions';
 import { confirmOrderStyles } from '../theme/ConfirmOrderTheme'
 
 interface Props extends StackScreenProps<RootStackParams, 'ConfirmOrderScreen'> {}
@@ -22,14 +19,11 @@ export default function ConfirmOrderScreen({navigation, route}: Props) {
 
     const [checked, setChecked] = useState('contado');
     let menus: menuPedido[] =[];
-    const [direccion, setDireccion] = useState<Direccione | null>(null);
     const [restaurante, setRestaurante] = useState<Restaurante | undefined>();
-    const [expandir, setExpandir] = useState(false);
-    const handlePress = () => setExpandir(!expandir);
-
-    const { direcciones} = useContext( AddressContext );
+    const {direccionSeleccionada} = useContext( AddressContext );
     const { obtenerRestaurante} = useContext( RestaurantesContext );
     const { listarProductos, calcularTotal } = useContext( CarritoContext );
+    
     useEffect(() => {
         navigation.setOptions({
             title:'Resumen',
@@ -45,32 +39,18 @@ export default function ConfirmOrderScreen({navigation, route}: Props) {
     }, [])
 
     const pay = async () => {
-        if (!validateForm()) {
-            return
-        }
-
+       
         if (checked == "contado"){
 
-            navigation.navigate('ProcessOrderScreen',{'restaurante':restaurante!.correo, 'direccion':direccion!.id ,'medioPago': 'EFECTIVO' , 'ordenId': '', 'linkAprobacion':'', 'total': calcularTotal().total, 'menus': menus });
+            navigation.navigate('ProcessOrderScreen',{'restaurante':restaurante!.correo, 'direccion':direccionSeleccionada!.id ,'medioPago': 'EFECTIVO' , 'ordenId': '', 'linkAprobacion':'', 'total': calcularTotal().total, 'menus': menus });
     
         } else{
-            navigation.navigate('PaymentScreen',{'restaurante':restaurante!.correo, 'direccion':direccion!.id ,'menus': menus ,'total':calcularTotal().total});
+            navigation.navigate('PaymentScreen',{'restaurante':restaurante!.correo, 'direccion':direccionSeleccionada!.id ,'menus': menus ,'total':calcularTotal().total});
         }
         
          
         }
-    
-        const validateForm = () => {
-    
-            if(direccion== null) {
-                Alert.alert( 'Error', "Debe seleccionar una direccion",[{
-                    text: 'Ok'
-                }]);
-                return false
-            }
-    
-            return true
-        }    
+      
     return (
         <ScrollView>
         <View style={[confirmOrderStyles.container,{flexDirection:'row'}]}>
@@ -102,22 +82,7 @@ export default function ConfirmOrderScreen({navigation, route}: Props) {
         
         <Text style={ confirmOrderStyles.title}>Direccion de envio:</Text>
         <View style={confirmOrderStyles.containerAddress}>
-            <List.Section style={{margin:10}} >
-                <List.Accordion
-                    title={(direccion==null)? ("Seleccionar Direccion") : ( direccion!.calle + " "+ direccion!.numero) }
-                    expanded={expandir}
-                    theme={{colors:{...DefaultTheme.colors, primary:'#FD801E'}}}
-                    onPress={()=> handlePress()}
-                    left={props => <List.Icon {...props} icon="map-marker"  />}>
-                    {
-                        direcciones.map((item,index)=>(
-                    <List.Item  key={index} title={item.calle + " " + item.numero}
-                    left={props => <List.Icon {...props} icon="map-marker" />}
-                    
-                    onPress={() => {setDireccion(item), handlePress()}}/>
-                    ))}
-                </List.Accordion>
-            </List.Section>
+          <Text numberOfLines={1} ellipsizeMode='tail' style={{fontSize:15, alignSelf:'center', fontWeight: 'bold'}}>{direccionSeleccionada?.calle + " " + direccionSeleccionada?.numero + "  (" + direccionSeleccionada?.detalles + ")"} </Text>  
         </View>
 
         <Text style={ confirmOrderStyles.title}>Metodo de pago:</Text>

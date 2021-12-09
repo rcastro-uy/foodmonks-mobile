@@ -8,7 +8,7 @@ import { Alert } from 'react-native';
 type RestaurantesContextProps = {
     restaurantes: Restaurante[];
     productos: Producto[];
-    listarRestaurantes: (nombre: string, categoria: string, orden: boolean) => Promise<any>;
+    listarRestaurantes: (nombre: string, categoria: string, orden: boolean, direccion: number) => Promise<any>;
     listarProductos: (restauranteId: string, categoria: string, precioInicial: string, precioFinal: string) => void;
     obtenerRestaurante: (restauranteId: string) => Restaurante | undefined;
     listarPedidos: (nombreRestaurante: string, nombreMenu: string, estadoPedido: string, medioPago: string, ordenamiento: string, fecha: Date, total: string, page: number) => Promise<any>;
@@ -28,10 +28,10 @@ export const RestaurantesProvider = ({ children }: any ) => {
 
    
 
-    const listarRestaurantes = async(nombre: string, categoria: string, orden: boolean):Promise<any> => {
+    const listarRestaurantes = async(nombre: string, categoria: string, orden: boolean, direccion: number):Promise<any> => {
         let result = true;   
         try{ 
-            const resp = await foodMonksApi.get<Restaurante[]>(`/v1/cliente/listarAbiertos?nombre=${nombre}&categoria=${categoria}&orden=${orden}`);
+            const resp = await foodMonksApi.get<Restaurante[]>(`/v1/cliente/listarAbiertos?nombre=${nombre}&categoria=${categoria}&orden=${orden}&direccion=${direccion}`);
             setRestaurantes(resp.data)
             return resp.data;
         } catch (error:any){
