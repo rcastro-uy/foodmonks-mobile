@@ -1,6 +1,6 @@
 # FoodMonks Mobile App
 
-# Release 3.1
+# Release 3.0
 
 ## Cliente:
 
@@ -15,4 +15,6 @@
     Listar/buscar menús y promociones de un restaurante
     Listar/buscar pedidos realizados
     Realizar Pedido
+    Realizar Reclamo
+    Calificar Restaurante
 

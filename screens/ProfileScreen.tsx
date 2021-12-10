@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react"
-import { View,Image, Text, Button, StyleSheet, FlatList, TouchableOpacity, Alert} from "react-native"
+import { View,Image, Text, Button, StyleSheet, FlatList, TouchableOpacity} from "react-native"
 import { AuthContext } from "../context/AuthContext";
 import { profileStyles } from '../theme/ProfileTheme';
 import { Icon } from "react-native-elements";
