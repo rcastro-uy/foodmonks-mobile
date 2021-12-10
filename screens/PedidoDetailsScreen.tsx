@@ -1,10 +1,13 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useContext, useEffect } from 'react'
-import { Alert, Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useContext, useEffect, useState } from 'react'
+import { Alert, Dimensions, LogBox, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import Toast from 'react-native-easy-toast';
 import { Button, Card, Icon, Image } from 'react-native-elements';
 import { ScrollView } from 'react-native-gesture-handler';
 import HighScore from '../components/HighScore';
 import { MenuCompraComp } from '../components/MenuCompraComp';
+import Modal from '../components/Modal';
+import UpdateDeleteScore from '../components/UpdateDeleteScore';
 import { RootStackParams } from '../navigation/StackNavigator';
 import { pedidoDetailsStyles } from '../theme/PedidoDetailsTheme';
 
@@ -19,8 +22,15 @@ export default function PedidoDetailsScreen({navigation, route}:Props) {
     const menus = route.params.menus;
 
     const [cantidad, setCantidad] = React.useState<number>(0);
+    const toastRef = React.useRef<any>()
+    const [ refrescar, setRefrescar ] = useState( false );
+    const [ calificacion, setCalificacion ] = useState( calificacionRestaurante );
+    const [mostrarModal, setMostrarModal] = useState(false)
+    const [renderComponent, setRenderComponent] = useState(<HighScore />)
+
     
     useEffect(() => {
+        LogBox.ignoreLogs(['VirtualizedLists should never be nested'])
         navigation.setOptions({
             title:'Pedido',
             headerTitleAlign:'center',
@@ -38,10 +48,26 @@ export default function PedidoDetailsScreen({navigation, route}:Props) {
 
     //const { agregarProducto} = useContext( CarritoContext );
 
-    const idPedido = route.params.idPedido;
-    const estadoPedido = route.params.estadoPedido;
-    const calificacionRestaurante = route.params.calificacionRestaurante; //Es true si el restaurante ya tiene calificacion
-    const menus = route.params.menus;
+    const altaBajaModificarPuntuacion =() => {
+         
+        if (calificacion=='false') {
+            setRenderComponent(
+                <HighScore
+                toastRef={toastRef} idPedido={idPedido} setMostrarModal={setMostrarModal} setCalificacion={setCalificacion} setRefrescar ={setRefrescar}
+                />
+            )
+            setMostrarModal(true)
+            return;
+        }
+            setRenderComponent(
+                <UpdateDeleteScore
+                toastRef={toastRef} idPedido={idPedido} setMostrarModal={setMostrarModal} setCalificacion={setCalificacion} setRefrescar ={setRefrescar} calificacion={calificacion}
+                />
+            )
+            setMostrarModal(true)
+
+
+    }
 
     return (
       <>       
