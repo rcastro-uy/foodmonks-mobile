@@ -14,8 +14,10 @@ import ProductDetailsScreen from "../screens/ProductDetailsScreen";
 import CartScreen from "../screens/CartScreen";
 import ConfirmOrderScreen from '../screens/ConfirmOrderScreen';
 import ProcessOrderScreen from "../screens/ProcessOrderScreen";
-import { MenuCompra, Producto, menuPedido } from "../interfaces/AppInterfaces";
+import { MenuCompra, Producto, menuPedido, Reclamo } from "../interfaces/AppInterfaces";
 import PedidoDetailsScreen from "../screens/PedidoDetailsScreen";
+import ReclamoScreen from "../screens/ReclamoScreen";
+import PedidosScreen from "../screens/PedidosScreen";
 
 export type RootStackParams = {
   Login: undefined,
@@ -29,7 +31,8 @@ export type RootStackParams = {
   CartScreen: {id: string, nombre:string},
   ConfirmOrderScreen : {id: string, bool?: boolean},
   ProcessOrderScreen: {restaurante: string, direccion: number,medioPago: string, ordenId: string, linkAprobacion:string, total: number, menus: menuPedido[]}
-  PedidoDetailsScreen: {idPedido:string, estadoPedido:string, calificacionRestaurante:boolean, menus:MenuCompra[]},
+  PedidoDetailsScreen: {idPedido:number, estadoPedido:string, calificacionRestaurante:string, reclamo: Reclamo, menus:MenuCompra[]},
+  ReclamoScreen: {idPedido:number, reclamo: Reclamo},
 }
 
 const Stack = createNativeStackNavigator<RootStackParams>();
@@ -74,6 +77,7 @@ const MainStackNavigator = () => {
                 <Stack.Screen name="ConfirmOrderScreen" component={ConfirmOrderScreen} />
                 <Stack.Screen name="ProcessOrderScreen" component={ProcessOrderScreen} />
                 <Stack.Screen name="PedidoDetailsScreen" component={PedidoDetailsScreen} />
+                <Stack.Screen name="ReclamoScreen" component={ReclamoScreen} />  
               </>
             )
       }

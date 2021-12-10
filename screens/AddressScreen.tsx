@@ -14,7 +14,6 @@ import { AddressContext } from '../context/AddressContext';
 
 export default function AddressScreen({navigation, route}:any) {
 
-    //const { comprobarToken } = useContext( AuthContext );
     const toastRef = React.useRef<any>()
     const { direcciones} = useContext( AddressContext );
     const [ refrescar, setRefrescar ] = useState( false );
@@ -130,7 +129,7 @@ const styles = StyleSheet.create({
     },
     direccionItem: {
         bottom: 10,
-        shadowColor: 'transparent',
+        shadowColor: 'transparent'
        
     },
     containerList: {
@@ -141,6 +140,7 @@ const styles = StyleSheet.create({
         backgroundColor:"white",
         marginVertical: 10,
         borderRadius:20,
+        elevation: 7
     
     },
 })

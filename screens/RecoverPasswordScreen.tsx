@@ -1,22 +1,52 @@
 import { Ionicons } from "@expo/vector-icons";
-import React from "react"
-import { View, Text, TextInput, Button, StyleSheet, Image, Keyboard } from "react-native"
-import { Input } from "react-native-elements";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import React, { useContext, useEffect, useState } from "react"
+import { View, Text, TextInput, StyleSheet, Image, Keyboard, Alert } from "react-native"
+import { Button, Input } from "react-native-elements";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 import { Background } from "../components/Background";
 import { FoodLogo } from "../components/FoodLogo";
-import { passRecoverService } from "../services/passRecoverService";
+import { AuthContext } from "../context/AuthContext";
+import { loginStyles } from "../theme/LoginTheme";
 import { recoverpassStyles } from "../theme/RecoverPasswordTheme";
+import { validateEmail } from "../utils/helpers";
 
 export default function RecoverPasswordScreen({navigation}:any) {
-    const [email, setEmail] = React.useState("");
+    const [email, setEmail] = useState("");
+    const [loading, setLoading] = useState(false)
+    const [errorEmail, setErrorEmail] = useState("")
 
-    const onRecoverPassword = () => {
-        Keyboard.dismiss();
-        passRecoverService(email);
+    // funcion para validar input 
+    const validateData = () => {
+        setErrorEmail("")
+        
+        let isValid = true
+        
+        if(!validateEmail(email)) {
+            setErrorEmail("Debe ingresar un email válido.")
+            isValid = false
+        }
+        return isValid
     }
+
+    const { recuperarContrasenia, MensajeError, quitarError} = useContext( AuthContext );
+
+    const onRecoverPassword = async () => {
+        if (!validateData()) return ;
+        Keyboard.dismiss();
+        setLoading(true)
+         await recuperarContrasenia(email);
+        setLoading(false)
+    }
+
+    useEffect(() => {
+        if( MensajeError.length === 0 ) return;
+        Alert.alert( 'Error', MensajeError,[{
+            text: 'Ok',
+            onPress: quitarError
+        }]);
+
+    }, [ MensajeError ])
 
     return (
         <>
@@ -38,19 +68,24 @@ export default function RecoverPasswordScreen({navigation}:any) {
                         selectionColor="black"
                         onChangeText = {setEmail}
                         value={email}
+                        errorMessage={errorEmail}
                         onSubmitEditing={ onRecoverPassword }
                         autoCapitalize="none"
                         autoCorrect={ false }
                     />
                 </View>
                 <View style={ recoverpassStyles.buttonContainer }>
-                    <TouchableOpacity
+                    <Button
+                        type="outline"
                         activeOpacity={ 0.8 }
-                        style={ recoverpassStyles.button }
+                        title='Recuperar'
+                        titleStyle={loginStyles.buttonText}
+                        buttonStyle={loginStyles.button}
+                        style={loginStyles.button}
                         onPress={ onRecoverPassword }
-                        >
-                        <Text style={ recoverpassStyles.buttonText } >Recuperar</Text>
-                    </TouchableOpacity>
+                        loading={loading}
+
+                    />
                 </View>
             </KeyboardAwareScrollView>
         </>

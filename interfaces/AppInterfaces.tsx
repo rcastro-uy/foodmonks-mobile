@@ -75,6 +75,7 @@ export interface Restaurante {
     apellido: string;
     fechaRegistro: Date;
     calificacion: number;
+    cantidadCalificaciones: number,
     nombreRestaurante: string;
     rut: number;
     estado: EstadoRestaurante;
@@ -92,6 +93,7 @@ export interface RestauranteComp {
     descripcion: string;
     imagen: string;
     calificacion: number;
+    cantidadCalificaciones: number;
 }
 
 export const categorias = [
@@ -192,7 +194,15 @@ export interface Pedido {
     calificacionRestaurante: boolean;
     categoria: CategoriaMenu;
     nombreRestaurante: string;
+    reclamo: Reclamo;
     menus: MenuCompra[];
+}
+
+export interface Reclamo {
+    id: number;
+    fecha: Date;
+    razon: string;
+    comentario: string;
 }
 
 export interface MenuCompra {
@@ -207,6 +217,9 @@ export interface MenuCompra {
 
 export interface PedidoArray {
     pedidos: Pedido[];
+    currentPage: number;
+    totalItems: number;
+    totalPages: number;
 }
 
 export const estadosPedido = [

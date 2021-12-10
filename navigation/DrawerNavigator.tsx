@@ -22,6 +22,11 @@ const DrawerNavigator = () => {
         type='material-community'
         color='black'
       />,
+      title:'Inicio',
+      headerTitleAlign: 'center',
+      headerTitleStyle:({color:'white'}),
+      headerStyle:({backgroundColor:'#FD801E'}),
+      headerTintColor:'black',
       drawerActiveTintColor: '#FD801E'
       }} />
        <Drawer.Screen name="Mis direcciones"  component={AddressScreen} options={{
@@ -31,6 +36,9 @@ const DrawerNavigator = () => {
         color='black'
         />,
         headerTitleAlign:'center',
+        headerTitleStyle:({color:'white'}),
+        headerTintColor:'black',
+        headerStyle:({backgroundColor:'#FD801E'}),
         drawerActiveTintColor: '#FD801E' 
       }} />
       <Drawer.Screen name="Pedidos"  component={PedidosScreen} options={{
@@ -40,6 +48,9 @@ const DrawerNavigator = () => {
         color='black'
         />,
         headerTitleAlign:'center',
+        headerTitleStyle:({color:'white'}),
+        headerStyle:({backgroundColor:'#FD801E'}),
+        headerTintColor:'black',
         drawerActiveTintColor: '#FD801E' 
       }} />
       <Drawer.Screen name="Mi cuenta" component={ProfileScreen} options={{
@@ -48,7 +59,11 @@ const DrawerNavigator = () => {
         type='material-community'
         color='black'
         />,
-        headerTitle:'',
+        headerTitle:'Mi cuenta',
+        headerTitleAlign: 'center',
+        headerTitleStyle:({color:'white'}),
+        headerStyle:({backgroundColor:'#FD801E'}),
+        headerTintColor:'black',
         drawerActiveTintColor: '#FD801E' 
       }} />
       
@@ -63,6 +78,7 @@ const screenOptionStyle = {
   },
   headerTintColor: "white",
   headerBackTitle: "Back",
+  
 };
 
 export default DrawerNavigator;

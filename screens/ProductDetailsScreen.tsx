@@ -20,6 +20,8 @@ export default function ProductDetailsScreen({navigation, route}:Props) {
             headerBackTitle: 'Atras',
             headerBackTitleStyle:{color:'black'},
             headerTintColor: 'black',
+            headerTitleStyle:({color:'white'}),
+            headerStyle:({backgroundColor:'#FD801E'}),
           })
         setCantidad(0)
     }, [])

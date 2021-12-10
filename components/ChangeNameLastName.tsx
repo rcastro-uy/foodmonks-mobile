@@ -5,7 +5,7 @@ import { Button,Input } from 'react-native-elements'
 import { Icon } from 'react-native-elements/dist/icons/Icon'
 import { AuthContext } from '../context/AuthContext'
 import { useForm } from '../hooks/useForm'
-import { modificarPerfil } from '../services/actions'
+import { modificarPerfil } from '../api/actions'
 import { registerStyles } from '../theme/RegisterTheme'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AddressContext } from '../context/AddressContext'
@@ -64,7 +64,7 @@ export default function ChangeNameLastName({toastRef, setMostrarModal, setRefres
             inputContainerStyle={registerStyles.inputField}
             leftIcon={<Ionicons size={24} color={"#FD801E"} 
             type={'font-awesome'} name="person"/>}
-            selectionColor="white"
+            selectionColor="gray"
             errorMessage={errorNombre}
             onChangeText = {(value) => onChange(value, 'nombre')}
             value={nombre}
@@ -80,7 +80,7 @@ export default function ChangeNameLastName({toastRef, setMostrarModal, setRefres
             inputContainerStyle={registerStyles.inputField}
             leftIcon={<Ionicons size={24} color={"#FD801E"} 
             type={'font-awesome'} name="person"/>}
-            selectionColor="white"
+            selectionColor="gray"
             errorMessage={errorApellido}
             onChangeText = {(value) => onChange(value, 'apellido')}
             value={apellido}

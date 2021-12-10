@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Buffer } from "buffer"
 import { Keyboard, View, Text, TouchableOpacity, Modal, Pressable, Alert, FlatList, SectionList, LogBox } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { Input } from "react-native-elements";
+import { Button, Input } from "react-native-elements";
 import { Background } from '../components/Background'
 import { FoodLogo } from '../components/FoodLogo'
 import { useForm } from '../hooks/useForm'
@@ -21,6 +21,7 @@ export const RegisterScreen = ({navigation}:Props) => {
     
     const [hidePassword, setHidePassword] = useState(true)
     const [hidePassword2, setHidePassword2] = useState(true)
+    const [loading, setLoading] = useState(Boolean)
 
     //traigo la funcion que se enceuntra en AuthContext para comunicar con el back
     const { registrarCuenta, MensajeError, quitarError, MensajeOk, quitarMensajeOk} = useContext( AuthContext );
@@ -117,7 +118,7 @@ export const RegisterScreen = ({navigation}:Props) => {
      });
      
      // Funcion que realiza el boton crear cuenta
-     const onRegister = () => {
+     const onRegister = async () => {
         if (!validateData()) {
             Alert.alert("Error", "Verifique datos ingresados")
             return;
@@ -131,7 +132,10 @@ export const RegisterScreen = ({navigation}:Props) => {
             longitud: lng
         }
         let passBase = Buffer.from(password, "utf8").toString('base64');
-        registrarCuenta({nombre,apellido,correo : email,password : passBase, direccion: direccion})
+        let correo = Buffer.from(email, "utf8").toString('base64');
+        setLoading(true)
+        await registrarCuenta({nombre,apellido,correo,password : passBase, direccion: direccion})
+        setLoading(false)
         Keyboard.dismiss();
     }
 
@@ -170,7 +174,7 @@ export const RegisterScreen = ({navigation}:Props) => {
             inputContainerStyle={registerStyles.inputField}
             leftIcon={<Ionicons size={24} color={"#FD801E"} 
             type={'font-awesome'} name="person"/>}
-            selectionColor="white"
+            selectionColor="gray"
             errorMessage={errorNombre}
             onChangeText = {(value) => onChange(value, 'nombre')}
             value={nombre}
@@ -186,7 +190,7 @@ export const RegisterScreen = ({navigation}:Props) => {
             inputContainerStyle={registerStyles.inputField}
             leftIcon={<Ionicons size={24} color={"#FD801E"} 
             type={'font-awesome'} name="person"/>}
-            selectionColor="white"
+            selectionColor="gray"
             errorMessage={errorApellido}
             onChangeText = {(value) => onChange(value, 'apellido')}
             value={apellido}
@@ -210,7 +214,6 @@ export const RegisterScreen = ({navigation}:Props) => {
                 setLat(details!.geometry.location.lat);
                 setLng(details!.geometry.location.lng);
     
-                //console.log(details!.address_components[0].long_name)
               }
             }}
             query={{
@@ -227,7 +230,7 @@ export const RegisterScreen = ({navigation}:Props) => {
             inputContainerStyle={registerStyles.inputField}
             leftIcon={<Entypo  size={24} color={"#FD801E"} 
             type={'font-awesome'} name="address"/>}
-            selectionColor="white"
+            selectionColor="gray"
             errorMessage={errorEsquina}
             onChangeText = {(value) => onChange(value, 'esquina')}
             value={esquina}
@@ -243,7 +246,7 @@ export const RegisterScreen = ({navigation}:Props) => {
             inputContainerStyle={registerStyles.inputField}
             leftIcon={<Entypo  size={24} color={"#FD801E"} 
             type={'font-awesome'} name="address"/>}
-            selectionColor="white"
+            selectionColor="gray"
 
             onChangeText = {(value) => onChange(value, 'detalles')}
             value={detalles}
@@ -260,7 +263,7 @@ export const RegisterScreen = ({navigation}:Props) => {
             leftIcon={<MaterialCommunityIcons size={24} color={"#FD801E"} 
             type={'font-awesome'} name="email-plus"/>}
             keyboardType="email-address"
-            selectionColor="white"
+            selectionColor="gray"
             errorMessage={errorEmail}
             onChangeText = {(value) => onChange(value, 'email')}
             value={email}
@@ -275,13 +278,16 @@ export const RegisterScreen = ({navigation}:Props) => {
          <InputPassword errorMessage={errorPassword2}  onSubmitediting= {onRegister} getPass={getPassword2} pass={password2} secureTextEntry={hidePassword2} onPress={() => setHidePassword2(!hidePassword2)} />
  
                 {/* Boton crear cuenta */}
-                    <TouchableOpacity
+                    <Button
+                        type="outline"
                         activeOpacity={ 0.8 }
-                        style={ registerStyles.button }
+                        title="Crear cuenta"
+                        titleStyle= {registerStyles.buttonText}
+                        buttonStyle={ registerStyles.button }
                         onPress={ onRegister }
-                    >
-                        <Text style={ registerStyles.buttonText } >Crear cuenta</Text>
-                    </TouchableOpacity>
+                        loading={loading}
+                    />
+                  
         </View>
 
     </KeyboardAwareScrollView>

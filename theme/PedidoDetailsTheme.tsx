@@ -17,9 +17,9 @@ export const pedidoDetailsStyles = StyleSheet.create ({
         color: '#000000',
     },
     button: {
-        flexDirection: 'row',
-        width: 250, 
+        width: 200, 
          backgroundColor:'#FD801E',
+         margin:5,
          borderRadius: 100,
          alignSelf: 'center'
      },

@@ -8,6 +8,8 @@ import { Alert } from 'react-native';
 
 type AddressContextProps = {
     direcciones: Direccione[];
+    direccionSeleccionada: Direccione | null;
+    cambiarDireccionSeleccionada: (direccion: Direccione) => void;
     cargarDirecciones: (direcciones : Direccione[]) => void;
     agregarDireccion: ( numero: number, calle: string, esquina: string, detalles: string, latitud:  number, longitud: number ) => Promise<boolean>;
     modificarDireccion: ( id:number, numero: number, calle: string, esquina: string, detalles: string, latitud:  number, longitud: number ) => Promise<boolean>;
@@ -29,10 +31,16 @@ export const AddressProvider = ({ children }: any ) => {
 
 
     const [direcciones, setDirecciones] = useState<Direccione[]>([]);
+    const [direccionSeleccionada, setDireccionSeleccionada] = useState<Direccione | null>(null);
+   
     
-    
+    const cambiarDireccionSeleccionada = (direccion : Direccione) => {
+        setDireccionSeleccionada(direccion)
+    }
+
     const cargarDirecciones = async (direcciones : Direccione[]) => {
             setDirecciones(direcciones)
+            setDireccionSeleccionada(direcciones[0])
     }
 
     const agregarDireccion = async(numero: number, calle: string, esquina: string, detalles: string, latitud:  number, longitud: number ):Promise<boolean> => {
@@ -43,10 +51,7 @@ export const AddressProvider = ({ children }: any ) => {
               const refreshToken = await AsyncStorage.getItem('refreshToken')
               const resp = await foodMonksApi.post<ResponseAddDireccion>('/v1/cliente/agregarDireccion', {
                     numero,calle,esquina,detalles,latitud, longitud,
-              },{headers: {
-                Authorization: "Bearer " + token,
-                RefreshAuthentication: "Bearer " + refreshToken,
-              },});
+              });
 
               const direccion = {
                   id: resp.data.id,
@@ -76,16 +81,10 @@ export const AddressProvider = ({ children }: any ) => {
     const modificarDireccion = async( id: number,numero: number, calle: string, esquina: string, detalles: string, latitud:  number, longitud: number  ):Promise<boolean> =>{
         let result = true;
         try{ 
-            const token = await AsyncStorage.getItem('token');
-            console.log(token)
-            const refreshToken = await AsyncStorage.getItem('refreshToken')
-            const resp = await foodMonksApi.put('/v1/cliente/modificarDireccion', {
+           const resp = await foodMonksApi.put('/v1/cliente/modificarDireccion', {
                 id, numero,calle,esquina,detalles,latitud, longitud,
           },{params:{
-            id},headers: {
-                Authorization: "Bearer " + token,
-                RefreshAuthentication: "Bearer " + refreshToken,
-              },});
+            id}});
 
               const direccion = {
                 id: id,
@@ -108,7 +107,7 @@ export const AddressProvider = ({ children }: any ) => {
         result = false
         Alert.alert(
             "Error direccion",
-            error.response.data || 'Algo salió mal, intente mas tarde',
+            error.response || 'Algo salió mal, intente mas tarde',
             [
                 { text: "OK", style: "default" }
             ]
@@ -127,9 +126,6 @@ export const AddressProvider = ({ children }: any ) => {
             const refreshToken = await AsyncStorage.getItem('refreshToken')
             const resp = await foodMonksApi.delete('/v1/cliente/eliminarDireccion', { params:{
                 id
-            },headers: {
-              Authorization: "Bearer " + token,
-              RefreshAuthentication: "Bearer " + refreshToken,
             }});
 
             let indice = direcciones.findIndex(dir => dir.id === id );
@@ -157,6 +153,8 @@ export const AddressProvider = ({ children }: any ) => {
     return(
         <AddressContext.Provider value={{
             direcciones,
+            direccionSeleccionada,
+            cambiarDireccionSeleccionada,
             cargarDirecciones,
             agregarDireccion,
             modificarDireccion,

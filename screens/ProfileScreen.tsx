@@ -5,9 +5,9 @@ import { profileStyles } from '../theme/ProfileTheme';
 import { Icon } from "react-native-elements";
 import Modal from "../components/Modal";
 import ChangeNameLastName from "../components/ChangeNameLastName";
-import ChangePassword from "../components/ChangePassword";
 import {Rating} from 'react-native-elements';
 import Toast from "react-native-easy-toast";
+import { styles } from '../navigation/CustomDrawerNavigator';
 
 
 export default function ProfileScreen({navigation}:any) {
@@ -22,105 +22,99 @@ export default function ProfileScreen({navigation}:any) {
         comprobarToken()
         setRefrescar(false)
   },[refrescar])
-     
-      
-    const generarOpciones = () => {
-        return [
+
+    const bajarCuenta = () => {
+        Alert.alert("Estas seguro?", "Si elimina la cuenta, no volvera acceder ", [
             {
-                title : "Modificar informacion personal",
-                iconNameLeft: "account-circle",
-                iconColorLeft: "#a7bfd3",
-                iconNameRight: "chevron-right",
-                iconColorRight: "#a7bfd3",
-                index: "1",
-                opcion:"modificarInfo"
+              text: "Cancelar",
+              onPress: () => null,
+              style: "cancel"
             },
-            {
-                title : "Modificar Contraseña",
-                iconNameLeft: "lock-reset",
-                iconColorLeft: "#a7bfd3",
-                iconNameRight: "chevron-right",
-                iconColorRight: "#a7bfd3",
-                index:"2",
-                opcion:"modificarContraseña"
-            },
-        ]
+            { text: "Eliminar", onPress: () => { eliminarCuenta(), cerrarSesion()} }
+          ]);
     }
 
-    const opciones = generarOpciones();
-
-    const seleccionarOpcion = (key: string) => {
-        switch (key) {
-            case "modificarInfo":
-                setRenderComponent(
-                    <ChangeNameLastName
-                    toastRef={toastRef} setMostrarModal={setMostrarModal} setRefrescar ={setRefrescar}
-                    />
-                )
-                break;
-            case "modificarContraseña":
-                setRenderComponent(
-                    <ChangePassword
-                    setMostrarModal={setMostrarModal}
-                /> 
-                )
-                break;
-        }
+    const modificarInfo = () => {
+        setRenderComponent(
+            <ChangeNameLastName
+            toastRef={toastRef} setMostrarModal={setMostrarModal} setRefrescar ={setRefrescar}
+            />
+        )
         setMostrarModal(true)
     }
-    
+         
     return (
         <>
         <View style={ profileStyles.container }>
             <Image
-        source={ require('../images/monjeNegro.png') }
-        style={profileStyles.imageProfile}
-      />
-           <View style={profileStyles.infoUser}>
+                source={ require('../images/profile-icon.png') }
+                style={profileStyles.imageProfile}
+
+            />
+           <View style={{paddingStart:15}}>
                 <Text style={profileStyles.displayName}>
                     {
                         usuario?.nombre 
                     }
                 </Text>
                 <Text>{usuario?.correo}</Text>
-                <View style={{top:15}}>
-                    <Text style={{fontWeight: "bold", bottom:5}}>Mi valoracion: {usuario?.calificacion}/5</Text>
+                <View style={{top:15,alignItems:'flex-start'}}>
+                <Text style={{fontWeight: "bold", bottom:5}}>Fecha de registro: {usuario?.fechaRegistro}</Text>
+                    <Text style={{fontWeight: "bold", bottom:5}}>Mi calificación: {usuario?.calificacion}/5</Text>
                     <Rating  fractions="{1}"  imageSize={20}  showRating={false} startingValue={usuario?.calificacion.toString()} />
+                    {(usuario!.cantidadCalificaciones <10 )?
+                        ( <Text style={{borderWidth:0,padding:2,textAlign:'center', color:'black',fontWeight: "bold", backgroundColor:'#6DC36D', alignSelf:'flex-start' }}>Nuevo</Text> ) : (null)
+                    }
+                   
                 </View>
             </View>
         </View>
 
-<View>
+<View style={{top:30}}>
 
-<Text style={ profileStyles.title }>Mi cuenta</Text>
+<Text style={ profileStyles.title }>Administrar</Text>
     <View style={profileStyles.optionContainer}>
-        <FlatList
-            data={opciones}
-            keyExtractor={( p ) => p.index}
-            style={profileStyles.menuItem}
-            renderItem={({item})=>
-            
-             <TouchableOpacity onPress={()=>seleccionarOpcion(item.opcion)} style={ profileStyles.containerList } activeOpacity={0.8}>
-                
-                
-            <Icon
-                type="material-community"
-                name={item.iconNameLeft}
-                color={item.iconColorLeft}
-            /> 
-            <Text style={profileStyles.optionText}>{item.title}</Text> 
-            <Icon
-                type="material-community"
-                name={item.iconNameRight}
-                color={item.iconColorRight}
-            /> 
-            
-                </TouchableOpacity>   
-        }
-        ItemSeparatorComponent = { () =>(
-            <View style={profileStyles.separador} />
-        )}
-        />
+    <TouchableOpacity style={ [profileStyles.containerList,{borderBottomWidth:1}] } activeOpacity={0.8} onPress={()=> {modificarInfo()} }> 
+                <Icon
+                    type="material-community"
+                    name="account-circle"
+                    color="#a7bfd3"
+                /> 
+                <Text style={profileStyles.optionText}>Modificar informacion personal</Text> 
+                <Icon
+                    type="material-community"
+                    name="chevron-right"
+                    color="#a7bfd3"
+                /> 
+        </TouchableOpacity> 
+
+        <TouchableOpacity style={ [profileStyles.containerList,{borderBottomWidth:1}] } activeOpacity={0.8} onPress={()=> {bajarCuenta()} }> 
+                <Icon
+                    type="material-community"
+                    name="delete"
+                    color="#a7bfd3"
+                /> 
+                <Text style={profileStyles.optionText}>Eliminar cuenta</Text> 
+                <Icon
+                    type="material-community"
+                    name="chevron-right"
+                    color="#a7bfd3"
+                /> 
+        </TouchableOpacity> 
+
+        <TouchableOpacity style={ [profileStyles.containerList ] } activeOpacity={0.8} onPress={()=> {cerrarSesion()} }> 
+                <Icon
+                    type="material-community"
+                    name="logout"
+                    color="#a7bfd3"
+                /> 
+                <Text style={profileStyles.optionText}>Cerrar sesion</Text> 
+                <Icon
+                    type="material-community"
+                    name="chevron-right"
+                    color="#a7bfd3"
+                /> 
+        </TouchableOpacity> 
 
         <Modal visible={mostrarModal} setVisible={setMostrarModal}>
                 {
@@ -128,28 +122,10 @@ export default function ProfileScreen({navigation}:any) {
                 }
         </Modal>
     </View>
-
-
-    <Text style={ profileStyles.title}>Administrar</Text>
-      <View style={profileStyles.optionContainer}>
-        <TouchableOpacity style={ profileStyles.containerList } activeOpacity={0.8} onPress={()=> { eliminarCuenta(); cerrarSesion()} }> 
-                <Icon
-                    type="material-community"
-                    name="delete"
-                    color="#a7bfd3"
-                /> 
-                <Text style={profileStyles.optionText}>Eliminar Cuenta</Text> 
-                <Icon
-                    type="material-community"
-                    name="chevron-right"
-                    color="#a7bfd3"
-                /> 
-        </TouchableOpacity> 
-        
-      </View> 
+</View> 
      
 
-</View>
+
 <Toast ref={toastRef} position="bottom" opacity={0.9}/>       
  </>       
     )
