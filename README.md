@@ -1,5 +1,5 @@
 # FoodMonks Mobile App
-
+- Correcciones varias
 # Release 3.0
 
 ## Cliente:
