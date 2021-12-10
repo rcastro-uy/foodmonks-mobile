@@ -190,8 +190,8 @@ export interface Pedido {
     medioPago: string;
     estadoPedido: string;
     fechaHoraEntrega: string;
-    calificacionCliente: boolean;
-    calificacionRestaurante: boolean;
+    calificacionCliente: string;
+    calificacionRestaurante: string;
     categoria: CategoriaMenu;
     nombreRestaurante: string;
     reclamo: Reclamo;
